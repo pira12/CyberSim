@@ -1,19 +1,22 @@
-from multiprocessing import Process
-import time
+import random
 
 class Attacker:
     def __init__(self, strategy):
         self.strategy = strategy
-        self.hacked_nodes = []
+        self.viable_nodes = set()
+        self.compromised_nodes = set()
 
-    # def attack_node(self, node):
-    #     """Function to start attack on node with vulnerability."""
-    #     time.sleep(5)
-    #     self.hacked_nodes.append(node)
+    def attack_nodes(self, network):
+        """Function to start attack on node with vulnerability."""
+        for node in self.viable_nodes:
+            if(random.random() > 0.5):
+                self.compromised_nodes.add(node)
+                network.compromised_nodes.append(node.node_id)
 
-    def scan_network(self, public_nodes):
+    def scan_network(self, network):
         """ Function to scan the public nodes in a network."""
-        for node in public_nodes:
-            # If public node is vulnerable, then attack else continue.
-            if(node.vulnerable):
-                
+        for node in network.nodes:
+            # If node is public and vulnerable then add to viable nodes.
+            if(node.node_id in network.public and node.vulnerable):
+                self.viable_nodes.add(node)
+
