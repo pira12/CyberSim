@@ -13,7 +13,7 @@ def run_sim(run_time):
     while(current_time < run_time):
         if(attack_generator()):
             event_list.append(f"Attack is generated at time {current_time}")
-            
+
         current_time += 1
 
 def print_event_list(event_list):
