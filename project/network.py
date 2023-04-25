@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
+import numpy as np
 
 
 
@@ -9,176 +10,177 @@ import random
 # print(G.degree(0))
 
 
-class Node:
+class Host:
     """
     Class for the nodes
     """
-    def __init__(self, node_id, public, vulnerable, compromised):
-        self.node_id = node_id
-        self.public = public
-        self.vulnerable = vulnerable
-        self.compromised = compromised
+    def __init__(self, subnet_addr, host_addr, score, access_for_score,
+                 host_discovered, host_reached, attacker_access_lvl,
+                 priv_esc_hardend, hardware, processes, services, os):
 
-    def make_vulnerable(self):
-        """
-        Make the node vulnerable
-        """
-        self.vulnerable = True
+        self.subnet_addr = subnet_addr                  # int
+        self.host_addr = host_addr                      # int
+        self.score = score                              # int
+        self.access_for_score = access_for_score        # int
+        self.host_discovered = host_discovered          # bool
+        self.host_reached = host_reached                # bool
+        self.attacker_access_lvl = attacker_access_lvl  # int
+        self.priv_esc_hardend = priv_esc_hardend        # [string]
+        self.hardware = hardware                        # string
+        self.processes = processes                      # [string]
+        self.services = services                        # [string]
+        self.os = os                                    # string
 
-    def patch(self):
-        """
-        Switch the node from vulnerable to normal
-        """
-        self.vulnerable = False
 
-    def make_compromised(self):
+    def get_address(self):
         """
-        Make the node compromised
+        Return the complete address of the host
+        (subnet address, host address)
         """
-        self.compromised = True
+        return (self.subnet_addr, self.host_addr)
+
+
+# Host(sub, host, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows")
+
+
+class Edge:
+    """
+    Class for edges in the network
+    """
+    def __init__(self, source_addr, dest_addr, servs_allowed):
+        self.source_addr = source_addr
+        self.dest_addr = dest_addr
+        self.exploits_hardend = []
+        self.servs_allowed = servs_allowed
+
+    def harden(self, exploit):
+        """
+        Make it harder for attackers to use certain exploits on
+        this edge. The probability of succesfull with that exploit will
+        be lowered.
+        """
+        self.exploits_hardend.append(exploit)
+
+
+    def get_source_addr(self):
+        """
+        Get the source address of the edge
+        """
+        return self.source_addr
+
+
+    def get_dest_addr(self):
+        """
+        Get the destination address of the edge
+        """
+        return self.dest_addr
 
 
 class Network:
     """
     Class for the Network
+    The first host is the internet, from which the attacker starts
     """
+    # Do we still need graph? I changed egdges to a dict.
     def __init__(self, graph):
         self.graph = graph
-        self.nodes = []
-        self.public = []
-        self.non_public = []
-        self.edges = []
+        self.hosts = [Host(1, 0, 1, 0, False, False, 0, [], "Internet", [], [], "windows")]
+        self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
+        self.edges = {}                 # The key is (source numb, dest numb) which can be found in host_map
+        self.sensitive_hosts = []
 
-        self.compromised_nodes = []
-        self.attack_visual_nodes = []
+        self.adjacency_matrix = np.array([[0]])
 
-    def add_node(self, node):
+
+    def add_host(self, host):
         """
         Add a node to the network
         """
-        self.nodes.append(node)
+        self.hosts.append(host)
+        addr = host.get_address()
+        # Host_numb is the number the host has in the array self.hosts
+        host_numb = len(self.host_map)
+        self.host_map[addr] = host_numb
 
-    def add_pub(self, node_id):
+        self.adjacency_matrix = np.r_[self.adjacency_matrix, [np.zeros(host_numb)]]
+        self.adjacency_matrix = np.c_[self.adjacency_matrix, np.zeros(host_numb + 1)]
+
+
+# What to do when the edge already exists?
+    def add_edge(self, source_addr, dest_addr, servs_allowed):
         """
-        Add node to the public list
+        Add an edge tot the network.
+        The column number is the source and the row number the destination
+        in the adjacency matrix.
         """
-        if node_id not in self.public:
-            self.public.append(node_id)
+        source = self.host_map[source_addr]
+        dest = self.host_map[dest_addr]
+        self.edges[(source, dest)] = Edge(source_addr, dest_addr, servs_allowed)
 
-    def add_non_pub(self, node_id):
+        self.adjacency_matrix[dest][source] = 1
+
+    def add_sensitive_hosts(self, addr):
         """
-        Add node to the non-public list
+        Add a sensitive host to the network
         """
-        if node_id not in self.non_public:
-            self.non_public.append(node_id)
+        if addr in self.host_map:
+            self.sensitive_hosts.append(addr)
+        else:
+            print("The address", addr, "is not in the network and can thus not be a sensitive host")
 
-    def add_edge(self, edge):
+
+    def get_host_place(self, address):
         """
-        Add edge tot the network
+        Return the place of the host in hosts
         """
-        self.edges.append(edge)
-
-    def random_vulnerable(self):
-        """
-        Random set some nodes to random
-        Perhaps also change self.nodes in sync.
-        """
-        for n in self.nodes:
-            if random.random() > 0.5:
-                n.make_vulnerable()
-
-    def add_comp(self, node_id):
-        """
-        Add a compromised node-id to the list.
-        Also update the (non public) nodes the attacker can see.
-        """
-        if node_id not in self.compromised_nodes:
-            self.nodes[node_id].make_compromised()
-            self.compromised_nodes.append(node_id)
-            self.add_att_vis(node_id)
-
-    def add_att_vis(self, node_id):
-        """
-        Add all neighbors of the given node to the
-        list of visible (non public) nodes for the attacker.
-        Add the compromised node as well.
-        """
-        for neigh in self.graph.neighbors(node_id):
-            if neigh not in self.attack_visual_nodes:
-                self.attack_visual_nodes.append(neigh)
-
-        if node_id not in self.attack_visual_nodes:
-            self.attack_visual_nodes.append(node_id)
+        return self.host_map[address]
 
 
-def get_ends(graph):
-    """
-    Function which get nodes at the edge of the network
-    """
-    ends = []
 
-    for n in graph.nodes:
-        if graph.degree(n) == 1:
-            ends.append(n)
-
-    return ends
-
-
-def create_network(number_of_nodes):
+def create_network(number_of_hosts):
     """
     Creates a random graph and create a network based on the graph.
     Return the graph, the network and the positions.
     """
 
-    G = nx.powerlaw_cluster_graph(number_of_nodes, 1, 0.4)
+    G = nx.powerlaw_cluster_graph(number_of_hosts, 1, 0.4)
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
     N = Network(G)
-    pub = get_ends(G)
 
-    for numb in range(0, number_of_nodes):
-        if numb in pub:
-            N.add_node(Node(numb, True, False, False))
-            N.add_pub(numb)
-        else:
-            N.add_node(Node(numb, False, False, False))
-            N.add_non_pub(numb)
+    for numb in range(0, number_of_hosts):
+        N.add_host(Host(2, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+
+    for numb in range(0, 3):
+        N.add_host(Host(3, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
     return N, pos
 
 
 N, pos = create_network(20)
-N.random_vulnerable()
+
+print(N.hosts[0].services)
+print(N.hosts[0].get_address())
+print(N.hosts[14].get_address())
+
+print(N.get_host_place((2,0)))
+N.add_sensitive_hosts((2,0))
+N.add_sensitive_hosts((3,0))
+
+N.add_edge((1, 0), (2,0), ["s1"])
+print(N.adjacency_matrix)
+print(N.edges[(0, 1)].servs_allowed)
 
 
-# nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
-# nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
 
-labels = {}
-for n in N.graph.nodes:
-    labels[n] = n
+# def draw_network():
+#     nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
+#     nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
+#     nx.draw(N.graph, pos, nodelist=N.compromised_nodes, node_color="tab:red")
 
-# nx.draw_networkx_labels(N.graph, pos, labels, font_size=11, font_color="whitesmoke")
-# plt.show()
+#     labels = {}
+#     for n in N.graph.nodes:
+#         labels[n] = n
 
-
-# N.add_comp(13)
-# N.add_comp(14)
-# N.add_comp(15)
-# N.add_comp(16)
-# N.add_comp(17)
-
-# print("compromised:", N.compromised_nodes)
-# print("Visible to attacker", N.attack_visual_nodes)
-
-def draw_network():
-    nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
-    nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
-    nx.draw(N.graph, pos, nodelist=N.compromised_nodes, node_color="tab:red")
-
-    labels = {}
-    for n in N.graph.nodes:
-        labels[n] = n
-
-    nx.draw_networkx_labels(N.graph, pos, labels, font_size=11, font_color="whitesmoke")
-    plt.show()
+#     nx.draw_networkx_labels(N.graph, pos, labels, font_size=11, font_color="whitesmoke")
+#     plt.show()
