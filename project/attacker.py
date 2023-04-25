@@ -1,22 +1,58 @@
 import random
+from globals import AttackStrat
 
 class Attacker:
-    def __init__(self, strategy):
+    """
+    This is the class for the attacker.
+    ...
+    Attributes
+    ----------
+    env : Simpy Enviroment
+        The Simpy enviroment of the simulator.
+    network : Network
+        The Netork with all the hosts and edges.
+    process : Process
+        The process of the attacker running.
+    strategy : int
+        The strategy chosen for the attacker
+    compromised hosts : [hosts]
+        The list with hosts which have been compromised by this attacker.
+    score : AccessLevel,
+        The won score by compromising the network for this attacker.
+    """
+
+    def __init__(self, env, network, strategy):
+        self.env = env
+        self.network = network
+        self.process = env.process(self.run())
         self.strategy = strategy
-        self.viable_nodes = set()
-        self.compromised_nodes = set()
+        self.compromised_hosts = []
+        self.score = 0
 
-    def attack_nodes(self, network):
-        """Function to start attack on node with vulnerability."""
-        for node in self.viable_nodes:
-            if(random.random() > 0.5):
-                self.compromised_nodes.add(node)
-                network.compromised_nodes.append(node.node_id)
 
-    def scan_network(self, network):
-        """ Function to scan the public nodes in a network."""
-        for node in network.nodes:
-            # If node is public and vulnerable then add to viable nodes.
-            if(node.node_id in network.public and node.vulnerable):
-                self.viable_nodes.add(node)
+    def run(self):
+        while True:
+            # Choose attack to launch based on attack strategy
+            attack_type = self.choose_attack()
 
+            # Launch the chosen attack
+            attack_start = self.env.now()
+            # TODO! : Run the attack host
+            # TODO! : Log the attack
+
+            # Wait for the attack to finish
+            yield self.env.timeout(10) # For now set to 10, but varies
+
+            # If the attack succeeded increase score and Log it.
+            if random.random() < self.attack_strategy[attack_type]:
+                self.score += 1
+
+
+    def choose_attack(self):
+        """
+        Choose attack based on attack strategy and compromised hosts.
+        """
+        if self.attack_strategy == AttackStrat.RANDOM:
+
+        if self.attack_strategy == AttackStrat.BRUTEF:
+            None
