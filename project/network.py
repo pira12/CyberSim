@@ -136,6 +136,63 @@ class Network:
         return self.host_map[address]
 
 
+    def reachable_hosts(self, source_addr):
+        """
+        Return all the hosts that can be reached by the given host
+        """
+        source = self.get_host_place(source_addr)
+        dests = []
+
+        for i in range(0, len(self.adjacency_matrix)):
+            if self.adjacency_matrix[i][source] == 1:
+                dests.append(self.hosts[i])
+
+        return dests
+
+
+    def reached_by_hosts(self, dest_addr):
+        """
+        Return all the hosts that can reach the given host
+        """
+        dest = self.get_host_place(dest_addr)
+        sources = []
+
+        for i in range(0, len(self.adjacency_matrix)):
+            if self.adjacency_matrix[dest][i] == 1:
+                sources.append(self.hosts[i])
+
+        return sources
+
+
+    def get_all_edges_from(self, source_addr):
+        """
+        Return all edges that start at the given host
+        """
+        source = self.get_host_place(source_addr)
+        edges = []
+
+        for i in range(0, len(self.adjacency_matrix)):
+            if self.adjacency_matrix[i][source] == 1:
+                edges.append(self.edges[(source, i)])
+
+        return edges
+
+
+    def get_all_edges_to(self, dest_addr):
+        """
+        Return all edges that go towards the given host
+        """
+        dest = self.get_host_place(dest_addr)
+        edges = []
+
+        for i in range(0, len(self.adjacency_matrix)):
+            if self.adjacency_matrix[dest][i] == 1:
+                edges.append(self.edges[(i, dest)])
+
+        return edges
+
+
+
 
 def create_network(number_of_hosts):
     """
@@ -170,6 +227,11 @@ N.add_sensitive_hosts((3,0))
 N.add_edge((1, 0), (2,0), ["s1"])
 print(N.adjacency_matrix)
 print(N.edges[(0, 1)].servs_allowed)
+
+print(N.reachable_hosts((1, 0)))
+print(N.reached_by_hosts((2, 0)))
+print(N.get_all_edges_from((1, 0)))
+print(N.get_all_edges_to((2, 0)))
 
 
 
