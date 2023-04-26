@@ -52,7 +52,9 @@ class Attacker:
         """
         Choose attack based on attack strategy and compromised hosts.
         """
-        if self.attack_strategy == AttackStrat.RANDOM:
-
-        if self.attack_strategy == AttackStrat.BRUTEF:
+        if self.attack_strategy == AttackStrat.RAND:
+            
+        if self.attack_strategy == AttackStrat.AGRO:
+            None
+        if self.attack_strategy == AttackStrat.DEFF:
             None

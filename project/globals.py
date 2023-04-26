@@ -15,8 +15,9 @@ class AccessLevel(enum.IntEnum):
 
 
 class AttackStrat(enum.IntEnum):
-    RANDOM = 0
-    BRUTEF = 1
+    RAND = 0
+    AGRO = 1
+    DEFF = 2
 
     def __str__(self):
         return self.name
@@ -26,8 +27,9 @@ class AttackStrat(enum.IntEnum):
 
 
 class DefenseStrat(enum.IntEnum):
-    RANDOM = 0
-    BRUTEF = 1
+    RAND = 0
+    AGRO = 1
+    DEFF = 2
 
     def __str__(self):
         return self.name

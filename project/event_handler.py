@@ -16,8 +16,8 @@ triggered.
 """
 env = simpy.Environment()
 
-# Print/Acces the event list
-print(env.event_queue)
+# Print/Access the event list
+print(env._queue)
 
 def termination_criteria1(env):
     if env.now >= globals.MAX_RUMTIME:
@@ -25,12 +25,12 @@ def termination_criteria1(env):
     return False
 
 def termination_criteria2(env):
-    if len(env.event_queue) == 0:
+    if len(env._queue) == 0:
         return True
     return False
 
 # Run the simulation with multiple termination cireteria.
-env.run(until=simpy.AllOf(env, [termination_criteria1, termination_criteria2]))
+env.run(until=globals.MAX_RUMTIME)
 
 print("Simulation ended at time:", env.now)
 
