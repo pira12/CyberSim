@@ -81,9 +81,8 @@ class Network:
     Class for the Network
     The first host is the internet, from which the attacker starts
     """
-    # Do we still need graph? I changed egdges to a dict.
-    def __init__(self, graph):
-        self.graph = graph
+
+    def __init__(self):
         self.hosts = [Host(1, 0, 1, 0, False, False, 0, [], "Internet", [], [], "windows")]
         self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
         self.edges = {}                 # The key is (source numb, dest numb) which can be found in host_map
@@ -117,7 +116,7 @@ class Network:
         dest = self.host_map[dest_addr]
         self.edges[(source, dest)] = Edge(source_addr, dest_addr, servs_allowed)
 
-        self.adjacency_matrix[dest][source] = 1
+        self.adjacency_matrix[source][dest] = 1
 
     def add_sensitive_hosts(self, addr):
         """
@@ -144,13 +143,13 @@ class Network:
         dests = []
 
         for i in range(0, len(self.adjacency_matrix)):
-            if self.adjacency_matrix[i][source] == 1:
+            if self.adjacency_matrix[source][i] == 1:
                 dests.append(self.hosts[i])
 
         return dests
 
 
-    def reached_by_hosts(self, dest_addr):
+    def reach_this_host(self, dest_addr):
         """
         Return all the hosts that can reach the given host
         """
@@ -158,7 +157,7 @@ class Network:
         sources = []
 
         for i in range(0, len(self.adjacency_matrix)):
-            if self.adjacency_matrix[dest][i] == 1:
+            if self.adjacency_matrix[i][dest] == 1:
                 sources.append(self.hosts[i])
 
         return sources
@@ -172,7 +171,7 @@ class Network:
         edges = []
 
         for i in range(0, len(self.adjacency_matrix)):
-            if self.adjacency_matrix[i][source] == 1:
+            if self.adjacency_matrix[source][i] == 1:
                 edges.append(self.edges[(source, i)])
 
         return edges
@@ -186,7 +185,7 @@ class Network:
         edges = []
 
         for i in range(0, len(self.adjacency_matrix)):
-            if self.adjacency_matrix[dest][i] == 1:
+            if self.adjacency_matrix[i][dest] == 1:
                 edges.append(self.edges[(i, dest)])
 
         return edges
@@ -194,55 +193,71 @@ class Network:
 
 
 
-def create_network(number_of_hosts):
+def create_basic_network(numb1, numb2):
     """
     Creates a random graph and create a network based on the graph.
     Return the graph, the network and the positions.
     """
 
-    G = nx.powerlaw_cluster_graph(number_of_hosts, 1, 0.4)
-    pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+    # G = nx.powerlaw_cluster_graph(numb1, 1, 0.4)
+    # pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
-    N = Network(G)
+    N = Network()
 
-    for numb in range(0, number_of_hosts):
+    for numb in range(0, numb1):
         N.add_host(Host(2, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
-    for numb in range(0, 3):
+    for numb in range(0, numb2):
         N.add_host(Host(3, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
-    return N, pos
+
+    N.add_sensitive_hosts((2,0))
+    N.add_sensitive_hosts((3,0))
 
 
-N, pos = create_network(20)
+    for numb in range(1, numb1):
+        N.add_edge((1, 0), (2, numb), ["s1"])
+        N.add_edge((2, 0), (2, numb), ["s1"])
+        N.add_edge((2, numb), (2, 0), ["s1"])
 
-print(N.hosts[0].services)
-print(N.hosts[0].get_address())
-print(N.hosts[14].get_address())
+    for numb in range(1, numb2):
+        N.add_edge((3, 0), (3, numb), ["s1"])
+        N.add_edge((3, numb), (3, 0), ["s1"])
+
+    N.add_edge((2, 0), (3, 0), ["s1"])
+
+
+    return N
+
+def draw_network(network):
+    G = nx.DiGraph(network.adjacency_matrix)
+    pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+
+    nx.draw(G, pos, node_color="tab:orange")
+
+    # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
+    # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
+    # nx.draw(N.graph, pos, nodelist=N.compromised_nodes, node_color="tab:red")
+
+    labels = {}
+    for n in G.nodes:
+        labels[n] = n
+
+    nx.draw_networkx_labels(G, pos, labels, font_size=11, font_color="whitesmoke")
+    plt.show()
+
+
+N = create_basic_network(5, 3)
 
 print(N.get_host_place((2,0)))
-N.add_sensitive_hosts((2,0))
-N.add_sensitive_hosts((3,0))
-
-N.add_edge((1, 0), (2,0), ["s1"])
 print(N.adjacency_matrix)
-print(N.edges[(0, 1)].servs_allowed)
+print(N.edges[(0, 2)].servs_allowed)
 
-print(N.reachable_hosts((1, 0)))
-print(N.reached_by_hosts((2, 0)))
-print(N.get_all_edges_from((1, 0)))
-print(N.get_all_edges_to((2, 0)))
+print([x.source_addr for x in N.get_all_edges_to((2, 0))])
+print([x.source_addr for x in N.get_all_edges_from((2, 0))])
+
+print([x.get_address() for x in N.reach_this_host((2, 0))])
+print([x.get_address() for x in N.reachable_hosts((2, 0))])
 
 
-
-# def draw_network():
-#     nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
-#     nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
-#     nx.draw(N.graph, pos, nodelist=N.compromised_nodes, node_color="tab:red")
-
-#     labels = {}
-#     for n in N.graph.nodes:
-#         labels[n] = n
-
-#     nx.draw_networkx_labels(N.graph, pos, labels, font_size=11, font_color="whitesmoke")
-#     plt.show()
+draw_network(N)
