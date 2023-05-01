@@ -93,6 +93,12 @@ class Edge:
         """
         return self.dest_addr
 
+    def get_hardened(self):
+        """
+        Return the array of hardened attacks.
+        """
+        return self.exploits_hardened
+
 
 class Network:
     """
@@ -251,7 +257,7 @@ class Network:
         """
         Return all the attack types each host is hardened against.
         """
-        return [h.get_hardened() for h in self.hosts]
+        return [e.get_hardened() for e in self.edges.values()]
 
 
 
