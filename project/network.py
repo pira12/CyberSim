@@ -16,7 +16,7 @@ class Host:
     """
     def __init__(self, subnet_addr, host_addr, score, access_for_score,
                  host_discovered, host_reached, attacker_access_lvl,
-                 priv_esc_hardend, hardware, processes, services, os):
+                 priv_esc_hardened, hardware, processes, services, os):
 
         self.subnet_addr = subnet_addr                  # int
         self.host_addr = host_addr                      # int
@@ -25,7 +25,7 @@ class Host:
         self.host_discovered = host_discovered          # bool
         self.host_reached = host_reached                # bool
         self.attacker_access_lvl = attacker_access_lvl  # int
-        self.priv_esc_hardend = priv_esc_hardend        # [string]
+        self.priv_esc_hardened = priv_esc_hardened      # [string]
         self.hardware = hardware                        # string
         self.processes = processes                      # [string]
         self.services = services                        # [string]
@@ -40,6 +40,23 @@ class Host:
         return (self.subnet_addr, self.host_addr)
 
 
+    def harden(self, attack_type):
+        """
+        Make it harder for attackers to use certain attacks on
+        this host. The probability of succesfull with that attack will
+        be lowered.
+        """
+        if attack_type not in self.priv_esc_hardened:
+            self.priv_esc_hardened.append(attack_type)
+
+
+    def get_hardened(self):
+        """
+        Return the array of hardened attacks.
+        """
+        return self.priv_esc_hardened
+
+
 # Host(sub, host, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows")
 
 
@@ -50,16 +67,17 @@ class Edge:
     def __init__(self, source_addr, dest_addr, servs_allowed):
         self.source_addr = source_addr
         self.dest_addr = dest_addr
-        self.exploits_hardend = []
+        self.exploits_hardened = []
         self.servs_allowed = servs_allowed
 
-    def harden(self, exploit):
+    def harden(self, attack_type):
         """
-        Make it harder for attackers to use certain exploits on
-        this edge. The probability of succesfull with that exploit will
+        Make it harder for attackers to use certain attacks on
+        this edge. The probability of succesfull with that attack will
         be lowered.
         """
-        self.exploits_hardend.append(exploit)
+        if attack_type not in self.exploits_hardened:
+            self.exploits_hardened.append(attack_type)
 
 
     def get_source_addr(self):
@@ -191,6 +209,53 @@ class Network:
         return edges
 
 
+    def get_random_host(self):
+        """
+        Return a random hosts from the network and 1 otherwise.
+        This does not include the first host, because the first
+        host symbolises the interner from which the attacker starts
+        and in not truly part of the IT structure of the company.
+        """
+
+        if len(self.hosts) == 1:
+            print("Cannot get a random host because there is noone")
+            return 1
+
+        random_numb = random.randint(1, len(self.hosts)-1)
+        return self.hosts[random_numb]
+
+    def get_random_edge(self):
+        """
+        Return a random edge from the network and 1 otherwise.
+        """
+        if np.sum(self.adjacency_matrix) == 0:
+            print("Cannot get a random edge because there is noone")
+            return 1
+
+        while(1):
+            random_numb1 = random.randint(0, len(self.hosts)-1)
+            random_numb2 = random.randint(0, len(self.hosts)-1)
+
+            if self.adjacency_matrix[random_numb1][random_numb2] == 1:
+                return self.edges[(random_numb1, random_numb2)]
+
+
+    def get_all_host_hardenings(self):
+        """
+        Return all the attack types each host is hardened against.
+        """
+        return [h.get_hardened() for h in self.hosts]
+
+
+    def get_all_edge_hardenings(self):
+        """
+        Return all the attack types each host is hardened against.
+        """
+        return [h.get_hardened() for h in self.hosts]
+
+
+
+
 
 
 def create_basic_network(numb1, numb2):
@@ -246,18 +311,21 @@ def draw_network(network):
     nx.draw_networkx_labels(G, pos, labels, font_size=11, font_color="whitesmoke")
     plt.show()
 
+if __name__ == '__main__':
+    N = create_basic_network(5, 3)
 
-N = create_basic_network(5, 3)
+    print(N.get_host_place((2,0)))
+    print(N.adjacency_matrix)
+    print(N.edges[(0, 2)].servs_allowed)
 
-print(N.get_host_place((2,0)))
-print(N.adjacency_matrix)
-print(N.edges[(0, 2)].servs_allowed)
+    print([x.source_addr for x in N.get_all_edges_to((2, 0))])
+    print([x.source_addr for x in N.get_all_edges_from((2, 0))])
 
-print([x.source_addr for x in N.get_all_edges_to((2, 0))])
-print([x.source_addr for x in N.get_all_edges_from((2, 0))])
+    print([x.get_address() for x in N.reach_this_host((2, 0))])
+    print([x.get_address() for x in N.reachable_hosts((2, 0))])
 
-print([x.get_address() for x in N.reach_this_host((2, 0))])
-print([x.get_address() for x in N.reachable_hosts((2, 0))])
+    print(N.get_random_edge())
+    print(N.get_random_host())
 
 
-draw_network(N)
+    draw_network(N)
