@@ -422,4 +422,4 @@ if __name__ == '__main__':
     print(N.get_edge(((1, 0), (2, 0))))
 
 
-    draw_network(N)
+    # draw_network(N)

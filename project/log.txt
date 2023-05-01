@@ -1,0 +1,9 @@
+2023-05-01 14:16:30,877 Start exploit at 0.
+2023-05-01 14:16:30,877 Start exploit succeeded at 0.
+2023-05-01 14:16:30,877 Start exploit at 10.
+2023-05-01 14:16:30,877 Start exploit succeeded at 10.
+2023-05-01 14:16:30,877 Start priv_esc at 20.
+2023-05-01 14:16:30,877 Start exploit at 30.
+2023-05-01 14:16:30,877 Start exploit at 40.
+2023-05-01 14:16:30,877 Start priv_esc at 50.
+2023-05-01 14:16:30,877 Simulation ended at time: 60

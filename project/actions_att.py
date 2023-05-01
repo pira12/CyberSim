@@ -19,6 +19,7 @@ Attacker action types implemented:
 
 """
 
+
 class Action:
     """
     The base action classs for Attack actions and Defender actions.
@@ -130,7 +131,7 @@ class PrivilegeEscalation(Action):
                  prob=1.0,
                  req_access=AccessLevel.USER,
                  os = None,
-                 process=None,
+                 process= None,
                  access=0):
 
         super().__init__(name=name,
@@ -144,25 +145,25 @@ class PrivilegeEscalation(Action):
         self.process = process
         self.access = access
 
-
-class HardwareScan(Action):
+class SubnetScan(Action):
     """
-    HardwareScan action and inherits base action from the Action Class.
+    SubnetScan action and inherits base action from the Action Class.
     """
 
     def __init__(self,
-                 target,
+                 duration,
                  cost,
                  prob=1.0,
                  req_access=AccessLevel.USER,
                  **kwargs):
 
-        super().__init__("hardware_scan",
-                         target=target,
+        super().__init__("subnet_scan",
+                         duration=duration,
                          cost=cost,
                          prob=prob,
                          req_access=req_access,
                          **kwargs)
+
 
 class OSScan(Action):
     """
@@ -170,54 +171,33 @@ class OSScan(Action):
     """
 
     def __init__(self,
-                 target,
+                 duration,
                  cost,
                  prob=1.0,
                  req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("os_scan",
-                         target=target,
+                         duration=duration,
                          cost=cost,
                          prob=prob,
                          req_access=req_access,
                          **kwargs)
 
-
-class ProcessScan(Action):
+class HardwareScan(Action):
     """
-    ProcessScan action and inherits base action from the Action Class.
+    HardwareScan action and inherits base action from the Action Class.
     """
 
     def __init__(self,
-                 target,
+                 duration,
                  cost,
                  prob=1.0,
                  req_access=AccessLevel.USER,
                  **kwargs):
 
-        super().__init__("process_scan",
-                         target=target,
-                         cost=cost,
-                         prob=prob,
-                         req_access=req_access,
-                         **kwargs)
-
-
-class SubnetScan(Action):
-    """
-    SubnetScan action and inherits base action from the Action Class.
-    """
-
-    def __init__(self,
-                 target,
-                 cost,
-                 prob=1.0,
-                 req_access=AccessLevel.USER,
-                 **kwargs):
-
-        super().__init__("subnet_scan",
-                         target=target,
+        super().__init__("hardware_scan",
+                         duration=duration,
                          cost=cost,
                          prob=prob,
                          req_access=req_access,
@@ -229,14 +209,33 @@ class ServiceScan(Action):
     """
 
     def __init__(self,
-                 target,
+                 duration,
                  cost,
                  prob=1.0,
                  req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("service_scan",
-                         target=target,
+                         duration=duration,
+                         cost=cost,
+                         prob=prob,
+                         req_access=req_access,
+                         **kwargs)
+
+class ProcessScan(Action):
+    """
+    ProcessScan action and inherits base action from the Action Class.
+    """
+
+    def __init__(self,
+                 duration,
+                 cost,
+                 prob=1.0,
+                 req_access=AccessLevel.USER,
+                 **kwargs):
+
+        super().__init__("process_scan",
+                         duration=duration,
                          cost=cost,
                          prob=prob,
                          req_access=req_access,

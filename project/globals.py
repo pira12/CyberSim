@@ -1,6 +1,14 @@
 import enum
+import logging
 
 MAX_RUMTIME = 60
+
+"""
+Define logging settings.
+"""
+logging.basicConfig(filename='log.txt', filemode='w',
+                    format='%(asctime)s %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class AccessLevel(enum.IntEnum):
     NONE = 0

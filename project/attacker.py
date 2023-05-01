@@ -1,5 +1,7 @@
 import random
-from globals import AttackStrat
+import globals as glob
+import actions_att as act
+
 
 class Attacker:
     """
@@ -24,37 +26,61 @@ class Attacker:
     def __init__(self, env, network, strategy):
         self.env = env
         self.network = network
-        self.process = env.process(self.run())
         self.strategy = strategy
+        self.actions = {}
         self.compromised_hosts = []
+        self.scanned_hosts = []
         self.score = 0
+        self.target = (1, 0)
 
 
     def run(self):
-        while True:
-            # Choose attack to launch based on attack strategy
-            attack_type = self.choose_attack()
+        # Load attacks to launch based on attack strategy
+        self.load_actions()
 
-            # Launch the chosen attack
-            attack_start = self.env.now()
-            # TODO! : Run the attack host
+        while True:
+            # TODO! : Check if host is already compromised.
+
+                # TODO! : If so then scan for other hosts.
+
+                # TODO! : Else run a privilege escalation.
+
+            # TODO! : Check the edges for hardenning if none exploit etc...
+
+
+
+
+            # TODO! : Run the attack on host
+            glob.logger.info(f"Start {attack_type} at {self.env.now}.")
             # TODO! : Log the attack
 
             # Wait for the attack to finish
             yield self.env.timeout(10) # For now set to 10, but varies
 
             # If the attack succeeded increase score and Log it.
-            if random.random() < self.attack_strategy[attack_type]:
-                self.score += 1
+            if random.random() > 0.5:
+                self.score += 10
+                glob.logger.info(f"Start {attack_type} succeeded at {attack_start}.")
 
 
-    def choose_attack(self):
+
+    def load_actions(self):
         """
-        Choose attack based on attack strategy and compromised hosts.
+        Load the actions for this attacker based on given strategy.
         """
-        if self.attack_strategy == AttackStrat.RAND:
-            
-        if self.attack_strategy == AttackStrat.AGRO:
-            None
-        if self.attack_strategy == AttackStrat.DEFF:
-            None
+        if self.strategy == glob.AttackStrat.RAND:
+            self.actions = {
+                "snscan" : act.SubnetScan(10, 1), #Subnetscan with duration 10 and cost 1.
+                "osscan" : act.OSScan(5, 1), #Osscan with duration 5 and cost 1.
+                "hwscan" : act.HardwareScan(5, 1), #Hardwarescan with duration 5 and cost 1.
+                "pscan" : act.ProcessScan(5, 1), #Processscan with duration 5 and cost 1.
+                "sscan" : act.ServiceScan(5, 1), #Servicescan with duration 5 and cost 1.
+                "exploit" : act.Exploit("exploit", (1,0), 20, 10), #Exploit with duration 10 and cost 20.
+                "priv_esc": act.PrivilegeEscalation("priv_esc", (1,0), 20, 10) #Privilegeescalation with duration 10 and cost 20.
+            }
+
+
+    def subnetscan(self):
+        yield self.env.timeout(self.actions["snscan"].duration)
+        self.seen_hosts += self.network.get_all_edges_from(self.target)
+
