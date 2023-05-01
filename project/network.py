@@ -328,4 +328,4 @@ if __name__ == '__main__':
     print(N.get_random_host())
 
 
-    draw_network(N)
+    # draw_network(N)

@@ -1,23 +1,7 @@
 import simpy
-import logging
-import globals
-
-"""
-Define logging settings.
-"""
-logging.basicConfig(filename='log.txt', filemode='w',
-                    format='%(asctime)s %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-"""
-Create the Simpy enviroment and run it till one of termination criteria are
-triggered.
-"""
-env = simpy.Environment()
-
-# Print/Access the event list
-print(env._queue)
+import globals as glob
+import network as nw
+import attacker as att
 
 def termination_criteria1(env):
     if env.now >= globals.MAX_RUMTIME:
@@ -29,14 +13,34 @@ def termination_criteria2(env):
         return True
     return False
 
-# Run the simulation with multiple termination cireteria.
-env.run(until=globals.MAX_RUMTIME)
+"""
+Create network and attackers and defenders.
+"""
+N = nw.create_basic_network(5, 3)
+# nw.draw_network(N)
 
-print("Simulation ended at time:", env.now)
+
+"""
+Create the Simpy enviroment and run it till one of termination criteria are
+triggered.
+"""
+env = simpy.Environment()
+
+attacker1  = att.Attacker(env, N, 0)
+
+env.process(attacker1.run())
+
+# Print/Access the event list
+print(env._queue)
+
+# Run the simulation with multiple termination cireteria.
+env.run(until=glob.MAX_RUMTIME)
+
+glob.logger.info(f"Simulation ended at time: {env.now}")
 
 
 """
 Log all events which have happened in the simulation.
 """
-for handler in logger.handlers:
+for handler in glob.logger.handlers:
     handler.flush()
