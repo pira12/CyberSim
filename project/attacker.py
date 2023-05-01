@@ -1,6 +1,6 @@
 import random
 import globals as glob
-import actions as act
+import actions_att as act
 
 
 class Attacker:
