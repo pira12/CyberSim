@@ -40,14 +40,40 @@ class Host:
         return (self.subnet_addr, self.host_addr)
 
 
-    def harden(self, attack_type):
+    def get_score(self):
         """
-        Make it harder for attackers to use certain attacks on
-        this host. The probability of succesfull with that attack will
-        be lowered.
+        Return the score of the host.
         """
-        if attack_type not in self.priv_esc_hardened:
-            self.priv_esc_hardened.append(attack_type)
+        return self.score
+
+
+    def get_access_for_score(self):
+        """
+        Return the access needed to get the score of this host.
+        """
+        return self.access_for_score
+
+
+    def get_host_discovered(self):
+        """
+        Return whethert he host is discovered.
+        """
+        return self.host_discovered
+
+
+    def get_host_reached(self):
+        """
+        Return whethert he host is reached.
+        """
+        return self.host_reached
+
+
+    def get_attacker_access_lvl(self):
+        """
+        Return the attacker access lvl that the defender thinks
+        the attacker has.
+        """
+        return self.attacker_access_lvl
 
 
     def get_hardened(self):
@@ -57,7 +83,42 @@ class Host:
         return self.priv_esc_hardened
 
 
-# Host(sub, host, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows")
+    def get_hardware(self):
+        """
+        Return the hardware of the host.
+        """
+        return self.hardware
+
+
+    def get_processes(self):
+        """
+        Return the processes of the host.
+        """
+        return self.processes
+
+
+    def get_services(self):
+        """
+        Return the services of the host.
+        """
+        return self.services
+
+
+    def get_os(self):
+        """
+        Return the os of the host.
+        """
+        return self.os
+
+
+    def harden(self, attack_type):
+        """
+        Make it harder for attackers to use certain attacks on
+        this host. The probability of succesfull with that attack will
+        be lowered.
+        """
+        if attack_type not in self.priv_esc_hardened:
+            self.priv_esc_hardened.append(attack_type)
 
 
 class Edge:
@@ -98,6 +159,13 @@ class Edge:
         Return the array of hardened attacks.
         """
         return self.exploits_hardened
+
+
+    def get_servs_allowed(self):
+        """
+        Return the services that are allowed on this edge.
+        """
+        return self.servs_allowed
 
 
 class Network:
@@ -157,6 +225,23 @@ class Network:
         Return the place of the host in hosts
         """
         return self.host_map[address]
+
+
+    def get_host(self, address):
+        """
+        Return the Host with the given address
+        """
+        return self.hosts[self.get_host_place(address)]
+
+
+    def get_edge(self, addresses):
+        """
+        Return the edge given addresses: ((source address), (destination address))
+        """
+        (source_address, destination_address) = addresses
+        source_numb = self.get_host_place(source_address)
+        dest_numb = self.get_host_place(destination_address)
+        return self.edges[(source_numb, dest_numb)]
 
 
     def reachable_hosts(self, source_addr):
@@ -332,6 +417,9 @@ if __name__ == '__main__':
 
     print(N.get_random_edge())
     print(N.get_random_host())
+
+    print(N.get_host((1,0)))
+    print(N.get_edge(((1, 0), (2, 0))))
 
 
     draw_network(N)
