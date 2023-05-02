@@ -26,7 +26,7 @@ triggered.
 """
 env = simpy.Environment()
 
-attacker1  = att.Attacker(env, N, 0)
+attacker1  = att.Attacker(env, N, glob.AttackStrat.RAND)
 
 env.process(attacker1.run())
 
@@ -35,7 +35,7 @@ print(env._queue)
 
 # Run the simulation with multiple termination cireteria.
 env.run(until=glob.MAX_RUMTIME)
-
+print("WOOP")
 glob.logger.info(f"Simulation ended at time: {env.now}")
 
 

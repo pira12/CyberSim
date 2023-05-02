@@ -45,14 +45,12 @@ class Action:
 
     def __init__(self,
                  name,
-                 target,
                  cost,
                  duration,
                  prob=1.0,
                  req_access=AccessLevel.USER):
 
         self.name = name
-        self.target = target
         self.cost = cost
         self.duration = duration
         self.prob = prob
@@ -82,7 +80,6 @@ class Exploit(Action):
 
     def __init__(self,
                  name,
-                 target,
                  cost,
                  duration,
                  prob=1.0,
@@ -93,7 +90,6 @@ class Exploit(Action):
                  access=0):
 
         super().__init__(name=name,
-                         target=target,
                          cost=cost,
                          duration = duration,
                          prob=prob,
@@ -125,7 +121,6 @@ class PrivilegeEscalation(Action):
 
     def __init__(self,
                  name,
-                 target,
                  cost,
                  duration,
                  prob=1.0,
@@ -135,7 +130,6 @@ class PrivilegeEscalation(Action):
                  access=0):
 
         super().__init__(name=name,
-                         target=target,
                          cost=cost,
                          duration = duration,
                          prob=prob,

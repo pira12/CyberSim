@@ -31,43 +31,40 @@ class Attacker:
         self.compromised_hosts = []
         self.scanned_hosts = []
         self.score = 0
+        self.start = (1, 0)
         self.target = (1, 0)
 
 
     def run(self):
+        """
+        The main process, which the attacker repeats untill the simulation is terminated.
+        """
         # Load attacks to launch based on attack strategy
         self.load_actions()
 
         while True:
-            # TODO! : Check if host is already compromised.
+            # Check if host is already compromised.
+            host = self.network.get_host(self.start)
+            if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
+                # If so then scan for other hosts and to compromised nodes.
+                self.compromised_hosts.append(self.start)
+                glob.logger.info(f"Start SubnetScan at {self.env.now}.")
+                self.env.run(self.env.process(self.subnetscan()))
 
-                # TODO! : If so then scan for other hosts.
-
-                # TODO! : Else run a privilege escalation.
-
-            # TODO! : Check the edges for hardenning if none exploit etc...
-
-
-
-
-            # TODO! : Run the attack on host
-            glob.logger.info(f"Start {attack_type} at {self.env.now}.")
-            # TODO! : Log the attack
-
-            # Wait for the attack to finish
-            yield self.env.timeout(10) # For now set to 10, but varies
-
-            # If the attack succeeded increase score and Log it.
-            if random.random() > 0.5:
-                self.score += 10
-                glob.logger.info(f"Start {attack_type} succeeded at {attack_start}.")
-
+                # Check the edges for hardenning if none exploit etc...
+                glob.logger.info(f"Start Exploit at {self.env.now}.")
+                self.env.run(self.env.process(self.exploit()))
+            else:
+                # Else run a privilege escalation.
+                glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+                self.env.run(self.env.process(self.privilege_escalation()))
 
 
     def load_actions(self):
         """
         Load the actions for this attacker based on given strategy.
         """
+        glob.logger.info(f"Load attacker actions for strategy {self.strategy} at {self.env.now}.")
         if self.strategy == glob.AttackStrat.RAND:
             self.actions = {
                 "snscan" : act.SubnetScan(10, 1), #Subnetscan with duration 10 and cost 1.
@@ -81,6 +78,38 @@ class Attacker:
 
 
     def subnetscan(self):
+        """
+        The subnet scan function which checks for reachable hosts.
+        """
         yield self.env.timeout(self.actions["snscan"].duration)
-        self.seen_hosts += self.network.get_all_edges_from(self.target)
+        self.scanned_hosts = self.network.reachable_hosts(self.start)
+        glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
+
+
+    def privilege_escalation(self):
+        """
+        The privilege escalation function which tries to escalate privelege.
+        """
+        host = self.network.get_host(self.start)
+        if self.actions["priv_esc"].name in host.get_hardened():
+            yield self.env.timeout(self.actions["priv_esc"].duration)
+            glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
+        else:
+            host.attacker_access_lvl += 1
+            yield self.env.timeout(self.actions["priv_esc"].duration)
+            glob.logger.info(f"Privilege escalation succeeded on host {host.get_address()} at {self.env.now}.")
+
+
+    def exploit(self):
+        """
+        The exploit function which tries to exploit a link to hop to another node.
+        """
+        self.target = random.choice(self.scanned_hosts).get_address()
+        edge = self.network.get_edge((self.start, self.target))
+        yield self.env.timeout(self.actions["exploit"].duration)
+        if self.actions["exploit"].name in edge.get_hardened():
+            glob.logger.info(f"Exploit failed on edge {(self.start, self.target)} at {self.env.now}.")
+        else:
+            glob.logger.info(f"Exploit succeeded on edge {(self.start, self.target)} at {self.env.now}.")
+            self.start = self.target
 
