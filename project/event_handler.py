@@ -35,7 +35,7 @@ print(env._queue)
 
 # Run the simulation with multiple termination cireteria.
 env.run(until=glob.MAX_RUMTIME)
-print("WOOP")
+
 glob.logger.info(f"Simulation ended at time: {env.now}")
 
 

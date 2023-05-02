@@ -49,15 +49,15 @@ class Attacker:
                 # If so then scan for other hosts and to compromised nodes.
                 self.compromised_hosts.append(self.start)
                 glob.logger.info(f"Start SubnetScan at {self.env.now}.")
-                self.env.run(self.env.process(self.subnetscan()))
+                yield self.env.process(self.subnetscan())
 
                 # Check the edges for hardenning if none exploit etc...
                 glob.logger.info(f"Start Exploit at {self.env.now}.")
-                self.env.run(self.env.process(self.exploit()))
+                yield self.env.process(self.exploit())
             else:
                 # Else run a privilege escalation.
                 glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-                self.env.run(self.env.process(self.privilege_escalation()))
+                yield self.env.process(self.privilege_escalation())
 
 
     def load_actions(self):
