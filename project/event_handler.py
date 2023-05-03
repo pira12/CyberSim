@@ -2,6 +2,7 @@ import simpy
 import globals as glob
 import network as nw
 import attacker as att
+import defender as defend
 
 def termination_criteria1(env):
     if env.now >= globals.MAX_RUMTIME:
@@ -27,8 +28,10 @@ triggered.
 env = simpy.Environment()
 
 attacker1  = att.Attacker(env, N, glob.AttackStrat.RAND)
+defender1  = defend.Defender(env, N, "random")
 
 env.process(attacker1.run())
+env.process(defender1.run())
 
 # Print/Access the event list
 print(env._queue)
@@ -44,3 +47,6 @@ Log all events which have happened in the simulation.
 """
 for handler in glob.logger.handlers:
     handler.flush()
+
+
+nw.draw_network(N)

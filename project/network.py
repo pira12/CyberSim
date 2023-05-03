@@ -141,6 +141,13 @@ class Edge:
             self.exploits_hardened.append(attack_type)
 
 
+    def get_both_addr(self):
+        """
+        Get both the source and destination address of the edge
+        """
+        return (self.source_addr, self.dest_addr)
+
+
     def get_source_addr(self):
         """
         Get the source address of the edge
@@ -345,6 +352,18 @@ class Network:
         return [e.get_hardened() for e in self.edges.values()]
 
 
+    def get_all_hardened_hosts(self):
+        """
+        Return all hosts that are hardened against some attack.
+        """
+        hosts = []
+        hardenings = self.get_all_host_hardenings()
+
+        for i in range(0, len(hardenings)):
+            if hardenings[i] != []:
+                hosts.append(i)
+
+        return hosts
 
 
 
@@ -390,6 +409,8 @@ def draw_network(network):
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
     nx.draw(G, pos, node_color="tab:orange")
+    hardened_hosts = network.get_all_hardened_hosts()
+    nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
 
     # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
     # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")

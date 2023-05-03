@@ -38,13 +38,11 @@ class Action_def:
                  name,
                  cost,
                  duration,
-                 env,
                  prob=1.0):
 
         self.name = name
         self.cost = cost
         self.duration = duration
-        self.env = env
         self.prob = prob
 
 
@@ -66,28 +64,26 @@ class Harden_host(Action_def):
                  cost,
                  duration,
                  attack_type,
-                 env,
                  prob=1.0):
 
         super().__init__(name=name,
                          cost=cost,
                          duration=duration,
-                         env=env,
                          prob=prob)
 
         self.attack_type = attack_type
 
+    def get_duration(self):
+        """
+        Return the duration of the hardening of the host
+        """
+        return self.duration
 
-    def do_host_hardening(self, target_host):
+    def get_attack_type(self):
         """
-        Harden a host against a certain type of attack.
-        target_host : Host
-            The target of the action is host that the action is being used on.
+        Return the attack_type against which the host is being hardened.
         """
-        print("RRR")
-        # yield self.env.timeout(self.cost)
-        print("TTT")
-        target_host.harden(self.attack_type)
+        return self.attack_type
 
 
 
@@ -111,22 +107,24 @@ class Harden_edge(Action_def):
                  cost,
                  duration,
                  attack_type,
-                 env,
                  prob=1.0):
 
         super().__init__(name=name,
                          cost=cost,
                          duration=duration,
-                         env=env,
                          prob=prob)
 
         self.attack_type = attack_type
 
 
-    def do_edge_hardening(self, target_edge):
+    def get_duration(self):
         """
-        Harden a edge against a certain type of attack.
-        target_edge : Edge
-            The target of the action is edge that the action is being used on.
+        Return the duration of the hardening of the host
         """
-        target_edge.harden(self.attack_type)
+        return self.duration
+
+    def get_attack_type(self):
+        """
+        Return the attack_type against which the host is being hardened.
+        """
+        return self.attack_type
