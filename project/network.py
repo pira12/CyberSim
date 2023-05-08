@@ -12,18 +12,41 @@ import numpy as np
 
 class Host:
     """
-    Class for the nodes
+    Class for the hosts.
+    ----------
+    subnet_addr : int
+        The subnet address of the host.
+    host_addr : int
+        The host address of the host.
+    score : int
+        An indication how important the data of this host is.
+    access_for_score : int
+        The level of access the attacker needs to get to the data
+        and thus get the amount of points that the data is worth.
+    attacker_access_lvl : int
+        The highest access level any of the attackers have
+        in this host. This is the level the defender will see
+        when it scans the host.
+    priv_esc_hardened : [string]
+        An array with all the privilege escalation attacks that this
+        host is hardened against.
+    hardware : string
+        The hardware of the host. The host has only one hardware.
+    processes : [string]
+        The processes run on the host. This could be multiple.
+    services : [string]
+        The services run on the host. This could be multiple.
+    os : string
+        The operating system of the host.
     """
     def __init__(self, subnet_addr, host_addr, score, access_for_score,
-                 host_discovered, host_reached, attacker_access_lvl,
-                 priv_esc_hardened, hardware, processes, services, os):
+                 attacker_access_lvl, priv_esc_hardened, hardware,
+                 processes, services, os):
 
         self.subnet_addr = subnet_addr                  # int
         self.host_addr = host_addr                      # int
         self.score = score                              # int
         self.access_for_score = access_for_score        # int
-        self.host_discovered = host_discovered          # bool
-        self.host_reached = host_reached                # bool
         self.attacker_access_lvl = attacker_access_lvl  # int
         self.priv_esc_hardened = priv_esc_hardened      # [string]
         self.hardware = hardware                        # string
@@ -70,8 +93,7 @@ class Host:
 
     def get_attacker_access_lvl(self):
         """
-        Return the attacker access lvl that the defender thinks
-        the attacker has.
+        Return the  access level of the attacker.
         """
         return self.attacker_access_lvl
 
@@ -116,6 +138,8 @@ class Host:
         Make it harder for attackers to use certain attacks on
         this host. The probability of succesfull with that attack will
         be lowered.
+        ----------
+        attack_type : string
         """
         if attack_type not in self.priv_esc_hardened:
             self.priv_esc_hardened.append(attack_type)
@@ -136,6 +160,8 @@ class Edge:
         Make it harder for attackers to use certain attacks on
         this edge. The probability of succesfull with that attack will
         be lowered.
+        ----------
+        attack_type : string
         """
         if attack_type not in self.exploits_hardened:
             self.exploits_hardened.append(attack_type)
@@ -143,21 +169,21 @@ class Edge:
 
     def get_both_addr(self):
         """
-        Get both the source and destination address of the edge
+        Get both the source and destination address of the edge.
         """
         return (self.source_addr, self.dest_addr)
 
 
     def get_source_addr(self):
         """
-        Get the source address of the edge
+        Get the source address of the edge.
         """
         return self.source_addr
 
 
     def get_dest_addr(self):
         """
-        Get the destination address of the edge
+        Get the destination address of the edge.
         """
         return self.dest_addr
 
@@ -179,20 +205,52 @@ class Network:
     """
     Class for the Network
     The first host is the internet, from which the attacker starts
+    ----------
+    hosts : [Hosts]
+        An array with all the hosts in the network.
+    host_map : dictionary, key (int, int)
+        A dictionary with as key (subnet addr, host addr).
+        The returned data is the place in hosts of the host
+        with the given address.
+    edges : dictionary, key (int, int)
+        A dictionary with as key (source numb, dest numb),
+        these numbers can be found in host_map. The returned data
+        is the edge between the hosts that are in the given positions
+        in hosts.
+    sensitive_hosts : [(int, int)]
+        An array with all (subnet addr, host addr) of the hosts with
+        sensitive information.
+    failed_att_hosts : [(int, int)]
+        An array with all (subnet addr, host addr) of the hosts that
+        have been attack, but the attack failed.
+    failed_att_edges : [((int, int), (int, int))]
+        An array with all (source addr, destination addr) of the edges
+        that have been attack, but the attack failed.
+    adjacency_matrix : [[int]]
+        The adjacency matrix of the network. There is an edge from
+        host A to host B if adjacency_matrix[A number][B number] is 1.
+        The numbers are the places in hosts. These can be retrieved with
+        host_map.
+
     """
 
     def __init__(self):
-        self.hosts = [Host(1, 0, 1, 0, False, False, 0, [], "Internet", [], [], "windows")]
+        self.hosts = [Host(1, 0, 1, 0, 0, [], "Internet", [], [], "windows")]
         self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
-        self.edges = {}                 # The key is (source numb, dest numb) which can be found in host_map
+        self.edges = {}                 # The key is (source numb, dest numb)
         self.sensitive_hosts = []
+
+        self.failed_att_hosts = []
+        self.failed_att_edges = []
 
         self.adjacency_matrix = np.array([[0]])
 
 
     def add_host(self, host):
         """
-        Add a node to the network
+        Add a node to the network.
+        ----------
+        host : Host
         """
         self.hosts.append(host)
         addr = host.get_address()
@@ -210,6 +268,10 @@ class Network:
         Add an edge tot the network.
         The column number is the source and the row number the destination
         in the adjacency matrix.
+        ----------
+        source_addr : (int, int)
+        dest_addr : (int, int)
+        servs_allowed : [string]
         """
         source = self.host_map[source_addr]
         dest = self.host_map[dest_addr]
@@ -217,26 +279,40 @@ class Network:
 
         self.adjacency_matrix[source][dest] = 1
 
-    def add_sensitive_hosts(self, addr):
+
+    def add_sensitive_hosts(self, address):
         """
-        Add a sensitive host to the network
+        Add a sensitive host to the network.
+        ---------
+        address : (int, int)
         """
-        if addr in self.host_map:
-            self.sensitive_hosts.append(addr)
+        if address in self.host_map:
+            self.sensitive_hosts.append(address)
         else:
-            print("The address", addr, "is not in the network and can thus not be a sensitive host")
+            print("The address", address, "is not in the network and can thus not be a sensitive host")
+
+
+    def get_sensitive_hosts(self):
+        """
+        Get all sensitive hosts of the network.
+        """
+        return self.sensitive_hosts
 
 
     def get_host_place(self, address):
         """
-        Return the place of the host in hosts
+        Return the place of the host in hosts.
+        ----------
+        address : (int, int)
         """
         return self.host_map[address]
 
 
     def get_host(self, address):
         """
-        Return the Host with the given address
+        Return the Host with the given address.
+        ----------
+        address : (int, int)
         """
         return self.hosts[self.get_host_place(address)]
 
@@ -244,16 +320,21 @@ class Network:
     def get_edge(self, addresses):
         """
         Return the edge given addresses: ((source address), (destination address))
+        ----------
+        addresses : ((int, int), (int, int))
         """
         (source_address, destination_address) = addresses
         source_numb = self.get_host_place(source_address)
         dest_numb = self.get_host_place(destination_address)
+
         return self.edges[(source_numb, dest_numb)]
 
 
     def reachable_hosts(self, source_addr):
         """
-        Return all the hosts that can be reached by the given host
+        Return all the hosts that can be reached by the given host.
+        ----------
+        source_addr : (int, int)
         """
         source = self.get_host_place(source_addr)
         dests = []
@@ -267,7 +348,9 @@ class Network:
 
     def reach_this_host(self, dest_addr):
         """
-        Return all the hosts that can reach the given host
+        Return all the hosts that can reach the given host.
+        ----------
+        dest_addr : (int, int)
         """
         dest = self.get_host_place(dest_addr)
         sources = []
@@ -281,7 +364,9 @@ class Network:
 
     def get_all_edges_from(self, source_addr):
         """
-        Return all edges that start at the given host
+        Return all edges that start at the given host.
+        ---------
+        source_addr : (int, int)
         """
         source = self.get_host_place(source_addr)
         edges = []
@@ -295,7 +380,9 @@ class Network:
 
     def get_all_edges_to(self, dest_addr):
         """
-        Return all edges that go towards the given host
+        Return all edges that go towards the given host.
+        ----------
+        dest_addr : (int, int)
         """
         dest = self.get_host_place(dest_addr)
         edges = []
@@ -366,12 +453,63 @@ class Network:
         return hosts
 
 
+    def get_failed_att_hosts(self):
+        """
+        Get all the hosts that have been attacked, but the attack failed.
+        """
+        return self.failed_att_hosts
+
+
+    def add_failed_att_hosts(self, host):
+        """
+        Add an failed attack on a host to the array of failed attacks
+        on hosts.
+        ----------
+        host : Host
+        """
+        self.failed_att_hosts.append(host)
+
+
+    def reset_failed_att_hosts(self):
+        """
+        Empty the array of failed attacks on hosts.
+        """
+        self.failed_att_hosts = []
+
+
+    def get_failed_att_edges(self):
+        """
+        Get all the edges that have been attacked, but the attack failed.
+        """
+        return self.failed_att_edges
+
+
+    def add_failed_att_edges(self, edge):
+        """
+        Add an failed attack on an edge to the array of failed attacks
+        on edges.
+        ----------
+        edge : Edge
+        """
+        self.failed_att_edges.append(edge)
+
+
+    def reset_failed_att_edges(self):
+        """
+        Get all the edges that have been attacked, but the attack failed.
+        """
+        self.failed_att_edges = []
 
 
 def create_basic_network(numb1, numb2):
     """
     Creates a random graph and create a network based on the graph.
     Return the graph, the network and the positions.
+    ----------
+    numb1: int
+        The number of hosts in the first subnet.
+    numb2: int
+        The number of hosts in the second subnet.
     """
 
     # G = nx.powerlaw_cluster_graph(numb1, 1, 0.4)
@@ -380,10 +518,10 @@ def create_basic_network(numb1, numb2):
     N = Network()
 
     for numb in range(0, numb1):
-        N.add_host(Host(2, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        N.add_host(Host(2, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
     for numb in range(0, numb2):
-        N.add_host(Host(3, numb, 10, 2, False, False, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        N.add_host(Host(3, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
 
     N.add_sensitive_hosts((2,0))
@@ -440,7 +578,7 @@ if __name__ == '__main__':
     print(N.get_random_host())
 
     print(N.get_host((1,0)))
-    print(N.get_edge(((1, 0), (2, 0))))
+    print(N.get_edge(((1, 0), (2, 1))))
 
 
     # draw_network(N)

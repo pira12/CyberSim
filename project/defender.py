@@ -5,10 +5,10 @@ import globals as glob
 
 class Defender:
     def __init__(self, env, network, strategy):
-        self.strategy = strategy
-        self.network = network
-        self.score = 0
         self.env = env
+        self.network = network
+        self.strategy = strategy
+        self.score = 0
 
         self.host_attacks = ["att_h1"]
         self.edge_attacks = ["att_e1"]
