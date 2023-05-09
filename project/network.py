@@ -77,25 +77,19 @@ class Host:
         return self.access_for_score
 
 
-    def get_host_discovered(self):
-        """
-        Return whethert he host is discovered.
-        """
-        return self.host_discovered
-
-
-    def get_host_reached(self):
-        """
-        Return whethert he host is reached.
-        """
-        return self.host_reached
-
-
     def get_attacker_access_lvl(self):
         """
         Return the  access level of the attacker.
         """
         return self.attacker_access_lvl
+
+
+    def set_attacker_access_lvl(self, lvl):
+        """
+        Set the access level to the given level if it is higher.
+        """
+        if self.get_attacker_access_lvl() < lvl:
+            self.attacker_access_lvl = lvl
 
 
     def get_hardened(self):

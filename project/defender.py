@@ -17,9 +17,16 @@ class Defender:
         self.harden_e1 = Harden_edge("harden att_e1", 1, 10, "att_e1")
 
 
+    def subtract_score(self, numb):
+        """
+        Subtract a number from the score.
+        """
+        self.score -= numb
+
+
     def run(self):
         """
-        The main process, which the attacker repeats untill the simulation is terminated.
+        The main process, which the attacker repeats until the simulation is terminated.
         """
         # Load attacks to launch based on attack strategy
         # self.load_actions()
@@ -50,6 +57,8 @@ class Defender:
         glob.logger.info(f"Start Harden_host at {self.env.now} on host {target_host.get_address()}.")
         yield self.env.timeout(harden_action.get_duration())
         target_host.harden(harden_action.get_attack_type())
+        self.subtract_score(harden_action.get_cost())
+        print(self.score)
         glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
 
 
@@ -61,4 +70,5 @@ class Defender:
         glob.logger.info(f"Start Harden_edge at {self.env.now} on edge {target_edge.get_both_addr()}.")
         yield self.env.timeout(harden_action.get_duration())
         target_edge.harden(harden_action.get_attack_type())
+        self.subtract_score(harden_action.get_cost())
         glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")

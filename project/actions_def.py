@@ -75,7 +75,7 @@ class Harden_host(Action_def):
 
     def get_duration(self):
         """
-        Return the duration of the hardening of the host
+        Return the duration of the hardening of the host.
         """
         return self.duration
 
@@ -84,6 +84,13 @@ class Harden_host(Action_def):
         Return the attack_type against which the host is being hardened.
         """
         return self.attack_type
+
+
+    def get_cost(self):
+        """
+        Return the cost of the action.
+        """
+        return self.cost
 
 
 
@@ -128,3 +135,12 @@ class Harden_edge(Action_def):
         Return the attack_type against which the host is being hardened.
         """
         return self.attack_type
+
+
+    def get_cost(self):
+        """
+        Return the cost of the action.
+        """
+        return self.cost
+
+
