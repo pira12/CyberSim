@@ -81,7 +81,7 @@ class Attacker:
         """
         The subnet scan function which checks for reachable hosts.
         """
-        yield self.env.timeout(self.actions["snscan"].duration)
+        yield self.env.timeout(self.actions["snscan"].get_duration())
         self.scanned_hosts = self.network.reachable_hosts(self.start)
         glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
 
@@ -91,12 +91,15 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         host = self.network.get_host(self.start)
+
         if self.actions["priv_esc"].name in host.get_hardened():
-            yield self.env.timeout(self.actions["priv_esc"].duration)
+            yield self.env.timeout(self.actions["priv_esc"].get_duration())
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
+            self.network.add_failed_att_hosts(host)
+
         else:
-            host.attacker_access_lvl += 1
-            yield self.env.timeout(self.actions["priv_esc"].duration)
+            yield self.env.timeout(self.actions["priv_esc"].get_duration())
+            host.set_attacker_access_lvl(host.get_attacker_access_lvl() + 1)
             glob.logger.info(f"Privilege escalation succeeded on host {host.get_address()} at {self.env.now}.")
 
 
@@ -106,9 +109,11 @@ class Attacker:
         """
         self.target = random.choice(self.scanned_hosts).get_address()
         edge = self.network.get_edge((self.start, self.target))
-        yield self.env.timeout(self.actions["exploit"].duration)
+        yield self.env.timeout(self.actions["exploit"].get_duration())
+
         if self.actions["exploit"].name in edge.get_hardened():
             glob.logger.info(f"Exploit failed on edge {(self.start, self.target)} at {self.env.now}.")
+            self.network.add_failed_att_edges(edge)
         else:
             glob.logger.info(f"Exploit succeeded on edge {(self.start, self.target)} at {self.env.now}.")
             self.start = self.target

@@ -22,7 +22,7 @@ Attacker action types implemented:
 
 class Action:
     """
-    The base action classs for Attack actions and Defender actions.
+    The base action classs for Attack actions.
     ...
     Attributes
     ----------
@@ -55,6 +55,18 @@ class Action:
         self.duration = duration
         self.prob = prob
         self.req_access = req_access
+
+    def get_duration(self):
+        """
+        Return the duration of the hardening of the host.
+        """
+        return self.duration
+
+    def get_cost(self):
+        """
+        Return the cost of the action.
+        """
+        return self.cost
 
 
 class Exploit(Action):
