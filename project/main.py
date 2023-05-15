@@ -9,17 +9,24 @@ customtkinter.set_default_color_theme("blue")
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-
-        # Window configuration
+        """
+        Window configuration
+        """
         self.title("Cyber Security Simulator")
         self.geometry(f"{1100}x{580}")
 
-        # Window grid layout
+        """
+        -------------------------------------------------------------------------------------------
+        Window layout
+        """
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
         self.grid_rowconfigure((0, 1, 2), weight=1)
 
-        # Create sidebar
+        """
+        -------------------------------------------------------------------------------------------
+        Sidebar
+        """
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
@@ -38,25 +45,43 @@ class App(customtkinter.CTk):
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
-        # Create main frame
+        """
+        -------------------------------------------------------------------------------------------
+        Main frame
+        """
         self.tabview = customtkinter.CTkTabview(self, width=880, height=550)
         self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=(10, 0), sticky="nesw")
         self.tabview.add("System")
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
 
-        # Configure grid of individual tabs
+        """
+        -------------------------------------------------------------------------------------------
+        Configure grid of individual tabs
+        """
         self.tabview.tab("System").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
 
-        # Place objects on tabs
+
+        """
+        -------------------------------------------------------------------------------------------
+        System tab
+        """
         self.label_system = customtkinter.CTkLabel(self.tabview.tab("System"), text="This is the system tab")
         self.label_system.grid(row=0, column=0, padx=20, pady=20)
 
+        """
+        -------------------------------------------------------------------------------------------
+        Attacker tab
+        """
         self.label_attacker = customtkinter.CTkLabel(self.tabview.tab("Attacker"), text="This is the attacker tab")
         self.label_attacker.grid(row=0, column=0, padx=20, pady=20)
 
+        """
+        -------------------------------------------------------------------------------------------
+        Defender tab
+        """
         self.label_defender = customtkinter.CTkLabel(self.tabview.tab("Defender"), text="This is the defender tab")
         self.label_defender.grid(row=0, column=0, padx=20, pady=20)
 

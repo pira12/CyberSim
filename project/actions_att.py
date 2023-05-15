@@ -68,6 +68,18 @@ class Action:
         """
         return self.cost
 
+    def get_prob(self):
+        """
+        Return the propability of succes of the action.
+        """
+        return self.prob
+
+    def get_req_acces(self):
+        """
+        Return the required acces for the action.
+        """
+        return self.req_access
+
 
 class Exploit(Action):
     """

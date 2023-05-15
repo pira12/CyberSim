@@ -31,6 +31,7 @@ class Attacker:
         self.compromised_hosts = []
         self.scanned_hosts = []
         self.score = 0
+        self.cost = 0
         self.start = (1, 0)
         self.target = (1, 0)
 
@@ -83,6 +84,7 @@ class Attacker:
         """
         yield self.env.timeout(self.actions["snscan"].get_duration())
         self.scanned_hosts = self.network.reachable_hosts(self.start)
+        self.update_costs(self.actions["snscan"].get_cost())
         glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
 
 
@@ -91,16 +93,21 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         host = self.network.get_host(self.start)
+        self.update_costs(self.actions["priv_esc"].get_cost())
 
         if self.actions["priv_esc"].name in host.get_hardened():
+            # Priv_esc has failed.
             yield self.env.timeout(self.actions["priv_esc"].get_duration())
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
             self.network.add_failed_att_hosts(host)
-
         else:
+            # Priv_esc has succeeded.
             yield self.env.timeout(self.actions["priv_esc"].get_duration())
             host.set_attacker_access_lvl(host.get_attacker_access_lvl() + 1)
+            if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
+                self.update_score(host.get_score())
             glob.logger.info(f"Privilege escalation succeeded on host {host.get_address()} at {self.env.now}.")
+
 
 
     def exploit(self):
@@ -109,6 +116,8 @@ class Attacker:
         """
         self.target = random.choice(self.scanned_hosts).get_address()
         edge = self.network.get_edge((self.start, self.target))
+        self.update_costs(self.actions["exploit"].get_cost())
+
         yield self.env.timeout(self.actions["exploit"].get_duration())
 
         if self.actions["exploit"].name in edge.get_hardened():
@@ -118,3 +127,16 @@ class Attacker:
             glob.logger.info(f"Exploit succeeded on edge {(self.start, self.target)} at {self.env.now}.")
             self.start = self.target
 
+
+    def update_cost(self, cost):
+        """
+        Update the cost of the attacker with given value for cost.
+        """
+        self.cost += cost
+
+
+    def update_score(self, score):
+        """
+        Update the score of the attacker with given value for score.
+        """
+        self.score += score
