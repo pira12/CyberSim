@@ -73,8 +73,8 @@ class Attacker:
                 "hwscan" : act.HardwareScan(5, 1), #Hardwarescan with duration 5 and cost 1.
                 "pscan" : act.ProcessScan(5, 1), #Processscan with duration 5 and cost 1.
                 "sscan" : act.ServiceScan(5, 1), #Servicescan with duration 5 and cost 1.
-                "exploit" : act.Exploit("exploit", (1,0), 20, 10), #Exploit with duration 10 and cost 20.
-                "priv_esc": act.PrivilegeEscalation("priv_esc", (1,0), 20, 10) #Privilegeescalation with duration 10 and cost 20.
+                "exploit" : act.Exploit("exploit", 1, 20, 10), #Exploit with duration 10 and cost 20.
+                "priv_esc": act.PrivilegeEscalation("priv_esc", 1, 20, 10) #Privilegeescalation with duration 10 and cost 20.
             }
 
 
@@ -84,7 +84,7 @@ class Attacker:
         """
         yield self.env.timeout(self.actions["snscan"].get_duration())
         self.scanned_hosts = self.network.reachable_hosts(self.start)
-        self.update_costs(self.actions["snscan"].get_cost())
+        self.update_cost(self.actions["snscan"].get_cost())
         glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
 
 
@@ -93,7 +93,7 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         host = self.network.get_host(self.start)
-        self.update_costs(self.actions["priv_esc"].get_cost())
+        self.update_cost(self.actions["priv_esc"].get_cost())
 
         if self.actions["priv_esc"].name in host.get_hardened():
             # Priv_esc has failed.
@@ -116,7 +116,7 @@ class Attacker:
         """
         self.target = random.choice(self.scanned_hosts).get_address()
         edge = self.network.get_edge((self.start, self.target))
-        self.update_costs(self.actions["exploit"].get_cost())
+        self.update_cost(self.actions["exploit"].get_cost())
 
         yield self.env.timeout(self.actions["exploit"].get_duration())
 

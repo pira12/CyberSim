@@ -1,22 +1,22 @@
-2023-05-10 16:24:35,176 Load attacker actions for strategy RAND at 0.
-2023-05-10 16:24:35,176 Start PrivilegeEscalation at 0.
-2023-05-10 16:24:35,176 Start Harden_edge at 0 on edge ((1, 0), (2, 1)).
-2023-05-10 16:24:35,177 Edge ((1, 0), (2, 1)) hardened against att_e1 at 10.
-2023-05-10 16:24:35,177 Start Harden_edge at 10 on edge ((2, 0), (2, 1)).
-2023-05-10 16:24:35,177 Privilege escalation succeeded on host (1, 0) at 20.
-2023-05-10 16:24:35,177 Edge ((2, 0), (2, 1)) hardened against att_e1 at 20.
-2023-05-10 16:24:35,177 Start PrivilegeEscalation at 20.
-2023-05-10 16:24:35,177 Start Harden_host at 20 on host (2, 0).
-2023-05-10 16:24:35,177 Host (2, 0) hardened against att_h1 at 30.
-2023-05-10 16:24:35,177 Start Harden_host at 30 on host (2, 0).
-2023-05-10 16:24:35,177 Privilege escalation succeeded on host (1, 0) at 40.
-2023-05-10 16:24:35,177 Host (2, 0) hardened against att_h1 at 40.
-2023-05-10 16:24:35,177 Start SubnetScan at 40.
-2023-05-10 16:24:35,177 Start Harden_edge at 40 on edge ((2, 2), (2, 0)).
-2023-05-10 16:24:35,177 SubnetScan succeeded on host (1, 0) at 50.
-2023-05-10 16:24:35,177 Edge ((2, 2), (2, 0)) hardened against att_e1 at 50.
-2023-05-10 16:24:35,177 Start Exploit at 50.
-2023-05-10 16:24:35,177 Start Harden_host at 50 on host (2, 2).
-2023-05-10 16:24:35,177 Simulation ended at time: 60
-2023-05-10 16:24:35,261 Note: NumExpr detected 12 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
-2023-05-10 16:24:35,261 NumExpr defaulting to 8 threads.
+2023-05-15 14:49:07,713 Load attacker actions for strategy RAND at 0.
+2023-05-15 14:49:07,713 Start PrivilegeEscalation at 0.
+2023-05-15 14:49:07,713 Start Harden_host at 0 on host (3, 2).
+2023-05-15 14:49:07,713 Host (3, 2) hardened against att_h1 at 10.
+2023-05-15 14:49:07,713 Start Harden_edge at 10 on edge ((1, 0), (2, 1)).
+2023-05-15 14:49:07,713 Privilege escalation succeeded on host (1, 0) at 20.
+2023-05-15 14:49:07,713 Edge ((1, 0), (2, 1)) hardened against att_e1 at 20.
+2023-05-15 14:49:07,713 Start PrivilegeEscalation at 20.
+2023-05-15 14:49:07,713 Start Harden_edge at 20 on edge ((1, 0), (2, 3)).
+2023-05-15 14:49:07,713 Edge ((1, 0), (2, 3)) hardened against att_e1 at 30.
+2023-05-15 14:49:07,714 Start Harden_edge at 30 on edge ((2, 1), (2, 0)).
+2023-05-15 14:49:07,714 Privilege escalation succeeded on host (1, 0) at 40.
+2023-05-15 14:49:07,714 Edge ((2, 1), (2, 0)) hardened against att_e1 at 40.
+2023-05-15 14:49:07,714 Start SubnetScan at 40.
+2023-05-15 14:49:07,714 Start Harden_edge at 40 on edge ((2, 0), (2, 3)).
+2023-05-15 14:49:07,714 SubnetScan succeeded on host (1, 0) at 50.
+2023-05-15 14:49:07,714 Edge ((2, 0), (2, 3)) hardened against att_e1 at 50.
+2023-05-15 14:49:07,714 Start Exploit at 50.
+2023-05-15 14:49:07,714 Start Harden_host at 50 on host (3, 2).
+2023-05-15 14:49:07,714 Simulation ended at time: 60
+2023-05-15 14:49:07,823 Note: NumExpr detected 12 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2023-05-15 14:49:07,823 NumExpr defaulting to 8 threads.
