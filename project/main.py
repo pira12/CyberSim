@@ -76,33 +76,44 @@ class App(customtkinter.CTk):
         -------------------------------------------------------------------------------------------
         System tab
         """
-        self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"), width=440)
-        self.textbox.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        # The manual textbox
+        self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"))
+        self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.option_frame = customtkinter.CTkFrame(self.tabview.tab("System"), width=440)
-        self.option_frame.grid(row=0, column=1, padx=(20, 20), pady=(20,20), sticky="nsew")
+        # Create the frame for system settings
+        self.option_frame = customtkinter.CTkFrame(self.tabview.tab("System"))
+        self.option_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.tabview.tab("System").grid_rowconfigure(0, weight=3)
+        self.option_frame.grid_columnconfigure(0, weight=3)
+        self.textbox.grid_rowconfigure(0, weight=3)
 
+
+        # Network selection
         self.label_1 = customtkinter.CTkLabel(master=self.option_frame, text="Select a network:")
-        self.label_1.grid(row=0, column=0, padx=20, pady=20)
+        self.label_1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
         self.network_options = customtkinter.CTkOptionMenu(master=self.option_frame, dynamic_resizing=False,
                                                         values=["Network 1", "Network 2", "Network 3", "Network 4", "Network 5"])
-        self.network_options.grid(row=0, column=1, padx=20, pady=(20, 20))
+        self.network_options.grid(row=0, column=1, padx=20, pady=(20, 20), sticky="nw")
 
+        # Simulation number selection
         self.label_2 = customtkinter.CTkLabel(master=self.option_frame, text="Set the number of simulations:")
-        self.label_2.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
+        self.label_2.grid(row=1, column=0, padx=20, pady=20, sticky="nw")
         self.sim_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Number of simulations")
-        self.sim_entry.grid(row=1, column=1, columnspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.sim_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
+        # Runtime selection
         self.label_3 = customtkinter.CTkLabel(master=self.option_frame, text="Set the simulation run time:")
-        self.label_3.grid(row=2, column=0, padx=20, pady=20, sticky="nsew")
+        self.label_3.grid(row=2, column=0, padx=20, pady=20, sticky="nw")
         self.time_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Simulation time")
-        self.time_entry.grid(row=2, column=1, columnspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.time_entry.grid(row=2, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
+        # Outpuf filename selection
         self.label_4 = customtkinter.CTkLabel(master=self.option_frame, text="Set the output file name:")
-        self.label_4.grid(row=3, column=0, padx=20, pady=20, sticky="nsew")
+        self.label_4.grid(row=3, column=0, padx=20, pady=20, sticky="nw")
         self.file_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Output filename")
-        self.file_entry.grid(row=3, column=1, columnspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.file_entry.grid(row=3, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
+        # Selection for importing and saving settings
         # self.label_5 = customtkinter.CTkLabel(master=self.option_frame, text="Import Configuration:")
         # self.label_5.grid(row=4, column=0, padx=20, pady=20, sticky="nsew")
         # self.entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Output filename")
@@ -116,14 +127,17 @@ class App(customtkinter.CTk):
         -------------------------------------------------------------------------------------------
         Attacker tab
         """
+        # Upper frame for entry form.
         self.attacker_frame = customtkinter.CTkFrame(self.tabview.tab("Attacker"))
         self.attacker_frame.grid(row=0, column=0, padx=(10, 10), pady=(10,10), sticky="nsew")
 
+        # Lower frame for generated attackers.
         self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("Attacker"), label_text="Attacker settings")
         self.scrollable_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         self.tabview.tab("Attacker").grid_rowconfigure(1, weight=3)
         self.scrollable_frame.grid_rowconfigure(1, weight=3)
 
+        # Entry form with button to start function.
         self.label_a1 = customtkinter.CTkLabel(master=self.attacker_frame, text="Set number of attackers:")
         self.label_a1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
@@ -137,8 +151,36 @@ class App(customtkinter.CTk):
         -------------------------------------------------------------------------------------------
         Defender tab
         """
-        self.label_defender = customtkinter.CTkLabel(self.tabview.tab("Defender"), text="This is the defender tab")
-        self.label_defender.grid(row=0, column=0, padx=20, pady=20)
+        # Frame for strategy
+        self.defender_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
+        self.defender_frame.grid(row=0, column=0, padx=(10, 10), pady=(10,10), sticky="nsew")
+
+        # Strategy selection.
+        self.label_d1 = customtkinter.CTkLabel(master=self.defender_frame, text="Choose defence strategy:")
+        self.label_d1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.defense_strategy = customtkinter.CTkOptionMenu(master=self.defender_frame, dynamic_resizing=False,
+                                                            values=["Strategy 1", "Strategy 2", "Strategy 3"])
+        self.defense_strategy.grid(row=0, column=1, padx=10, pady=20)
+
+        # Frame for edge actions
+        self.edge_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
+        self.edge_frame.grid(row=1, column=0, padx=(10, 10), pady=(10,10), sticky="nsew")
+
+        self.label_d2 = customtkinter.CTkLabel(master=self.edge_frame, text="Defender edge actions:")
+        self.label_d2.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+        self.harden_edge = customtkinter.CTkSwitch(master=self.edge_frame, text="Harden edge")
+        self.harden_edge.grid(row=1, column=0, padx=20, pady=20, sticky="W")
+
+        # Frame for host actions
+        self.host_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
+        self.host_frame.grid(row=2, column=0, padx=(10, 10), pady=(10,10), sticky="nsew")
+
+        self.label_d3 = customtkinter.CTkLabel(master=self.host_frame, text="Defender host actions:")
+        self.label_d3.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+        self.harden_host = customtkinter.CTkSwitch(master=self.host_frame, text="Harden host")
+        self.harden_host.grid(row=1, column=0, padx=20, pady=20, sticky="W")
 
         """
         -------------------------------------------------------------------------------------------
@@ -166,41 +208,50 @@ class App(customtkinter.CTk):
         print("Show results")
 
     def set_attackers(self):
+        """ Function which generates attacker frames based on input from entry form."""
+        self.attacker_settings = [[] for _ in range(int(self.att_entry.get()))]
         for i in range(int(self.att_entry.get())):
+            # Creates a form and splits it in rows of 2.
             self.attacker_frame = customtkinter.CTkFrame(master=self.scrollable_frame)
             self.attacker_frame.grid(row=i//2, column=i%2, padx=(10, 10), pady=(10,10), sticky="nsew")
-            self.attacker_frame_switches = []
 
             self.label_attacker = customtkinter.CTkLabel(master=self.attacker_frame, text=f"Attacker {i}")
             self.label_attacker.grid(row=0, column=0, padx=10, pady=10, sticky="W")
 
+            # Strategy for attacker
+            strategy = customtkinter.CTkOptionMenu(master=self.attacker_frame, dynamic_resizing=False,
+                                                        values=["Strategy 1", "Strategy 2", "Strategy 3"])
+            strategy.grid(row=0, column=1, padx=10, pady=20)
+            self.attacker_settings[i].append(strategy)
+
+            # List with actions
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Subnet Scan")
             switch.grid(row=1, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Operating System Scan")
             switch.grid(row=2, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Hardware Scan")
             switch.grid(row=3, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Process Scan")
             switch.grid(row=4, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Service Scan")
             switch.grid(row=1, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Exploit")
             switch.grid(row=2, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
             switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_frame_switches.append(switch)
+            self.attacker_settings[i].append(switch)
 
 
 if __name__ == "__main__":
