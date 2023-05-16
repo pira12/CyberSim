@@ -3,7 +3,13 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 
+from actions_def import Harden_host, Harden_edge
+from actions_att import Exploit, PrivilegeEscalation
+glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("att_h2", 1, 10, 0.8, 1, process="p7")]
+glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1"), Exploit("att_e2", 1, 10, 0.8, service="s1")]
 
+glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
+glob_hard_e = [Harden_edge("harden att_e1", 1, 10, "att_e1"), Harden_edge("harden att_e2", 1, 10, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
 
 # print(nx.info(G))
 # print([e for e in G.edges])
@@ -88,7 +94,7 @@ class Host:
         """
         Set the access level to the given level if it is higher.
         """
-        if self.get_attacker_access_lvl() < lvl:
+        if self.attacker_access_lvl < lvl:
             self.attacker_access_lvl = lvl
 
 
@@ -137,6 +143,25 @@ class Host:
         """
         if attack_type not in self.priv_esc_hardened:
             self.priv_esc_hardened.append(attack_type)
+
+
+    def possible_attacks(self):
+        """
+        Return all the possible PrivilegeEscalations that work on this host.
+        """
+        poss_atts = []
+        for att in glob_atts_h:
+            if att.process in self.get_processes():
+                poss_atts.append(att)
+
+        return poss_atts
+
+    def possible_attacks_names(self):
+        """
+        Return all the names of the possible PrivilegeEscalations
+        that work on this host.
+        """
+        return [x.name for x in self.possible_attacks()]
 
 
 class Edge:
@@ -193,6 +218,25 @@ class Edge:
         Return the services that are allowed on this edge.
         """
         return self.servs_allowed
+
+
+    def possible_exploits(self):
+        """
+        Return all the possible PrivilegeEscalations that work on this host.
+        """
+        poss_exps = []
+        for att in glob_atts_e:
+            if att.service in self.get_servs_allowed():
+                poss_exps.append(att)
+
+        return poss_exps
+
+    def possible_exploits_names(self):
+        """
+        Return all the names of the possible PrivilegeEscalations
+        that work on this host.
+        """
+        return [x.name for x in self.possible_exploits()]
 
 
 class Network:
@@ -277,20 +321,49 @@ class Network:
     def add_sensitive_hosts(self, address):
         """
         Add a sensitive host to the network.
+        The sensitive hosts are ordered from highest score
+        to lowest score.
         ---------
         address : (int, int)
         """
         if address in self.host_map:
             self.sensitive_hosts.append(address)
+
+            value = self.get_score_host(address)
+            place = len(self.sensitive_hosts) - 2
+
+            while place >= 0:
+                if value <= self.get_score_host(self.sensitive_hosts[place]):
+                    break
+
+                temp = self.sensitive_hosts[place]
+                self.sensitive_hosts[place] = self.sensitive_hosts[place + 1]
+                self.sensitive_hosts[place + 1] = temp
+                place -= 1
+
         else:
             print("The address", address, "is not in the network and can thus not be a sensitive host")
 
 
+    def get_score_host(self, address):
+        """
+        Return the score of the host of the given address.
+        """
+        return self.get_host(address).get_score()
+
+
     def get_sensitive_hosts(self):
         """
-        Get all sensitive hosts of the network.
+        Get all addresses of the sensitive hosts of the network.
         """
         return self.sensitive_hosts
+
+
+    def get_sensitive_hosts2(self):
+        """
+        Get all the sensitive hosts of the network.
+        """
+        return [self.get_host(x) for x in self.sensitive_hosts]
 
 
     def get_host_place(self, address):
@@ -510,15 +583,18 @@ def create_basic_network(numb1, numb2):
     # pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
     N = Network()
+    N.add_host(Host(2, 0, 100, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+    N.add_host(Host(3, 0, 110, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
-    for numb in range(0, numb1):
+    for numb in range(1, numb1):
         N.add_host(Host(2, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
-    for numb in range(0, numb2):
+    for numb in range(1, numb2):
         N.add_host(Host(3, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
 
     N.add_sensitive_hosts((2,0))
+    N.add_sensitive_hosts((3,1))
     N.add_sensitive_hosts((3,0))
 
 
