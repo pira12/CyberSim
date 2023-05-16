@@ -120,7 +120,9 @@ class App(customtkinter.CTk):
         self.attacker_frame.grid(row=0, column=0, padx=(10, 10), pady=(10,10), sticky="nsew")
 
         self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("Attacker"), label_text="Attacker settings")
-        self.scrollable_frame.grid(row=1, column=0, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.scrollable_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.tabview.tab("Attacker").grid_rowconfigure(1, weight=3)
+        self.scrollable_frame.grid_rowconfigure(1, weight=3)
 
         self.label_a1 = customtkinter.CTkLabel(master=self.attacker_frame, text="Set number of attackers:")
         self.label_a1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
@@ -164,13 +166,41 @@ class App(customtkinter.CTk):
         print("Show results")
 
     def set_attackers(self):
-        self.scrollable_frame.grid_columnconfigure(0, weight=1)
-        self.scrollable_frame_switches = []
         for i in range(int(self.att_entry.get())):
-            switch = customtkinter.CTkSwitch(master=self.scrollable_frame, text=f"CTkSwitch {i}")
-            switch.grid(row=i, column=0, padx=10, pady=(0, 20))
-            self.scrollable_frame_switches.append(switch)
+            self.attacker_frame = customtkinter.CTkFrame(master=self.scrollable_frame)
+            self.attacker_frame.grid(row=i//2, column=i%2, padx=(10, 10), pady=(10,10), sticky="nsew")
+            self.attacker_frame_switches = []
 
+            self.label_attacker = customtkinter.CTkLabel(master=self.attacker_frame, text=f"Attacker {i}")
+            self.label_attacker.grid(row=0, column=0, padx=10, pady=10, sticky="W")
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Subnet Scan")
+            switch.grid(row=1, column=0, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Operating System Scan")
+            switch.grid(row=2, column=0, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Hardware Scan")
+            switch.grid(row=3, column=0, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Process Scan")
+            switch.grid(row=4, column=0, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Service Scan")
+            switch.grid(row=1, column=1, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Exploit")
+            switch.grid(row=2, column=1, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
+            switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
+            self.attacker_frame_switches.append(switch)
 
 
 if __name__ == "__main__":
