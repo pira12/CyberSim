@@ -2,18 +2,15 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+import globals as glob
 
 from actions_def import Harden_host, Harden_edge
 from actions_att import Exploit, PrivilegeEscalation
 glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("att_h2", 1, 10, 0.8, 1, process="p7")]
 glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1"), Exploit("att_e2", 1, 10, 0.8, service="s1")]
 
-glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
-glob_hard_e = [Harden_edge("harden att_e1", 1, 10, "att_e1"), Harden_edge("harden att_e2", 1, 10, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
-
-# print(nx.info(G))
-# print([e for e in G.edges])
-# print(G.degree(0))
+# glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
+# glob_hard_e = [Harden_edge("harden att_e1", 1, 10, "att_e1"), Harden_edge("harden att_e2", 1, 10, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
 
 
 class Host:
@@ -508,16 +505,30 @@ class Network:
 
     def get_all_hardened_hosts(self):
         """
-        Return all hosts that are hardened against some attack.
+        Return the place in the array hosts of all hosts that are
+        hardened against some attack.
         """
-        hosts = []
-        hardenings = self.get_all_host_hardenings()
+        hardened_hosts = []
 
-        for i in range(0, len(hardenings)):
-            if hardenings[i] != []:
-                hosts.append(i)
+        for i in range(0, len(self.hosts)):
+            if self.hosts[i].get_hardened() != []:
+                hardened_hosts.append(i)
 
-        return hosts
+        return hardened_hosts
+
+
+    def get_all_compromised_hosts(self):
+        """
+        Return the place in the array hosts of all hosts that are
+        compromised.
+        """
+        compromised_host = []
+
+        for i in range(0, len(self.hosts)):
+            if self.hosts[i].get_attacker_access_lvl() != 0:
+                compromised_host.append(i)
+
+        return compromised_host
 
 
     def get_failed_att_hosts(self):
@@ -574,23 +585,31 @@ def create_basic_network(numb1, numb2):
     Return the graph, the network and the positions.
     ----------
     numb1: int
-        The number of hosts in the first subnet.
+        The number of hosts in the first subnet. At least 2.
     numb2: int
-        The number of hosts in the second subnet.
+        The number of hosts in the second subnet. At least 2.
     """
+    if numb1 < 2:
+        numb1 = 2
+    if numb2 < 2:
+        numb2 = 2
 
     # G = nx.powerlaw_cluster_graph(numb1, 1, 0.4)
     # pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
     N = Network()
-    N.add_host(Host(2, 0, 100, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
-    N.add_host(Host(3, 0, 110, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+    N.add_host(Host(2, 0, 100, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+    N.add_host(Host(3, 0, 110, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+    # N.add_host(Host(2, 0, 100, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+    # N.add_host(Host(3, 0, 110, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
     for numb in range(1, numb1):
-        N.add_host(Host(2, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        # N.add_host(Host(2, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
     for numb in range(1, numb2):
-        N.add_host(Host(3, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        # N.add_host(Host(3, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
+        N.add_host(Host(3, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
 
     N.add_sensitive_hosts((2,0))
@@ -599,18 +618,18 @@ def create_basic_network(numb1, numb2):
 
 
     for numb in range(1, numb1):
-        N.add_edge((1, 0), (2, numb), ["s1"])
-        N.add_edge((2, 0), (2, numb), ["s1"])
-        N.add_edge((2, numb), (2, 0), ["s1"])
+        N.add_edge((1, 0), (2, numb), glob.services[0:1])
+        N.add_edge((2, 0), (2, numb), glob.services[0:1])
+        N.add_edge((2, numb), (2, 0), glob.services[0:1])
 
     for numb in range(1, numb2):
-        N.add_edge((3, 0), (3, numb), ["s1"])
-        N.add_edge((3, numb), (3, 0), ["s1"])
+        N.add_edge((3, 0), (3, numb), glob.services[0:1])
+        N.add_edge((3, numb), (3, 0), glob.services[0:1])
 
-    N.add_edge((2, 0), (3, 0), ["s1"])
-
+    N.add_edge((2, 0), (3, 0), glob.services[0:1])
 
     return N
+
 
 def draw_network(network):
     G = nx.DiGraph(network.adjacency_matrix)
@@ -619,6 +638,8 @@ def draw_network(network):
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()
     nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
+    compromised_hosts = network.get_all_compromised_hosts()
+    nx.draw(G, pos, nodelist=compromised_hosts, node_color="tab:red")
 
     # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
     # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
@@ -626,9 +647,10 @@ def draw_network(network):
 
     labels = {}
     for n in G.nodes:
-        labels[n] = n
+        # labels[n] = n
+        labels[n] = network.hosts[n].get_address()
 
-    nx.draw_networkx_labels(G, pos, labels, font_size=11, font_color="whitesmoke")
+    nx.draw_networkx_labels(G, pos, labels, font_size=8, font_color="whitesmoke")
     plt.show()
 
 if __name__ == '__main__':

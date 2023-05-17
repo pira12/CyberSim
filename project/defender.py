@@ -10,6 +10,9 @@ glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1")]
 glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
 glob_hard_e = [Harden_edge("harden att_e1", 1, 1, "att_e1"), Harden_edge("harden att_e2", 1, 1, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
 
+# first-layer defense
+# last-layer defense
+# minimum-cost defense en dan ook voor duration I guess... of kan alles tegelijk hmmmm
 
 class Defender:
     def __init__(self, env, network, strategy):
@@ -60,14 +63,13 @@ class Defender:
         sensitive hosts against exploits.
         """
         importants = self.network.get_sensitive_hosts2()
-        print([x.get_address() for x in importants])
 
         for imp in importants:
             yield self.env.process(self.fully_harden_host(imp))
 
         for imp in importants:
             out_going = self.network.get_all_edges_to(imp.get_address())
-            print(out_going)
+
             for out in out_going:
                 yield self.env.process(self.fully_harden_edge(out))
 
@@ -92,7 +94,6 @@ class Defender:
         host : Host
         """
         attack_names = host.possible_attacks_names()
-        print(attack_names)
 
         useful_harden = []
         for possible_harden in glob_hard_h:
@@ -122,7 +123,6 @@ class Defender:
         edge : Edge
         """
         exploit_names = edge.possible_exploits_names()
-        print(exploit_names)
 
         useful_harden = []
         for possible_harden in glob_hard_e:

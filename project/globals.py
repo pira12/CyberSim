@@ -1,6 +1,9 @@
 import enum
 import logging
 
+from actions_def import Harden_host, Harden_edge
+# from actions_att import Exploit, PrivilegeEscalation
+
 MAX_RUMTIME = 60
 
 """
@@ -44,3 +47,16 @@ class DefenseStrat(enum.IntEnum):
 
     def __repr__(self):
         return self.name
+
+
+# glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("att_h2", 1, 10, 0.8, 1, process="p7")]
+# glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1"), Exploit("att_e2", 1, 10, 0.8, service="s1")]
+
+glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
+glob_hard_e = [Harden_edge("harden att_e1", 1, 10, "att_e1"), Harden_edge("harden att_e2", 1, 10, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
+
+
+hardware = ["Lenovo"]
+os = ["windows"]
+services = ["s1", "s2"]
+processes = ["p1", "p2"]
