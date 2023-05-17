@@ -6,6 +6,7 @@ from actions_def import Harden_host, Harden_edge
 
 MAX_RUMTIME = 60
 
+
 """
 Define logging settings.
 """

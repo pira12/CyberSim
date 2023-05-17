@@ -1,5 +1,3 @@
-from globals import AccessLevel
-
 """
 **Actions:**
 
@@ -48,7 +46,7 @@ class Action:
                  cost,
                  duration,
                  prob=1.0,
-                 req_access=AccessLevel.USER):
+                 req_access=0):
 
         self.name = name
         self.cost = cost
@@ -107,7 +105,7 @@ class Exploit(Action):
                  cost,
                  duration,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
+                 req_access=1,
                  hardware=None,
                  os = None,
                  service=None,
@@ -148,7 +146,7 @@ class PrivilegeEscalation(Action):
                  cost,
                  duration,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
+                 req_access=1,
                  os = None,
                  process= None,
                  access=0):
@@ -172,14 +170,12 @@ class SubnetScan(Action):
                  duration,
                  cost,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("subnet_scan",
                          duration=duration,
                          cost=cost,
                          prob=prob,
-                         req_access=req_access,
                          **kwargs)
 
 
@@ -192,14 +188,12 @@ class OSScan(Action):
                  duration,
                  cost,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("os_scan",
                          duration=duration,
                          cost=cost,
                          prob=prob,
-                         req_access=req_access,
                          **kwargs)
 
 class HardwareScan(Action):
@@ -211,14 +205,12 @@ class HardwareScan(Action):
                  duration,
                  cost,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("hardware_scan",
                          duration=duration,
                          cost=cost,
                          prob=prob,
-                         req_access=req_access,
                          **kwargs)
 
 class ServiceScan(Action):
@@ -230,14 +222,12 @@ class ServiceScan(Action):
                  duration,
                  cost,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("service_scan",
                          duration=duration,
                          cost=cost,
                          prob=prob,
-                         req_access=req_access,
                          **kwargs)
 
 class ProcessScan(Action):
@@ -249,12 +239,10 @@ class ProcessScan(Action):
                  duration,
                  cost,
                  prob=1.0,
-                 req_access=AccessLevel.USER,
                  **kwargs):
 
         super().__init__("process_scan",
                          duration=duration,
                          cost=cost,
                          prob=prob,
-                         req_access=req_access,
                          **kwargs)
