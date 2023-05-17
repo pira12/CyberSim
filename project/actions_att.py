@@ -54,9 +54,15 @@ class Action:
         self.prob = prob
         self.req_access = req_access
 
+    def get_name(self):
+        """
+        Return the name of the attack.
+        """
+        return self.name
+
     def get_duration(self):
         """
-        Return the duration of the hardening of the host.
+        Return the duration of the action.
         """
         return self.duration
 
@@ -122,6 +128,12 @@ class Exploit(Action):
         self.service = service
         self.access = access
 
+    def get_service(self):
+        """
+        Return the service of the exploit.
+        """
+        return self.service
+
 
 class PrivilegeEscalation(Action):
     """
@@ -160,6 +172,12 @@ class PrivilegeEscalation(Action):
         self.os = os
         self.process = process
         self.access = access
+
+    def get_process(self):
+        """
+        Return the process of the priviege escalation.
+        """
+        return self.process
 
 class SubnetScan(Action):
     """
