@@ -5,7 +5,10 @@ from actions_def import Harden_host, Harden_edge
 # from actions_att import Exploit, PrivilegeEscalation
 
 MAX_RUMTIME = 60
+NUM_SIMS = 1
+OUT_FILENAME = "output"
 
+attacker_list= []
 
 """
 Define logging settings.

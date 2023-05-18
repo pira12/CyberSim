@@ -1,5 +1,8 @@
 import tkinter
+import globals as glob
 import customtkinter
+from CTkMessagebox import CTkMessagebox
+from event_handler import start_simulation, stop_simulation
 
 # System appearance settings
 customtkinter.set_appearance_mode("System")
@@ -199,7 +202,12 @@ class App(customtkinter.CTk):
         customtkinter.set_widget_scaling(new_scaling_float)
 
     def start_event(self):
-        print("Start simulation")
+        """
+        Function connected to the start button.
+        """
+        if self.check_edge_cases() == True:
+            return
+        start_simulation()
 
     def stop_event(self):
         print("Stop simulation")
@@ -209,7 +217,7 @@ class App(customtkinter.CTk):
 
     def set_attackers(self):
         """ Function which generates attacker frames based on input from entry form."""
-        self.attacker_settings = [[] for _ in range(int(self.att_entry.get()))]
+        glob.attacker_list = [[] for _ in range(int(self.att_entry.get()))]
         for i in range(int(self.att_entry.get())):
             # Creates a form and splits it in rows of 2.
             self.attacker_frame = customtkinter.CTkFrame(master=self.scrollable_frame)
@@ -222,37 +230,58 @@ class App(customtkinter.CTk):
             strategy = customtkinter.CTkOptionMenu(master=self.attacker_frame, dynamic_resizing=False,
                                                         values=["Strategy 1", "Strategy 2", "Strategy 3"])
             strategy.grid(row=0, column=1, padx=10, pady=20)
-            self.attacker_settings[i].append(strategy)
+            glob.attacker_list[i].append(strategy)
 
             # List with actions
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Subnet Scan")
             switch.grid(row=1, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Operating System Scan")
             switch.grid(row=2, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Hardware Scan")
             switch.grid(row=3, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Process Scan")
             switch.grid(row=4, column=0, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Service Scan")
             switch.grid(row=1, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Exploit")
             switch.grid(row=2, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
             switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
-            self.attacker_settings[i].append(switch)
+            glob.attacker_list[i].append(switch)
 
+    def check_edge_cases(self):
+        """
+        Funciton which checks if everything is filled in before running the simualtion.
+        """
+        if self.sim_entry.get() == "":
+            CTkMessagebox(master=app, title="Error", message="The number of simulations is not set!", icon="warning")
+            return True
+        else:
+            glob.NUM_SIMS = self.sim_entry.get()
+
+        if self.time_entry.get() == "":
+            CTkMessagebox(master=app, title="Error", message="The simulation time entry is empty!", icon="warning")
+            return True
+        else:
+            glob.MAX_RUNTIME = self.time_entry.get()
+
+        if self.file_entry.get() == "":
+            CTkMessagebox(master=app, title="Error", message="The output filename is not chosen!", icon="warning")
+            return True
+        else:
+            glob.OUT_FILENAME = self.file_entry.get()
 
 if __name__ == "__main__":
     # Run app
