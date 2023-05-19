@@ -61,10 +61,11 @@ class App(customtkinter.CTk):
         Main frame
         """
         self.tabview = customtkinter.CTkTabview(self, width=880, height=550)
-        self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=(10, 0), sticky="nesw")
+        self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=5, pady=5, sticky="nesw")
         self.tabview.add("System")
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
+        self.tabview.add("Simulation log")
 
         """
         -------------------------------------------------------------------------------------------
@@ -73,7 +74,7 @@ class App(customtkinter.CTk):
         self.tabview.tab("System").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
-
+        self.tabview.tab("Simulation log").grid_columnconfigure(0, weight=1)
 
         """
         -------------------------------------------------------------------------------------------
@@ -137,6 +138,8 @@ class App(customtkinter.CTk):
         # Lower frame for generated attackers.
         self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("Attacker"), label_text="Attacker settings")
         self.scrollable_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Make the frames fill the empty spaces.
         self.tabview.tab("Attacker").grid_rowconfigure(1, weight=3)
         self.scrollable_frame.grid_rowconfigure(1, weight=3)
 
@@ -187,6 +190,18 @@ class App(customtkinter.CTk):
 
         """
         -------------------------------------------------------------------------------------------
+        Simulation log tab
+        """
+        # The manual textbox
+        self.log = customtkinter.CTkTextbox(self.tabview.tab("Simulation log"))
+        self.log.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Make the frames fill the empty spaces.
+        self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
+        self.log.grid_rowconfigure(0, weight=3)
+
+        """
+        -------------------------------------------------------------------------------------------
         Set the deafult values
         """
         self.appearance_mode_optionemenu.set("Dark")
@@ -208,6 +223,9 @@ class App(customtkinter.CTk):
         if self.check_edge_cases() == True:
             return
         start_simulation()
+        with open('log.txt') as f:
+            log = f.read()
+        self.log.insert("0.0", log)
 
     def stop_event(self):
         print("Stop simulation")
