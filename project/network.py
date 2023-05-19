@@ -571,6 +571,23 @@ class Network:
         self.failed_att_edges = []
 
 
+    def calculate_score(self):
+        """
+        Return the total score in the network and the sum of the
+        hosts that are compromised by an attacker.
+        """
+        total = 0
+        comprimised_score = 0
+        for host in self.hosts:
+            if host.get_attacker_access_lvl() > 0:
+                comprimised_score += host.get_score()
+
+            total += host.get_score()
+
+        return total, comprimised_score
+
+
+
 def create_basic_network(numb1, numb2):
     """
     Creates a random graph and create a network based on the graph.

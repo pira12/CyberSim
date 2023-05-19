@@ -22,6 +22,10 @@ class Defender:
         self.score = 0
 
 
+    def get_score(self):
+        return self.score
+
+
     def subtract_score(self, numb):
         """
         Subtract a number from the score.
