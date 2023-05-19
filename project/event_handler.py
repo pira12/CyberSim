@@ -7,9 +7,14 @@ import defender as defend
 
 
 def generate_attackers(env, N):
-    for item in glob.attacker_list:
-        attacker  = att.Attacker(env, N, glob.AttackStrat.RAND)
+    for attacker_settings in glob.attacker_list:
+        attacker  = att.Attacker(env, N, attacker_settings)
         env.process(attacker.run())
+
+def generate_defender(env, N):
+    defender  = defend.Defender(env, N, "random")
+    env.process(defender.run())
+
 
 def stop_simulation():
     """
@@ -37,8 +42,7 @@ def start_simulation():
 
     generate_attackers(env, N)
 
-    defender1  = defend.Defender(env, N, "random")
-    env.process(defender1.run())
+    generate_defender(env, N)
 
     # Print/Access the event list
     print(env._queue)

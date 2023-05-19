@@ -15,6 +15,8 @@ class Attacker:
         The Netork with all the hosts and edges.
     process : Process
         The process of the attacker running.
+    attacker_settings : []
+        The attacker_settings consist of which strategy and actions are set.
     strategy : int
         The strategy chosen for the attacker
     compromised hosts : [hosts]
@@ -23,10 +25,11 @@ class Attacker:
         The won score by compromising the network for this attacker.
     """
 
-    def __init__(self, env, network, strategy):
+    def __init__(self, env, network, attacker_settings):
         self.env = env
         self.network = network
-        self.strategy = strategy
+        self.attacker_settings = attacker_settings
+        self.strategy = ""
         self.actions = {}
         self.compromised_hosts = []
         self.scanned_hosts = []
@@ -65,17 +68,22 @@ class Attacker:
         """
         Load the actions for this attacker based on given strategy.
         """
-        glob.logger.info(f"Load attacker actions for strategy {self.strategy} at {self.env.now}.")
-        if self.strategy == glob.AttackStrat.RAND:
-            self.actions = {
-                "snscan" : act.SubnetScan(10, 1), #Subnetscan with duration 10 and cost 1.
-                "osscan" : act.OSScan(5, 1), #Osscan with duration 5 and cost 1.
-                "hwscan" : act.HardwareScan(5, 1), #Hardwarescan with duration 5 and cost 1.
-                "pscan" : act.ProcessScan(5, 1), #Processscan with duration 5 and cost 1.
-                "sscan" : act.ServiceScan(5, 1), #Servicescan with duration 5 and cost 1.
-                "exploit" : act.Exploit("exploit", 1, 20, 10), #Exploit with duration 10 and cost 20.
-                "priv_esc": act.PrivilegeEscalation("priv_esc", 1, 20, 10) #Privilegeescalation with duration 10 and cost 20.
-            }
+        glob.logger.info(f"Load attacker actions and strategy for attacker at {self.env.now}.")
+        self.strategy = self.attacker_settings[0].get()
+        if self.attacker_settings[1].get() == 1:
+            self.actions["snscan"] = act.SubnetScan(10, 1) #Subnetscan with duration 10 and cost 1.
+        if self.attacker_settings[2].get() == 1:
+            self.actions["osscan"] = act.OSScan(5, 1) #Osscan with duration 5 and cost 1.
+        if self.attacker_settings[3].get() == 1:
+            self.actions["hwscan"] = act.HardwareScan(5, 1) #Hardwarescan with duration 5 and cost 1.
+        if self.attacker_settings[4].get() == 1:
+            self.actions["pscan"] = act.ProcessScan(5, 1) #Processscan with duration 5 and cost 1.
+        if self.attacker_settings[5].get() == 1:
+            self.actions["sscan"] = act.ServiceScan(5, 1) #Servicescan with duration 5 and cost 1.
+        if self.attacker_settings[6].get() == 1:
+            self.actions["exploit"] = act.Exploit("exploit", 1, 20, 10) #Exploit with duration 10 and cost 20.
+        if self.attacker_settings[7].get() == 1:
+            self.actions["priv_esc"] = act.PrivilegeEscalation("priv_esc", 1, 20, 10) #Privilegeescalation with duration 10 and cost 20.
 
 
     def subnetscan(self):

@@ -283,6 +283,23 @@ class App(customtkinter.CTk):
         else:
             glob.OUT_FILENAME = self.file_entry.get()
 
+        if self.att_entry.get() == "" or len(glob.attacker_list) <= 0:
+            CTkMessagebox(master=app, title="Error", message="There not enough attakers generated!", icon="warning")
+            return True
+
+        for i, attacker in enumerate(glob.attacker_list):
+            switch_check = 0
+            for switch in attacker:
+                if switch.get() == 1:
+                    switch_check += 1
+            if switch_check == 0:
+                CTkMessagebox(master=app, title="Error", message=f"Select at least one attack for attacker {i}!", icon="warning")
+                return True
+
+        if self.harden_edge.get() == 0 and self.harden_host.get() == 0:
+            CTkMessagebox(master=app, title="Error", message="Select at least one defence method for the defender!", icon="warning")
+            return True
+
 if __name__ == "__main__":
     # Run app
     app = App()
