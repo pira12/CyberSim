@@ -1,4 +1,3 @@
-import tkinter
 import globals as glob
 import customtkinter
 from CTkMessagebox import CTkMessagebox
@@ -56,6 +55,10 @@ class App(customtkinter.CTk):
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
+        # Set the deafult values.
+        self.appearance_mode_optionemenu.set("Dark")
+        self.scaling_optionemenu.set("100%")
+
         """
         -------------------------------------------------------------------------------------------
         Main frame
@@ -83,6 +86,8 @@ class App(customtkinter.CTk):
         # The manual textbox
         self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"))
         self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.insert("0.0", "Manual?\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
+        self.textbox.configure(state="disabled")
 
         # Create the frame for system settings
         self.option_frame = customtkinter.CTkFrame(self.tabview.tab("System"))
@@ -195,18 +200,12 @@ class App(customtkinter.CTk):
         # The manual textbox
         self.log = customtkinter.CTkTextbox(self.tabview.tab("Simulation log"))
         self.log.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.log.insert("0.0", "This is where the log will appear after the simulation...")
+        self.log.configure(state="disabled")
 
         # Make the frames fill the empty spaces.
         self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
         self.log.grid_rowconfigure(0, weight=3)
-
-        """
-        -------------------------------------------------------------------------------------------
-        Set the deafult values
-        """
-        self.appearance_mode_optionemenu.set("Dark")
-        self.scaling_optionemenu.set("100%")
-        self.textbox.insert("0.0", "Manual?\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
 
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
