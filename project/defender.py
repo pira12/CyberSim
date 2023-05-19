@@ -4,11 +4,11 @@ from actions_def import Harden_host, Harden_edge
 from actions_att import Exploit, PrivilegeEscalation
 import globals as glob
 
-glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1")]
-glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1")]
+# glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1")]
+# glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1")]
 
-glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
-glob_hard_e = [Harden_edge("harden att_e1", 1, 1, "att_e1"), Harden_edge("harden att_e2", 1, 1, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
+# glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
+# glob_hard_e = [Harden_edge("harden att_e1", 1, 1, "att_e1"), Harden_edge("harden att_e2", 1, 1, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
 
 # first-layer defense
 # last-layer defense
@@ -21,11 +21,9 @@ class Defender:
         self.strategy = strategy
         self.score = 0
 
-        self.host_attacks = ["att_h1"]
-        self.edge_attacks = ["att_e1"]
 
-        self.harden_h1 = Harden_host("harden att_h1", 1, 10, "att_h1")
-        self.harden_e1 = Harden_edge("harden att_e1", 1, 10, "att_e1")
+    def get_score(self):
+        return self.score
 
 
     def subtract_score(self, numb):
@@ -96,7 +94,7 @@ class Defender:
         attack_names = host.possible_attacks_names()
 
         useful_harden = []
-        for possible_harden in glob_hard_h:
+        for possible_harden in glob.hard_h:
             if possible_harden.get_attack_type() in attack_names:
                 useful_harden.append(possible_harden)
 
@@ -125,11 +123,17 @@ class Defender:
         exploit_names = edge.possible_exploits_names()
 
         useful_harden = []
-        for possible_harden in glob_hard_e:
+        for possible_harden in glob.hard_e:
             if possible_harden.get_attack_type() in exploit_names:
                 useful_harden.append(possible_harden)
 
         return useful_harden
+
+    def get_random_def_h(self):
+        return random.choice(glob.hard_h)
+
+    def get_random_def_e(self):
+        return random.choice(glob.hard_e)
 
 
     def random_defense(self):
@@ -138,11 +142,11 @@ class Defender:
         """
         if random.random() >= 0.5:
             random_host = self.network.get_random_host()
-            yield self.env.process(self.harden_host(random_host, self.harden_h1))
+            yield self.env.process(self.harden_host(random_host, self.get_random_def_h()))
 
         else:
             random_edge = self.network.get_random_edge()
-            yield self.env.process(self.harden_edge(random_edge, self.harden_e1))
+            yield self.env.process(self.harden_edge(random_edge, self.get_random_def_e()))
 
 
     def harden_host(self, target_host, harden_action):
