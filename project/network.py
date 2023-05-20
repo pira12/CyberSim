@@ -660,7 +660,8 @@ def draw_network(network):
         labels[n] = network.hosts[n].get_address()
 
     nx.draw_networkx_labels(G, pos, labels, font_size=8, font_color="whitesmoke")
-    plt.show()
+    # plt.show()
+    plt.savefig("Network_fig.png", format="PNG")
 
 if __name__ == '__main__':
     N = create_basic_network(5, 3)
