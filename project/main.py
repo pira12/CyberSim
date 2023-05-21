@@ -1,11 +1,24 @@
 import globals as glob
 import customtkinter
+from PIL import Image
 from CTkMessagebox import CTkMessagebox
 from event_handler import start_simulation, stop_simulation
 
 # System appearance settings
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
+
+class ResultsWindow(customtkinter.CTkToplevel):
+    def __init__(self):
+        super().__init__()
+        self.geometry(f"{800}x{400}")
+        self.title("Results Window")
+
+        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"Network_fig.png"),
+                                                   dark_image=Image.open(f"Network_fig.png"),
+                                                   size=(780, 380))
+        self.result_preview = customtkinter.CTkLabel(self, image=self.result_image, text="")
+        self.result_preview.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
 
 class App(customtkinter.CTk):
@@ -16,6 +29,7 @@ class App(customtkinter.CTk):
         """
         self.title("Cyber Security Simulator")
         self.geometry(f"{1100}x{580}")
+        self.results_window = None
 
         """
         -------------------------------------------------------------------------------------------
@@ -85,7 +99,7 @@ class App(customtkinter.CTk):
         """
         # The manual textbox
         self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"))
-        self.textbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         self.textbox.insert("0.0", "Manual?\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
         self.textbox.configure(state="disabled")
 
@@ -101,8 +115,19 @@ class App(customtkinter.CTk):
         self.label_1 = customtkinter.CTkLabel(master=self.option_frame, text="Select a network:")
         self.label_1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
         self.network_options = customtkinter.CTkOptionMenu(master=self.option_frame, dynamic_resizing=False,
-                                                        values=["Network 1", "Network 2", "Network 3", "Network 4", "Network 5"])
+                                                           values=["network1", "network2", "network3", "network4", "network5"],
+                                                           command=self.update_network_entry)
         self.network_options.grid(row=0, column=1, padx=20, pady=(20, 20), sticky="nw")
+
+        # The network preview frame
+        self.preview_frame = customtkinter.CTkFrame(self.tabview.tab("System"))
+        self.preview_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.update_network_entry(0)
+        self.network_preview = customtkinter.CTkLabel(self.preview_frame, text="Network selection preview:")
+        self.network_preview.grid(row=0, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
 
         # Simulation number selection
         self.label_2 = customtkinter.CTkLabel(master=self.option_frame, text="Set the number of simulations:")
@@ -222,15 +247,22 @@ class App(customtkinter.CTk):
         if self.check_edge_cases() == True:
             return
         start_simulation()
+        # Update the log to the GUI.
+        self.log.configure(state="normal")
         with open('log.txt') as f:
             log = f.read()
         self.log.insert("0.0", log)
+        self.log.configure(state="disabled")
+        CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check")
 
     def stop_event(self):
         print("Stop simulation")
 
     def results_event(self):
-        print("Show results")
+        if self.results_window is None or not self.results_window.winfo_exists():
+            self.results_window = ResultsWindow()  # create window if its None or destroyed
+        else:
+            self.results_window.focus()  # if window exists focus it
 
     def set_attackers(self):
         """ Function which generates attacker frames based on input from entry form."""
@@ -277,6 +309,13 @@ class App(customtkinter.CTk):
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
             switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
             glob.attacker_list[i].append(switch)
+
+    def update_network_entry(self, dummy):
+        self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                              dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                              size=(420,225))
+        self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
 
     def check_edge_cases(self):
         """

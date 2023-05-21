@@ -44,9 +44,6 @@ def start_simulation():
 
     generate_defender(env, N)
 
-    # Print/Access the event list
-    print(env._queue)
-
     # Run the simulation with multiple termination cireteria.
     env.run(until=glob.MAX_RUMTIME)
 
