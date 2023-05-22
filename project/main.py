@@ -30,6 +30,7 @@ class App(customtkinter.CTk):
         self.title("Cyber Security Simulator")
         self.geometry(f"{1100}x{580}")
         self.results_window = None
+        self.protocol("WM_DELETE_WINDOW", self.quit)
 
         """
         -------------------------------------------------------------------------------------------
@@ -249,6 +250,7 @@ class App(customtkinter.CTk):
         start_simulation()
         # Update the log to the GUI.
         self.log.configure(state="normal")
+        self.log.delete("1.0", "1.end")
         with open('log.txt') as f:
             log = f.read()
         self.log.insert("0.0", log)

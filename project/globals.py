@@ -1,8 +1,12 @@
 import enum
 import logging
+import os
+os.environ['NUMEXPR_MAX_THREADS'] = '64'
 
 from actions_def import Harden_host, Harden_edge
 from actions_att import Exploit, PrivilegeEscalation
+
+
 
 MAX_RUMTIME = 60
 NUM_SIMS = 1
