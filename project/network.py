@@ -579,7 +579,7 @@ class Network:
         total = 0
         comprimised_score = 0
         for host in self.hosts:
-            if host.get_attacker_access_lvl() > 0:
+            if host.get_attacker_access_lvl() > 1:
                 comprimised_score += host.get_score()
 
             total += host.get_score()
