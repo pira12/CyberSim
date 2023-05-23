@@ -397,6 +397,15 @@ class Network:
         return self.hosts[self.get_host_place(address)]
 
 
+    def get_host_given_place(self, place):
+        """
+        Return the Host at the given place in hosts
+        ----------
+        place : int
+        """
+        return self.hosts[place]
+
+
     def get_edge(self, addresses):
         """
         Return the edge given addresses: ((source address), (destination address))
@@ -408,6 +417,17 @@ class Network:
         dest_numb = self.get_host_place(destination_address)
 
         return self.edges[(source_numb, dest_numb)]
+
+
+    def get_edge_given_places(self, u, v):
+        """
+        Return the edge given the places of the hosts the edge connects.
+        ----------
+        (u, v) : (int, int)
+        """
+        address_source = self.get_host_given_place(u).get_address()
+        address_destination = self.get_host_given_place(v).get_address()
+        return self.get_edge((address_source, address_destination))
 
 
     def reachable_hosts(self, source_addr):
@@ -633,15 +653,11 @@ def create_basic_network(numb1, numb2):
     N = Network()
     N.add_host(Host(2, 0, 100, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
     N.add_host(Host(3, 0, 110, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
-    # N.add_host(Host(2, 0, 100, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
-    # N.add_host(Host(3, 0, 110, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
 
     for numb in range(1, numb1):
-        # N.add_host(Host(2, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
         N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
     for numb in range(1, numb2):
-        # N.add_host(Host(3, numb, 10, 2, 0, [], "Lenovo", ["p1", "p2"], ["s1", "s2"], "windows"))
         N.add_host(Host(3, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
 
@@ -671,8 +687,20 @@ def draw_network(network):
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()
     nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
+
+
+    edges = G.edges
+    colors = []
+
+    for u,v in edges:
+        if network.get_edge_given_places(u, v).get_hardened() != []:
+            colors.append("blue")
+        else:
+            colors.append("black")
+
+
     compromised_hosts = network.get_all_compromised_hosts()
-    nx.draw(G, pos, nodelist=compromised_hosts, node_color="tab:red")
+    nx.draw(G, pos, nodelist=compromised_hosts, node_color="tab:red", edgelist=edges, edge_color=colors)
 
     # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
     # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
@@ -680,7 +708,6 @@ def draw_network(network):
 
     labels = {}
     for n in G.nodes:
-        # labels[n] = n
         labels[n] = network.hosts[n].get_address()
 
     nx.draw_networkx_labels(G, pos, labels, font_size=8, font_color="whitesmoke")
@@ -690,21 +717,4 @@ def draw_network(network):
 if __name__ == '__main__':
     N = create_basic_network(5, 3)
 
-    print(N.get_host_place((2,0)))
-    print(N.adjacency_matrix)
-    print(N.edges[(0, 2)].servs_allowed)
-
-    print([x.source_addr for x in N.get_all_edges_to((2, 0))])
-    print([x.source_addr for x in N.get_all_edges_from((2, 0))])
-
-    print([x.get_address() for x in N.reach_this_host((2, 0))])
-    print([x.get_address() for x in N.reachable_hosts((2, 0))])
-
-    print(N.get_random_edge())
-    print(N.get_random_host())
-
-    print(N.get_host((1,0)))
-    print(N.get_edge(((1, 0), (2, 1))))
-
-
-    # draw_network(N)
+    draw_network(N)
