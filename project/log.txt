@@ -1,20 +1,20 @@
-2023-05-23 16:02:40,504 Load attacker actions and strategy for attacker at 0.
-2023-05-23 16:02:40,505 Start PrivilegeEscalation at 0.
-2023-05-23 16:02:40,505 Start Harden_host at 0 on host (3, 0).
-2023-05-23 16:02:40,506 Host (3, 0) hardened against att_h1 at 10.
-2023-05-23 16:02:40,506 Start Harden_host at 10 on host (2, 0).
-2023-05-23 16:02:40,506 Privilege escalation succeeded on host (1, 0) at 20.
-2023-05-23 16:02:40,507 Host (2, 0) hardened against att_h1 at 20.
-2023-05-23 16:02:40,507 Start PrivilegeEscalation at 20.
-2023-05-23 16:02:40,507 Start Harden_host at 20 on host (3, 1).
-2023-05-23 16:02:40,507 Host (3, 1) hardened against att_h1 at 30.
-2023-05-23 16:02:40,508 Start Harden_edge at 30 on edge ((2, 0), (3, 0)).
-2023-05-23 16:02:40,508 Privilege escalation succeeded on host (1, 0) at 40.
-2023-05-23 16:02:40,508 Edge ((2, 0), (3, 0)) hardened against att_e1 at 40.
-2023-05-23 16:02:40,509 Start SubnetScan at 40.
-2023-05-23 16:02:40,509 Start Harden_edge at 40 on edge ((2, 0), (3, 0)).
-2023-05-23 16:02:40,509 SubnetScan succeeded on host (1, 0) at 50.
-2023-05-23 16:02:40,509 Edge ((2, 0), (3, 0)) hardened against att_e2 at 50.
-2023-05-23 16:02:40,510 Start Exploit at 50.
-2023-05-23 16:02:40,510 Start Harden_edge at 50 on edge ((3, 1), (3, 0)).
-2023-05-23 16:02:40,510 Simulation ended at time: 60
+2023-05-23 18:00:52,403 Load attacker actions and strategy for attacker at 0.
+2023-05-23 18:00:52,403 Start PrivilegeEscalation at 0.
+2023-05-23 18:00:52,404 Start Harden_edge at 0 on edge ((1, 0), (2, 2)).
+2023-05-23 18:00:52,405 Edge ((1, 0), (2, 2)) hardened against att_e1 at 10.
+2023-05-23 18:00:52,405 Start Harden_edge at 10 on edge ((1, 0), (2, 2)).
+2023-05-23 18:00:52,405 Privilege escalation succeeded on host (1, 0) at 20.
+2023-05-23 18:00:52,405 Edge ((1, 0), (2, 2)) hardened against att_e2 at 20.
+2023-05-23 18:00:52,406 Start PrivilegeEscalation at 20.
+2023-05-23 18:00:52,406 Start Harden_host at 20 on host (3, 0).
+2023-05-23 18:00:52,406 Host (3, 0) hardened against att_h1 at 30.
+2023-05-23 18:00:52,407 Start Harden_host at 30 on host (2, 0).
+2023-05-23 18:00:52,407 Privilege escalation succeeded on host (1, 0) at 40.
+2023-05-23 18:00:52,407 Host (2, 0) hardened against att_h1 at 40.
+2023-05-23 18:00:52,407 Start SubnetScan at 40.
+2023-05-23 18:00:52,408 Start Harden_host at 40 on host (3, 1).
+2023-05-23 18:00:52,408 SubnetScan succeeded on host (1, 0) at 50.
+2023-05-23 18:00:52,408 Host (3, 1) hardened against att_h1 at 50.
+2023-05-23 18:00:52,408 Start Exploit at 50.
+2023-05-23 18:00:52,409 Start Harden_edge at 50 on edge ((2, 0), (3, 0)).
+2023-05-23 18:00:52,409 Simulation ended at time: 60

@@ -47,14 +47,31 @@ class Defender:
         if self.strategy == "random":
             # while True:
             #     yield self.env.process(self.random_defense())
+            yield self.env.process(self.first_layer_defense())
 
-            yield self.env.process(self.last_defense())
+            yield self.env.process(self.last_layer_defense())
 
             while True:
                 yield self.env.process(self.random_defense())
 
 
-    def last_defense(self):
+    def first_layer_defense(self):
+        """
+        Harden the first layer
+        """
+
+        att_hosts = self.network.get_failed_att_hosts()
+        # att_edges = self.network.get_failed_att_edge()
+        att_edges = [self.network.get_edge(((1,0), (2,2)))]
+        print(att_edges)
+
+        if att_edges != []:
+            yield self.env.process(self.fully_harden_edge(att_edges[0]))
+        else:
+            yield self.env.process(self.random_defense())
+
+
+    def last_layer_defense(self):
         """
         Harden first the sensitive hosts against the relevant
         Privilege Escalations. Then harden the edges towards the
