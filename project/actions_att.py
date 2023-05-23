@@ -179,6 +179,48 @@ class PrivilegeEscalation(Action):
         """
         return self.process
 
+class DenialOfService(Action):
+    """
+    Denial of service action and inherits base action from the Action Class.
+
+    ...
+
+    Attributes
+    ----------
+    hardware: str
+        The hardware which is targeted by the exploit.
+        If none it works it works for all.
+    os: str
+        The operating system which is targeted by the exploit.
+        If none it works it works for all.
+    service: str
+        The service which is targeted by the exploit.
+        If none it works it works for all.
+    acces: int
+        The access level which is gained after succes.
+    """
+
+    def __init__(self,
+                 name,
+                 cost,
+                 duration,
+                 prob=1.0,
+                 req_access=1,
+                 hardware=None,
+                 os = None,
+                 access=0):
+
+        super().__init__(name=name,
+                         cost=cost,
+                         duration = duration,
+                         prob=prob,
+                         req_access=req_access)
+
+        self.hardware = hardware
+        self.os = os
+        self.access = access
+
+
 class SubnetScan(Action):
     """
     SubnetScan action and inherits base action from the Action Class.

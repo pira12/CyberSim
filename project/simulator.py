@@ -279,7 +279,7 @@ class App(customtkinter.CTk):
 
             # Strategy for attacker
             strategy = customtkinter.CTkOptionMenu(master=self.attacker_frame, dynamic_resizing=False,
-                                                        values=["Strategy 1", "Strategy 2", "Strategy 3"])
+                                                        values=["Zero-day exploit", "Advanced Persistent Threats", "Denial Of Service"])
             strategy.grid(row=0, column=1, padx=10, pady=20)
             glob.attacker_list[i].append(strategy)
 
@@ -310,6 +310,10 @@ class App(customtkinter.CTk):
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
             switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
+            glob.attacker_list[i].append(switch)
+
+            switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Denial Of Service")
+            switch.grid(row=4, column=1, padx=10, pady=20, sticky="W")
             glob.attacker_list[i].append(switch)
 
     def update_network_entry(self, dummy):
