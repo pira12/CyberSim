@@ -22,6 +22,8 @@ class Host:
         The highest access level any of the attackers have
         in this host. This is the level the defender will see
         when it scans the host.
+    dos : boolean
+        Indicates if the host in under a DoS attack.
     priv_esc_hardened : [string]
         An array with all the privilege escalation attacks that this
         host is hardened against.
@@ -43,6 +45,7 @@ class Host:
         self.score = score                              # int
         self.access_for_score = access_for_score        # int
         self.attacker_access_lvl = attacker_access_lvl  # int
+        self.dos = False                                # boolean
         self.priv_esc_hardened = priv_esc_hardened      # [string]
         self.hardware = hardware                        # string
         self.processes = processes                      # [string]
@@ -74,7 +77,7 @@ class Host:
 
     def get_attacker_access_lvl(self):
         """
-        Return the  access level of the attacker.
+        Return the access level of the attacker.
         """
         return self.attacker_access_lvl
 
@@ -85,6 +88,27 @@ class Host:
         """
         if self.attacker_access_lvl < lvl:
             self.attacker_access_lvl = lvl
+
+
+    def get_dos(self):
+        """
+        Return whether the host is under a DoS attack.
+        """
+        return self.dos
+
+
+    def dos_attack(self):
+        """
+        The host is under a DoS attack.
+        """
+        self.dos = True
+
+
+    def dos_attack_resolved(self):
+        """
+        The DoS attack is resolved
+        """
+        self.dos = False
 
 
     def get_hardened(self):
