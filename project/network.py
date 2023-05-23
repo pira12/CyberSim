@@ -235,19 +235,21 @@ class Edge:
 
     def possible_exploits(self):
         """
-        Return all the possible PrivilegeEscalations that work on this host.
+        Return all the possible exploits that work on this edge.
         """
         poss_exps = []
         for att in glob.atts_e:
-            if att.service in self.get_servs_allowed():
-                poss_exps.append(att)
+            if att.get_service() in self.get_servs_allowed():
+                if att.get_name() not in self.get_hardened():
+                    poss_exps.append(att)
+
 
         return poss_exps
 
     def possible_exploits_names(self):
         """
-        Return all the names of the possible PrivilegeEscalations
-        that work on this host.
+        Return all the names of the possible exploits
+        that work on this edge.
         """
         return [x.name for x in self.possible_exploits()]
 
@@ -286,7 +288,7 @@ class Network:
     """
 
     def __init__(self):
-        self.hosts = [Host(1, 0, 1, 0, 0, [], "Internet", [], [], "windows")]
+        self.hosts = [Host(1, 0, 1, 0, 2, [], "Internet", [], [], "windows")]
         self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
         self.edges = {}                 # The key is (source numb, dest numb)
         self.sensitive_hosts = []
