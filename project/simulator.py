@@ -208,6 +208,7 @@ class App(customtkinter.CTk):
 
         self.harden_edge = customtkinter.CTkSwitch(master=self.edge_frame, text="Harden edge")
         self.harden_edge.grid(row=1, column=0, padx=20, pady=20, sticky="W")
+        glob.harden_edge_allowed = self.harden_edge
 
         # Frame for host actions
         self.host_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
@@ -218,6 +219,7 @@ class App(customtkinter.CTk):
 
         self.harden_host = customtkinter.CTkSwitch(master=self.host_frame, text="Harden host")
         self.harden_host.grid(row=1, column=0, padx=20, pady=20, sticky="W")
+        glob.harden_host_allowed = self.harden_host
 
         """
         -------------------------------------------------------------------------------------------

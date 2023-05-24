@@ -86,21 +86,25 @@ class Attacker:
         """
         This is the zero-day exploit strategy where the focus is on using exploits to get deeper within the network.
         """
-        # Check if host is already compromised.
+        # Set start host.
         host = self.network.get_host(self.start)
-        if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
-            # If so then scan for other hosts and to compromised nodes.
-            self.compromised_hosts.append(self.start)
-            glob.logger.info(f"Start SubnetScan at {self.env.now}.")
-            yield self.env.process(self.subnetscan())
+        # Scan for reachable hosts.
+        glob.logger.info(f"Start SubnetScan at {self.env.now}.")
+        yield self.env.process(self.subnetscan())
 
-            # Check the edges for hardenning if none exploit etc...
-            glob.logger.info(f"Start Exploit at {self.env.now}.")
-            yield self.env.process(self.exploit())
-        else:
-            # Else run a privilege escalation.
-            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation(host))
+	    # From this host check for the edge with the lowest cost to exploit
+        possible_edges = self.network.get_all_edges_from(self.start)
+        for edge in possible_edges:
+            if edge.get_dest_addr() in self.compromised_hosts:
+                possible_edges.remove(edge)
+
+        # If other targets are available and not in compromised nodes.
+        if len(possible_edges) > 0:
+            edge = possible_edges[0]
+
+        glob.logger.info(f"Start Exploit at {self.env.now}.")
+        yield self.env.process(self.exploit(edge))
+
 
     def advanced_persistant_threats(self):
         # Check if host is already compromised.
@@ -145,31 +149,21 @@ class Attacker:
         self.update_cost(self.actions["snscan"].get_cost())
         glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
 
-    def exploit(self):
+    def exploit(self, vulnerable_edge):
         """
         The exploit function which tries to exploit a link to hop to another node.
         """
-        vulnerable_edge = None
-        seen_edges = [self.network.get_edge((self.start, host.get_address())) for host in self.scanned_hosts]
-        for edge in seen_edges:
-            if len(edge.possible_exploits()) > 0:
-                vulnerable_edge = edge
-                break
-
-        # Failsafe if no edges can be exploited.
-        if vulnerable_edge is None:
-            return
-
         exploit = self.lowest_cost(vulnerable_edge.possible_exploits())
         self.update_cost(exploit.get_cost())
 
         yield self.env.timeout(exploit.get_duration())
 
-        if exploit.get_name() in edge.get_hardened():
+        if exploit.get_name() in vulnerable_edge.get_hardened():
             glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
             self.network.add_failed_att_edges(vulnerable_edge)
         else:
             glob.logger.info(f"Exploit succeeded on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
+            self.compromised_hosts.append(vulnerable_edge.get)
             self.start = vulnerable_edge.get_source_addr()
 
 

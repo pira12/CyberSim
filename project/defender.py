@@ -20,7 +20,7 @@ class Defender:
         self.network = network
         self.strategy = strategy
         self.score = 0
-
+        self.test = glob.harden_host_allowed.get()
 
     def get_score(self):
         return self.score
