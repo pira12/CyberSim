@@ -1,20 +1,40 @@
-2023-05-23 18:00:52,403 Load attacker actions and strategy for attacker at 0.
-2023-05-23 18:00:52,403 Start PrivilegeEscalation at 0.
-2023-05-23 18:00:52,404 Start Harden_edge at 0 on edge ((1, 0), (2, 2)).
-2023-05-23 18:00:52,405 Edge ((1, 0), (2, 2)) hardened against att_e1 at 10.
-2023-05-23 18:00:52,405 Start Harden_edge at 10 on edge ((1, 0), (2, 2)).
-2023-05-23 18:00:52,405 Privilege escalation succeeded on host (1, 0) at 20.
-2023-05-23 18:00:52,405 Edge ((1, 0), (2, 2)) hardened against att_e2 at 20.
-2023-05-23 18:00:52,406 Start PrivilegeEscalation at 20.
-2023-05-23 18:00:52,406 Start Harden_host at 20 on host (3, 0).
-2023-05-23 18:00:52,406 Host (3, 0) hardened against att_h1 at 30.
-2023-05-23 18:00:52,407 Start Harden_host at 30 on host (2, 0).
-2023-05-23 18:00:52,407 Privilege escalation succeeded on host (1, 0) at 40.
-2023-05-23 18:00:52,407 Host (2, 0) hardened against att_h1 at 40.
-2023-05-23 18:00:52,407 Start SubnetScan at 40.
-2023-05-23 18:00:52,408 Start Harden_host at 40 on host (3, 1).
-2023-05-23 18:00:52,408 SubnetScan succeeded on host (1, 0) at 50.
-2023-05-23 18:00:52,408 Host (3, 1) hardened against att_h1 at 50.
-2023-05-23 18:00:52,408 Start Exploit at 50.
-2023-05-23 18:00:52,409 Start Harden_edge at 50 on edge ((2, 0), (3, 0)).
-2023-05-23 18:00:52,409 Simulation ended at time: 60
+2023-05-24 14:56:04,451 Load attacker actions and strategy for attacker at 0.
+2023-05-24 14:56:04,452 Start SubnetScan at 0.
+2023-05-24 14:56:04,453 Start Harden_edge at 0.5 on edge ((3, 2), (3, 0)).
+2023-05-24 14:56:04,453 SubnetScan succeeded on host (1, 0) at 10.
+2023-05-24 14:56:04,453 Start Exploit at 10.
+2023-05-24 14:56:04,454 Edge ((3, 2), (3, 0)) hardened against att_e3 at 10.5.
+2023-05-24 14:56:04,454 Start Harden_host at 10.5 on host (2, 3).
+2023-05-24 14:56:04,454 Host (2, 3) hardened against att_h1 at 20.5.
+2023-05-24 14:56:04,455 Start Harden_edge at 20.5 on edge ((2, 0), (2, 1)).
+2023-05-24 14:56:04,455 Exploit succeeded on edge ((1, 0), (2, 1)) at 30.
+2023-05-24 14:56:04,455 Start PrivilegeEscalation at 30.
+2023-05-24 14:56:04,455 Edge ((2, 0), (2, 1)) hardened against att_e2 at 30.5.
+2023-05-24 14:56:04,456 Start Harden_edge at 30.5 on edge ((2, 1), (2, 0)).
+2023-05-24 14:56:04,456 Edge ((2, 1), (2, 0)) hardened against att_e1 at 40.5.
+2023-05-24 14:56:04,456 Start Harden_edge at 40.5 on edge ((2, 0), (3, 0)).
+2023-05-24 14:56:04,456 Privilege escalation succeeded on host (2, 1) at 50.
+2023-05-24 14:56:04,457 Start PrivilegeEscalation at 50.
+2023-05-24 14:56:04,457 Edge ((2, 0), (3, 0)) hardened against att_e1 at 50.5.
+2023-05-24 14:56:04,457 Start Harden_edge at 50.5 on edge ((2, 0), (2, 3)).
+2023-05-24 14:56:04,457 Simulation ended at time: 60
+2023-05-24 14:56:09,517 Load attacker actions and strategy for attacker at 0.
+2023-05-24 14:56:09,518 Start SubnetScan at 0.
+2023-05-24 14:56:09,518 Start Harden_host at 0.5 on host (3, 0).
+2023-05-24 14:56:09,518 SubnetScan succeeded on host (1, 0) at 10.
+2023-05-24 14:56:09,519 Start Exploit at 10.
+2023-05-24 14:56:09,519 Host (3, 0) hardened against att_h2 at 10.5.
+2023-05-24 14:56:09,519 Start Harden_host at 10.5 on host (2, 3).
+2023-05-24 14:56:09,520 Host (2, 3) hardened against att_h1 at 20.5.
+2023-05-24 14:56:09,520 Start Harden_host at 20.5 on host (3, 0).
+2023-05-24 14:56:09,520 Exploit succeeded on edge ((1, 0), (2, 2)) at 30.
+2023-05-24 14:56:09,520 Start PrivilegeEscalation at 30.
+2023-05-24 14:56:09,521 Host (3, 0) hardened against att_h2 at 30.5.
+2023-05-24 14:56:09,521 Start Harden_edge at 30.5 on edge ((2, 0), (2, 1)).
+2023-05-24 14:56:09,521 Edge ((2, 0), (2, 1)) hardened against att_e3 at 40.5.
+2023-05-24 14:56:09,522 Start Harden_host at 40.5 on host (2, 0).
+2023-05-24 14:56:09,522 Privilege escalation succeeded on host (2, 2) at 50.
+2023-05-24 14:56:09,522 Start PrivilegeEscalation at 50.
+2023-05-24 14:56:09,523 Host (2, 0) hardened against att_h2 at 50.5.
+2023-05-24 14:56:09,523 Start Harden_edge at 50.5 on edge ((2, 0), (2, 1)).
+2023-05-24 14:56:09,523 Simulation ended at time: 60
