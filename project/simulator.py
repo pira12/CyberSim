@@ -281,7 +281,7 @@ class App(customtkinter.CTk):
 
             # Strategy for attacker
             strategy = customtkinter.CTkOptionMenu(master=self.attacker_frame, dynamic_resizing=False,
-                                                        values=["Zero-day exploit", "Advanced Persistent Threats", "Denial Of Service"])
+                                                        values=["Random Strategy", "Zero-day exploit", "Advanced Persistent Threats"])
             strategy.grid(row=0, column=1, padx=10, pady=20)
             glob.attacker_list[i].append(strategy)
 

@@ -47,15 +47,17 @@ class Attacker:
         self.load_actions()
 
         while True:
+            if self.strategy == "Random Strategy":
+                # Run RST
+                yield self.env.process(self.random_strategy())
             if self.strategy == "Zero-day exploit":
                 # Run ZDE
                 yield self.env.process(self.zero_day_exploit())
-            if self.strategy == glob.AttackStrat.APT:
-                # Run ZDE
-                continue
-            if self.strategy == glob.AttackStrat.DOS:
-                # Run ZDE
-                continue
+            if self.strategy == "Advanced Persistent Threats":
+                # Run APT
+                yield self.env.process(self.advanced_persistant_threats())
+
+
 
 
     def load_actions(self):
@@ -81,6 +83,29 @@ class Attacker:
             self.actions["dos"] = act.DenialOfService("dos", 1, 20, 10) #Denialofservice with duration 10 and cost 20.
         glob.logger.info(f"Attacker actions and strategy have been loaded for attacker at {self.env.now}.")
 
+    def random_strategy(self):
+        # Check if host is already compromised.
+        host = self.network.get_host(self.start)
+        if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
+            # If so then scan for other hosts and to compromised nodes.
+            self.compromised_hosts.append(self.start)
+            glob.logger.info(f"Start SubnetScan at {self.env.now}.")
+            yield self.env.process(self.subnetscan())
+
+            # Check the edges for hardenning if none exploit etc...
+            self.target = random.choice(self.scanned_hosts).get_address()
+            edge = self.network.get_edge((self.start, self.target))
+            # Check if there are new nodes else end attack.
+            if edge == None:
+                self.start = random.choice(self.compromised_hosts)
+                glob.logger.info(f"Looping back to host {self.start} at {self.env.now}.")
+            else:
+                glob.logger.info(f"Start Exploit at {self.env.now}.")
+                yield self.env.process(self.exploit(edge))
+        else:
+            # Else run a privilege escalation.
+            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+            yield self.env.process(self.privilege_escalation())
 
     def zero_day_exploit(self):
         """
@@ -123,23 +148,6 @@ class Attacker:
             glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
             yield self.env.process(self.privilege_escalation())
 
-    def denial_of_service(self):
-        # Check if host is already compromised.
-        host = self.network.get_host(self.start)
-        if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
-            # If so then scan for other hosts and to compromised nodes.
-            self.compromised_hosts.append(self.start)
-            glob.logger.info(f"Start SubnetScan at {self.env.now}.")
-            yield self.env.process(self.subnetscan())
-
-            # Check the edges for hardenning if none exploit etc...
-            glob.logger.info(f"Start Exploit at {self.env.now}.")
-            yield self.env.process(self.exploit())
-        else:
-            # Else run a privilege escalation.
-            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation())
-
     def subnetscan(self):
         """
         The subnet scan function which checks for reachable hosts.
@@ -163,7 +171,7 @@ class Attacker:
             self.network.add_failed_att_edges(vulnerable_edge)
         else:
             glob.logger.info(f"Exploit succeeded on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
-            self.compromised_hosts.append(vulnerable_edge.get)
+            self.compromised_hosts.append(vulnerable_edge.get_source_addr())
             self.start = vulnerable_edge.get_source_addr()
 
 

@@ -37,9 +37,9 @@ class AccessLevel(enum.IntEnum):
 
 
 class AttackStrat(enum.Enum):
+    RST = "Random Strategy"
     ZDE = "Zero-day exploit"
     APT = "Advanced Persistent Threats"
-    DOS = "Denial Of Service"
 
     def __str__(self):
         return self.name
