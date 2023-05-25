@@ -35,10 +35,10 @@ class AccessLevel(enum.IntEnum):
         return self.name
 
 
-class AttackStrat(enum.IntEnum):
-    RAND = 0
-    AGRO = 1
-    DEFF = 2
+class AttackStrat(enum.Enum):
+    RST = "Random Strategy"
+    ZDE = "Zero-day exploit"
+    APT = "Advanced Persistent Threats"
 
     def __str__(self):
         return self.name
