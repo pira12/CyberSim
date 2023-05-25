@@ -164,8 +164,9 @@ class Host:
         """
         poss_atts = []
         for att in glob.atts_h:
-            if att.process in self.get_processes():
-                poss_atts.append(att)
+            if att.get_process() in self.get_processes():
+                if att.get_name() not in self.get_hardened():
+                    poss_atts.append(att)
 
         return poss_atts
 

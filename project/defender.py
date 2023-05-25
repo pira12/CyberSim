@@ -20,9 +20,18 @@ class Defender:
         self.network = network
         self.strategy = strategy
         self.score = 0
-        self.test = glob.harden_host_allowed.get()
+        self.harden_host_allowed = glob.harden_host_allowed.get()
+        self.harden_edge_allowed = glob.harden_edge_allowed.get()
+
+        self.failed_att_hosts = [] #hmmmmm, nodig?
+        self.failed_att_edges = [] #hmmmmm, nodig?
+
+
 
     def get_score(self):
+        """
+        Return the score of the defender.
+        """
         return self.score
 
 
@@ -31,6 +40,39 @@ class Defender:
         Subtract a number from the score.
         """
         self.score -= numb
+
+    def get_failed_att_hosts(self):
+        """
+        Return the hosts that have been the target of a failed attack.
+        """
+        return self.failed_att_hosts
+
+
+    def add_failed_att_hosts(self, host):
+        """
+        Add a new failed attack on a host.
+        ----------
+        host: Host
+            The host that was target of a new failed attack.
+        """
+        self.failed_att_hosts.append(host)
+
+
+    def get_failed_att_edges(self):
+        """
+        Return the hosts that have been the target of a failed attack.
+        """
+        return self.failed_att_edges
+
+
+    def add_failed_att_edges(self, edge):
+        """
+        Add a new failed attack on a edge.
+        ----------
+        edge: Edge
+            The edge that was target of a new failed attack.
+        """
+        self.failed_att_edges.append(edge)
 
 
     def run(self):
@@ -47,11 +89,67 @@ class Defender:
         if self.strategy == "random":
             # while True:
             #     yield self.env.process(self.random_defense())
-            yield self.env.process(self.first_layer_defense())
 
+            # yield self.env.process(self.first_layer_defense())
+            # yield self.env.process(self.lazy_defense())
+            while True:
+                yield self.env.process(self.most_central())
+
+            while True:
+                yield self.env.process(self.random_defense())
+
+        elif self.strategy == "last layer":
             yield self.env.process(self.last_layer_defense())
 
             while True:
+                yield self.env.process(self.random_defense())
+
+        elif self.strategy == "lazy":
+            yield self.env.process(self.lazy_defense(1))
+
+        elif self.strategy == "first_layer_central":
+            yield self.env.process(self.most_central())
+
+
+    def most_central(self):
+
+        yield self.env.process(self.lazy_defense(2))
+
+
+
+
+    def lazy_defense(self, if_noone):
+        """
+        Only harden the hosts/edges which had a failed attack.
+        Also save which hosts/edges have been attacked.
+        ----------
+        if_noone : int
+            What to do when there is no new failed attack
+            0: nothing
+            1: wait
+            2: do a random hardening
+            else: nothing
+        """
+
+        att_hosts = self.network.get_failed_att_hosts()
+        att_edges = self.network.get_failed_att_edges()
+
+        for host in att_hosts:
+            self.add_failed_att_hosts(host)
+            yield self.env.process(self.fully_harden_host(host))
+
+        for edge in att_edges:
+            self.add_failed_att_edges(edge)
+            yield self.env.process(self.fully_harden_edge(edge))
+
+        self.network.reset_failed_att_hosts()
+        self.network.reset_failed_att_edges()
+
+        # What to do if there was no failed attack.
+        if att_hosts == [] and att_edges == []:
+            if if_noone == 1:
+                yield self.env.timeout(0.5)
+            elif if_noone == 2:
                 yield self.env.process(self.random_defense())
 
 
