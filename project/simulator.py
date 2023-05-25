@@ -1,4 +1,5 @@
 import globals as glob
+import os
 import customtkinter
 from PIL import Image
 from CTkMessagebox import CTkMessagebox
@@ -249,11 +250,12 @@ class App(customtkinter.CTk):
         """
         if self.check_edge_cases() == True:
             return
+
         start_simulation()
         # Update the log to the GUI.
         self.log.configure(state="normal")
-        self.log.delete("1.0", "1.end")
-        with open('log.txt') as f:
+        self.log.delete("0.0","end")
+        with open("log.txt") as f:
             log = f.read()
         self.log.insert("0.0", log)
         self.log.configure(state="disabled")

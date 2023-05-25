@@ -7,8 +7,8 @@ import defender as defend
 
 
 def generate_attackers(env, N):
-    for attacker_settings in glob.attacker_list:
-        attacker  = att.Attacker(env, N, attacker_settings)
+    for id, attacker_settings in enumerate(glob.attacker_list):
+        attacker  = att.Attacker(env, N, attacker_settings, id)
         env.process(attacker.run())
 
 def generate_defender(env, N):
@@ -27,9 +27,7 @@ def start_simulation():
     Function which will start the simulation.
     """
 
-    """
-    Create network and attackers and defenders.
-    """
+    #Create network.
     N = nw.create_basic_network(5, 3)
     # nw.draw_network(N)
 
@@ -40,6 +38,8 @@ def start_simulation():
     """
     env = simpy.Environment()
 
+
+    # Create attackers and defenders.
     generate_attackers(env, N)
 
     generate_defender(env, N)
@@ -48,13 +48,5 @@ def start_simulation():
     env.run(until=glob.MAX_RUMTIME)
 
     glob.logger.info(f"Simulation ended at time: {env.now}")
-
-
-    """
-    Log all events which have happened in the simulation.
-    """
-    for handler in glob.logger.handlers:
-        handler.flush()
-
 
     nw.draw_network(N)

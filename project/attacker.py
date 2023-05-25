@@ -25,10 +25,11 @@ class Attacker:
         The won score by compromising the network for this attacker.
     """
 
-    def __init__(self, env, network, attacker_settings):
+    def __init__(self, env, network, attacker_settings, attacker_id):
         self.env = env
         self.network = network
         self.attacker_settings = attacker_settings
+        self.id = attacker_id
         self.strategy = ""
         self.actions = {}
         self.compromised_hosts = []
@@ -58,8 +59,6 @@ class Attacker:
                 yield self.env.process(self.advanced_persistant_threats())
 
 
-
-
     def load_actions(self):
         """
         Load the actions for this attacker based on given strategy.
@@ -81,23 +80,23 @@ class Attacker:
             self.actions["priv_esc"] = glob.atts_h
         if self.attacker_settings[8].get() == 1:
             self.actions["dos"] = act.DenialOfService("dos", 1, 20, 10) #Denialofservice with duration 10 and cost 20.
-        glob.logger.info(f"Attacker actions and strategy have been loaded for attacker at {self.env.now}.")
+        glob.logger.info(f"Attacker actions and strategy have been loaded for attacker {self.id} at {self.env.now}.")
 
     def random_strategy(self):
         # Check if host is already compromised.
         host = self.network.get_host(self.start)
-        if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
+        if host.get_attacker_access_lvl() != glob.AccessLevel.NONE:
             # If so then scan for other hosts and to compromised nodes.
-            self.compromised_hosts.append(self.start)
             glob.logger.info(f"Start SubnetScan at {self.env.now}.")
             yield self.env.process(self.subnetscan())
 
-            # Check the edges for hardenning if none exploit etc...
+            # Choose a random target from seen hosts.
             self.target = random.choice(self.scanned_hosts).get_address()
             edge = self.network.get_edge((self.start, self.target))
-            # Check if there are new nodes else end attack.
+
+            # Check if there are new hosts else end attack.
             if edge == None:
-                self.start = random.choice(self.compromised_hosts)
+                self.start = random.choice(self.compromised_hosts)[0]
                 glob.logger.info(f"Looping back to host {self.start} at {self.env.now}.")
             else:
                 glob.logger.info(f"Start Exploit at {self.env.now}.")
@@ -105,30 +104,40 @@ class Attacker:
         else:
             # Else run a privilege escalation.
             glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation())
+            yield self.env.process(self.privilege_escalation(host))
 
     def zero_day_exploit(self):
         """
         This is the zero-day exploit strategy where the focus is on using exploits to get deeper within the network.
         """
-        # Set start host.
+        # Make a temp host for the run.
         host = self.network.get_host(self.start)
-        # Scan for reachable hosts.
-        glob.logger.info(f"Start SubnetScan at {self.env.now}.")
-        yield self.env.process(self.subnetscan())
+        # If the host had more that 3 neighbors we think it is valuable so get score.
+        if len(self.network.get_all_edges_from(self.start)) > 3 and self.start != (1, 0):
+            # Run a privilege escalation.
+            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+            yield self.env.process(self.privilege_escalation(host))
 
-	    # From this host check for the edge with the lowest cost to exploit
-        possible_edges = self.network.get_all_edges_from(self.start)
-        for edge in possible_edges:
-            if edge.get_dest_addr() in self.compromised_hosts:
-                possible_edges.remove(edge)
+        if host.get_attacker_access_lvl() == glob.AccessLevel.NONE or self.start == (1,0):
+            # If so then scan for other hosts and to compromised nodes.
+            glob.logger.info(f"Start SubnetScan at {self.env.now}.")
+            yield self.env.process(self.subnetscan())
 
-        # If other targets are available and not in compromised nodes.
-        if len(possible_edges) > 0:
-            edge = possible_edges[0]
+            # Choose the best target from seen hosts.
+            self.target = self.get_best_target()
+            edge = self.network.get_edge((self.start, self.target))
 
-        glob.logger.info(f"Start Exploit at {self.env.now}.")
-        yield self.env.process(self.exploit(edge))
+            # Check if there are new hosts else end attack.
+            if edge == None:
+                self.start = random.choice(self.compromised_hosts)[0]
+                glob.logger.info(f"Looping back to host {self.start} at {self.env.now}.")
+            else:
+                glob.logger.info(f"Start Exploit at {self.env.now}.")
+                yield self.env.process(self.exploit(edge))
+        else:
+            # Else run a privilege escalation till you have the score.
+            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+            yield self.env.process(self.privilege_escalation(host))
 
 
     def advanced_persistant_threats(self):
@@ -181,17 +190,18 @@ class Attacker:
         """
         priv_esc = self.lowest_cost(host.possible_attacks())
         self.update_cost(priv_esc.get_cost())
+        yield self.env.timeout(priv_esc.get_duration())
 
         if priv_esc.get_name() in host.get_hardened():
             # Priv_esc has failed.
-            yield self.env.timeout(priv_esc.get_duration())
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
             self.network.add_failed_att_hosts(host)
         else:
             # Priv_esc has succeeded.
-            yield self.env.timeout(priv_esc.get_duration())
             host.set_attacker_access_lvl(host.get_attacker_access_lvl() + 1)
+            self.add_compromised_host((host.get_address(), 1))
             if host.get_attacker_access_lvl() == glob.AccessLevel.ROOT:
+                self.add_compromised_host((host.get_address(), 2))
                 self.update_score(host.get_score())
             glob.logger.info(f"Privilege escalation succeeded on host {host.get_address()} at {self.env.now}.")
 
@@ -219,3 +229,28 @@ class Attacker:
                     best_exploit = exploit
 
         return best_exploit
+
+    def add_compromised_host(self, item):
+        """
+        Add a new compromised host to the list or update existing host with higher acces level.
+        """
+        for host in self.compromised_hosts:
+            if item[0] == host[0]:
+                if item[1] == host[1]:
+                    return
+                if item[1] > host[1]:
+                    host[1] = item[1]
+                    return
+
+        # This is if it is not in the list.
+        self.compromised_hosts.append(item)
+
+    def get_best_target(self):
+        """
+        This function should prioritise hosts from other subnets, if there is none, just take one.
+        """
+        for host in self.scanned_hosts:
+            if host.get_address()[0] != self.start[0]:
+                return host.get_address()
+
+        return self.scanned_hosts[0].get_address()
