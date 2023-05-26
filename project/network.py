@@ -85,8 +85,9 @@ class Host:
     def set_attacker_access_lvl(self, lvl):
         """
         Set the access level to the given level if it is higher.
+        The lvl cannot be higher than the root access.
         """
-        if self.attacker_access_lvl < lvl:
+        if self.attacker_access_lvl < lvl and self.attacker_access_lvl <= glob.AccessLevel.ROOT:
             self.attacker_access_lvl = lvl
 
 
@@ -324,7 +325,7 @@ class Network:
     """
 
     def __init__(self):
-        self.hosts = [Host(1, 0, 1, 0, 2, [], "Internet", [], [], "windows")]
+        self.hosts = [Host(1, 0, 0, 0, 2, [], "Internet", [], [], "windows")]
         self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
         self.edges = {}                 # The key is (source numb, dest numb)
         self.sensitive_hosts = []
@@ -676,7 +677,7 @@ class Network:
 
 def create_basic_network(numb1, numb2):
     """
-    Creates a random graph and create a network based on the graph.
+    Creates a basic network.
     Return the graph, the network and the positions.
     ----------
     numb1: int
@@ -722,6 +723,85 @@ def create_basic_network(numb1, numb2):
     return N
 
 
+def create_small_world(n, k, p):
+    """
+    Creates a random graph and create a network based on the graph.
+    Return the graph, the network and the positions.
+    ----------
+    n: int
+        Number of hosts.
+    k: int
+        Each node is joined with its k nearest neighbors in a ring topology.
+    p: int
+        The probability of rewiring each edge
+
+    """
+
+    G = nx.watts_strogatz_graph(n, k, p, seed=3113794652)
+    pos = nx.spring_layout(G, seed=3113794652)
+    # nx.draw(G, pos)
+    # plt.show()
+
+    N = Network()
+
+    for numb in range(0, len(G.nodes())):
+        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+
+    # Add 1 to both source and destination because host 0 is the internet.
+    for edge in G.edges():
+        source, dest = edge
+        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:1])
+        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:1])
+
+    if n >= 18:
+        N.add_edge((1, 0), (2, 4), glob.services[0:1])
+        N.add_edge((1, 0), (2, 10), glob.services[0:1])
+        N.add_edge((1, 0), (2, 17), glob.services[0:1])
+
+
+    return N
+
+
+def create_power_law(n, k, p):
+    """
+    Creates a random graph and create a network based on the graph.
+    Return the graph, the network and the positions.
+    ----------
+    n: int
+        Number of hosts.
+    k: int
+        The number of random edges to add for each new node
+    p: int
+        Probability of adding a triangle after adding a random edge
+
+    """
+
+    G = nx.powerlaw_cluster_graph(n, k, p, seed=3113794652)
+    pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+    nx.draw(G, pos)
+    plt.show()
+
+    N = Network()
+
+    for numb in range(0, len(G.nodes())):
+        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+
+    # Add 1 to both source and destination because host 0 is the internet.
+    for edge in G.edges():
+        source, dest = edge
+        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:1])
+        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:1])
+
+    if n >= 18:
+        N.add_edge((1, 0), (2, 10), glob.services[0:1])
+        N.add_edge((1, 0), (2, 13), glob.services[0:1])
+        N.add_edge((1, 0), (2, 14), glob.services[0:1])
+        N.add_edge((1, 0), (2, 18), glob.services[0:1])
+
+    return N
+
+
+
 def draw_network(network):
     G = nx.DiGraph(network.adjacency_matrix)
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
@@ -751,13 +831,24 @@ def draw_network(network):
 
     labels = {}
     for n in G.nodes:
-        labels[n] = network.hosts[n].get_address()
+        add1, add2 = network.hosts[n].get_address()
+        labels[n] = str(add1) + ", " + str(add2)
 
-    nx.draw_networkx_labels(G, pos, labels, font_size=8, font_color="whitesmoke")
+    nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
     # plt.show()
     plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
 
 if __name__ == '__main__':
-    N = create_basic_network(5, 3)
+    # N = create_basic_network(5, 3)
+    N = create_small_world(20, 4, 0.8)
+    # N = create_power_law(20, 1, 0.4)
 
     draw_network(N)
+    # max_score, compromised_score = N.calculate_score()
+    # def_cost = defender.get_score()
+
+    # print("Cost of defending actions:", def_cost)
+    # print("Sum of compromised score:", compromised_score)
+    # print("Max score:", max_score)
+
+    # print("Added costs and comprimised:", def_cost - compromised_score)
