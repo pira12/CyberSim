@@ -15,8 +15,8 @@ class ResultsWindow(customtkinter.CTkToplevel):
         self.geometry(f"{800}x{400}")
         self.title("Results Window")
 
-        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"Network_fig.png"),
-                                                   dark_image=Image.open(f"Network_fig.png"),
+        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
+                                                   dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
                                                    size=(780, 380))
         self.result_preview = customtkinter.CTkLabel(self, image=self.result_image, text="")
         self.result_preview.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -144,10 +144,10 @@ class App(customtkinter.CTk):
         self.runtime.grid(row=2, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
         # Outpuf filename selection
-        self.label_4 = customtkinter.CTkLabel(master=self.option_frame, text="Set the output file name:")
+        self.label_4 = customtkinter.CTkLabel(master=self.option_frame, text="Set the output folder name:")
         self.label_4.grid(row=3, column=0, padx=20, pady=20, sticky="nw")
-        self.file_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Output filename")
-        self.file_entry.grid(row=3, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.folder_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Folder name")
+        self.folder_entry.grid(row=3, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
         # Selection for importing and saving settings
         # self.label_5 = customtkinter.CTkLabel(master=self.option_frame, text="Import Configuration:")
@@ -344,11 +344,16 @@ class App(customtkinter.CTk):
         else:
             glob.MAX_RUNTIME = self.runtime.get()
 
-        if self.file_entry.get() == "":
+        if self.folder_entry.get() == "":
             CTkMessagebox(master=app, title="Error", message="The output filename is not chosen!", icon="warning")
             return True
         else:
-            glob.OUT_FILENAME = self.file_entry.get()
+            glob.OUT_FOLDERNAME = self.folder_entry.get()
+            try:
+                os.mkdir(f"./{self.folder_entry.get()}")
+            except FileExistsError:
+                CTkMessagebox(master=app, title="Error", message="There is already a folder with this name!", icon="warning")
+                return True
 
         if self.att_entry.get() == "" or len(glob.attacker_list) <= 0:
             CTkMessagebox(master=app, title="Error", message="There not enough attakers generated!", icon="warning")
