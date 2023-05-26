@@ -836,7 +836,7 @@ def draw_network(network):
 
     nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
     # plt.show()
-    plt.savefig("Network_fig.png", format="PNG")
+    plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
 
 if __name__ == '__main__':
     # N = create_basic_network(5, 3)

@@ -10,7 +10,7 @@ from actions_att import Exploit, PrivilegeEscalation
 
 MAX_RUNTIME = 60
 NUM_SIMS = 1
-OUT_FILENAME = "output"
+OUT_FOLDERNAME = "output"
 
 attacker_list= []
 defender_strategy = None
