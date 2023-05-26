@@ -86,6 +86,11 @@ class App(customtkinter.CTk):
         self.tabview.add("Defender")
         self.tabview.add("Simulation log")
 
+        self.progressbar = customtkinter.CTkProgressBar(self, orientation="horizontal", height=5)
+        self.progressbar.grid(row=2, column=1, columnspan=4, padx=5, pady=5, sticky="esw")
+        self.progressbar.set(0)
+        glob.progress_bar = self.progressbar
+
         """
         -------------------------------------------------------------------------------------------
         Configure grid of individual tabs
@@ -249,6 +254,7 @@ class App(customtkinter.CTk):
         """
         Function connected to the start button.
         """
+        self.progressbar.set(0)
         if self.check_edge_cases() == True:
             return
 
@@ -261,6 +267,8 @@ class App(customtkinter.CTk):
         self.log.insert("0.0", log)
         self.log.configure(state="disabled")
         os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
+
+        self.progressbar.set(1)
         CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check")
 
     def stop_event(self):
@@ -274,9 +282,16 @@ class App(customtkinter.CTk):
 
     def set_attackers(self):
         """ Function which generates attacker frames based on input from entry form."""
+        if self.att_entry.get() == "":
+            CTkMessagebox(master=app, title="Error", message="Choose number of attackers!", icon="warning")
+            return True
+
         glob.attacker_list = [[] for _ in range(int(self.att_entry.get()))]
+        for widgets in self.scrollable_frame.winfo_children():
+            widgets.destroy()
+
         for i in range(int(self.att_entry.get())):
-            # Creates a form and splits it in rows of 2.
+            # Creates a frame and splits it in rows of 2.
             self.attacker_frame = customtkinter.CTkFrame(master=self.scrollable_frame)
             self.attacker_frame.grid(row=i//2, column=i%2, padx=(10, 10), pady=(10,10), sticky="nsew")
 
@@ -353,8 +368,7 @@ class App(customtkinter.CTk):
             try:
                 os.mkdir(f"./{self.folder_entry.get()}")
             except FileExistsError:
-                CTkMessagebox(master=app, title="Error", message="There is already a folder with this name!", icon="warning")
-                return True
+                pass
 
         if self.att_entry.get() == "" or len(glob.attacker_list) <= 0:
             CTkMessagebox(master=app, title="Error", message="There not enough attakers generated!", icon="warning")

@@ -12,6 +12,8 @@ MAX_RUNTIME = 60
 NUM_SIMS = 1
 OUT_FOLDERNAME = "output"
 
+progress_bar = None
+
 attacker_list= []
 defender_strategy = None
 harden_host_allowed = None

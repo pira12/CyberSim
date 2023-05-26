@@ -15,7 +15,6 @@ def generate_defender(env, N):
     defender  = defend.Defender(env, N, "random")
     env.process(defender.run())
 
-
 def stop_simulation():
     """
     Function which will stop the simulation.

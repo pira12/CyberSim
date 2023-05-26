@@ -49,6 +49,7 @@ class Attacker:
         self.add_compromised_host(((1, 0), 2))
 
         while True:
+            glob.progress_bar.set(self.env.now / int(glob.MAX_RUNTIME))
             print(self.compromised_hosts)
             if self.strategy == "Random Strategy":
                 # Run RST
@@ -189,9 +190,14 @@ class Attacker:
         The exploit function which tries to exploit a link to hop to another node.
         """
         exploit = self.lowest_cost(vulnerable_edge.possible_exploits())
-        self.update_cost(exploit.get_cost())
 
-        yield self.env.timeout(exploit.get_duration())
+        try:
+            self.update_cost(exploit.get_cost())
+            yield self.env.timeout(exploit.get_duration())
+        except:
+            glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
+            self.network.add_failed_att_edges(vulnerable_edge)
+            return
 
         if exploit.get_name() in vulnerable_edge.get_hardened():
             glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
@@ -207,15 +213,16 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         priv_esc = self.lowest_cost(host.possible_attacks())
-        if priv_esc == None:
+
+        try:
+            self.update_cost(priv_esc.get_cost())
+            yield self.env.timeout(priv_esc.get_duration())
+        except:
             # Priv_esc has failed.
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
             self.network.add_failed_att_hosts(host)
-            self.start = random.choice(self.scanned_hosts).get_address()
+            self.start = (random.choice(self.compromised_hosts)[0])
             return
-
-        self.update_cost(priv_esc.get_cost())
-        yield self.env.timeout(priv_esc.get_duration())
 
         if priv_esc.get_name() in host.get_hardened():
             # Priv_esc has failed.
