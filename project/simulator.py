@@ -260,6 +260,7 @@ class App(customtkinter.CTk):
             log = f.read()
         self.log.insert("0.0", log)
         self.log.configure(state="disabled")
+        os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
         CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check")
 
     def stop_event(self):
