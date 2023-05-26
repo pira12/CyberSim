@@ -13,6 +13,7 @@ NUM_SIMS = 1
 OUT_FILENAME = "output"
 
 attacker_list= []
+defender_strategy = None
 harden_host_allowed = None
 harden_edge_allowed = None
 

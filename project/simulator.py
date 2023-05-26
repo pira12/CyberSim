@@ -197,8 +197,9 @@ class App(customtkinter.CTk):
         self.label_d1 = customtkinter.CTkLabel(master=self.defender_frame, text="Choose defence strategy:")
         self.label_d1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.defense_strategy = customtkinter.CTkOptionMenu(master=self.defender_frame, dynamic_resizing=False,
-                                                            values=["Strategy 1", "Strategy 2", "Strategy 3"])
+                                                            values=["random", "last layer", "lazy", "reactive and random"])
         self.defense_strategy.grid(row=0, column=1, padx=10, pady=20)
+        glob.defender_strategy = self.defense_strategy
 
         # Frame for edge actions
         self.edge_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
