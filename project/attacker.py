@@ -46,8 +46,10 @@ class Attacker:
         """
         # Load attacks to launch based on attack strategy
         self.load_actions()
+        self.add_compromised_host(((1, 0), 2))
 
         while True:
+            print(self.compromised_hosts)
             if self.strategy == "Random Strategy":
                 # Run RST
                 yield self.env.process(self.random_strategy())
@@ -85,7 +87,14 @@ class Attacker:
     def random_strategy(self):
         # Check if host is already compromised.
         host = self.network.get_host(self.start)
-        if self.compromised_check(host.get_address()) != False or self.start == (1, 0):
+
+        if random.randint(0, 1) > 0.3:
+            # Else run a privilege escalation.
+            if self.start != (1, 0):
+                glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+                yield self.env.process(self.privilege_escalation(host))
+
+        if self.compromised_check(host.get_address()) != False or self.compromised_check(host.get_address()) == 2:
             # If so then scan for other hosts and to compromised nodes.
             glob.logger.info(f"Start SubnetScan at {self.env.now}.")
             yield self.env.process(self.subnetscan())
@@ -101,10 +110,7 @@ class Attacker:
             else:
                 glob.logger.info(f"Start Exploit at {self.env.now}.")
                 yield self.env.process(self.exploit(edge))
-        else:
-            # Else run a privilege escalation.
-            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation(host))
+
 
     def zero_day_exploit(self):
         """
@@ -113,12 +119,13 @@ class Attacker:
         # Make a temp host for the run.
         host = self.network.get_host(self.start)
         # If the host had more that 3 neighbors we think it is valuable so get score.
-        if len(self.network.get_all_edges_from(self.start)) > 3 and self.start != (1, 0):
-            # Run a privilege escalation.
-            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation(host))
+        if len(self.network.get_all_edges_from(self.start)) > 3:
+            if self.start != (1, 0):
+                # Run a privilege escalation.
+                glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+                yield self.env.process(self.privilege_escalation(host))
 
-        if self.compromised_check(host.get_address()) != False or self.start == (1, 0):
+        if self.compromised_check(host.get_address()) != False:
             # If so then scan for other hosts and to compromised nodes.
             glob.logger.info(f"Start SubnetScan at {self.env.now}.")
             yield self.env.process(self.subnetscan())
@@ -134,7 +141,8 @@ class Attacker:
             else:
                 glob.logger.info(f"Start Exploit at {self.env.now}.")
                 yield self.env.process(self.exploit(edge))
-        else:
+
+        if self.start != (1,0):
             # Else run a privilege escalation till you have the score.
             glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
             yield self.env.process(self.privilege_escalation(host))
@@ -144,10 +152,11 @@ class Attacker:
         # Make a temp host for the run.
         host = self.network.get_host(self.start)
 
-        if self.compromised_check(host.get_address()) != 2 and self.start != (1, 0):
-            # Run a privilege escalation till root level.
-            glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
-            yield self.env.process(self.privilege_escalation(host))
+        if self.compromised_check(host.get_address()) != 2:
+            if self.start != (1, 0):
+                # Run a privilege escalation till root level.
+                glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
+                yield self.env.process(self.privilege_escalation(host))
         else:
             # If so then scan for other hosts and to compromised nodes.
             glob.logger.info(f"Start SubnetScan at {self.env.now}.")
@@ -189,8 +198,8 @@ class Attacker:
             self.network.add_failed_att_edges(vulnerable_edge)
         else:
             glob.logger.info(f"Exploit succeeded on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
-            self.compromised_hosts.append(vulnerable_edge.get_source_addr())
-            self.start = vulnerable_edge.get_source_addr()
+            self.add_compromised_host((vulnerable_edge.get_dest_addr(), 0))
+            self.start = vulnerable_edge.get_dest_addr()
 
 
     def privilege_escalation(self, host):
@@ -198,6 +207,13 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         priv_esc = self.lowest_cost(host.possible_attacks())
+        if priv_esc == None:
+            # Priv_esc has failed.
+            glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
+            self.network.add_failed_att_hosts(host)
+            self.start = random.choice(self.scanned_hosts).get_address()
+            return
+
         self.update_cost(priv_esc.get_cost())
         yield self.env.timeout(priv_esc.get_duration())
 
@@ -243,13 +259,14 @@ class Attacker:
         """
         Add a new compromised host to the list or update existing host with higher acces level.
         """
-        for host in self.compromised_hosts:
+        for i, host in enumerate(self.compromised_hosts):
             if item[0] == host[0]:
                 if item[1] == host[1]:
                     return
                 if item[1] > host[1]:
-                    host[1] = item[1]
+                    self.compromised_hosts[i] = (item[0], item[1])
                     return
+                return
 
         # This is if it is not in the list.
         self.compromised_hosts.append(item)
@@ -283,6 +300,6 @@ class Attacker:
         """
         for host in self.compromised_hosts:
             if host[0] == address:
-                return host[2]
+                return host[1]
 
         return False

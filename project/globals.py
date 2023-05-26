@@ -8,7 +8,7 @@ from actions_att import Exploit, PrivilegeEscalation
 
 
 
-MAX_RUMTIME = 60
+MAX_RUNTIME = 60
 NUM_SIMS = 1
 OUT_FILENAME = "output"
 
