@@ -58,6 +58,4 @@ def start_simulation():
 
     print("Added costs and comprimised:", def_cost - compromised_score)
 
-
-
     nw.draw_network(N)

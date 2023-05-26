@@ -13,7 +13,7 @@ NUM_SIMS = 1
 OUT_FOLDERNAME = "output"
 
 progress_bar = None
-
+network_selection = None
 attacker_list= []
 defender_strategy = None
 harden_host_allowed = None
