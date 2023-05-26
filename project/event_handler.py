@@ -14,6 +14,7 @@ def generate_attackers(env, N):
 def generate_defender(env, N):
     defender  = defend.Defender(env, N, "random")
     env.process(defender.run())
+    return defender
 
 
 def stop_simulation():
@@ -42,12 +43,21 @@ def start_simulation():
     # Create attackers and defenders.
     generate_attackers(env, N)
 
-    generate_defender(env, N)
+    defender = generate_defender(env, N)
 
     # Run the simulation with multiple termination cireteria.
     env.run(until=glob.MAX_RUNTIME)
 
     glob.logger.info(f"Simulation ended at time: {env.now}")
+
+    max_score, compromised_score = N.calculate_score()
+    def_cost = defender.get_score()
+
+    print("Cost of defending actions:", def_cost)
+    print("Sum of compromised score:", compromised_score)
+    print("Max score:", max_score)
+
+    print("Added costs and comprimised:", def_cost - compromised_score)
 
 
 
