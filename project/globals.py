@@ -8,11 +8,12 @@ from actions_att import Exploit, PrivilegeEscalation
 
 
 
-MAX_RUMTIME = 60
+MAX_RUNTIME = 60
 NUM_SIMS = 1
 OUT_FILENAME = "output"
 
 attacker_list= []
+defender_strategy = None
 harden_host_allowed = None
 harden_edge_allowed = None
 

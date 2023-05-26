@@ -140,8 +140,8 @@ class App(customtkinter.CTk):
         # Runtime selection
         self.label_3 = customtkinter.CTkLabel(master=self.option_frame, text="Set the simulation run time:")
         self.label_3.grid(row=2, column=0, padx=20, pady=20, sticky="nw")
-        self.time_entry = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Simulation time")
-        self.time_entry.grid(row=2, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.runtime = customtkinter.CTkEntry(master=self.option_frame, placeholder_text="Simulation time")
+        self.runtime.grid(row=2, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
         # Outpuf filename selection
         self.label_4 = customtkinter.CTkLabel(master=self.option_frame, text="Set the output file name:")
@@ -197,8 +197,9 @@ class App(customtkinter.CTk):
         self.label_d1 = customtkinter.CTkLabel(master=self.defender_frame, text="Choose defence strategy:")
         self.label_d1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.defense_strategy = customtkinter.CTkOptionMenu(master=self.defender_frame, dynamic_resizing=False,
-                                                            values=["Strategy 1", "Strategy 2", "Strategy 3"])
+                                                            values=["random", "last layer", "lazy", "reactive and random"])
         self.defense_strategy.grid(row=0, column=1, padx=10, pady=20)
+        glob.defender_strategy = self.defense_strategy
 
         # Frame for edge actions
         self.edge_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
@@ -337,11 +338,11 @@ class App(customtkinter.CTk):
         else:
             glob.NUM_SIMS = self.sim_entry.get()
 
-        if self.time_entry.get() == "":
+        if self.runtime.get() == "":
             CTkMessagebox(master=app, title="Error", message="The simulation time entry is empty!", icon="warning")
             return True
         else:
-            glob.MAX_RUNTIME = self.time_entry.get()
+            glob.MAX_RUNTIME = self.runtime.get()
 
         if self.file_entry.get() == "":
             CTkMessagebox(master=app, title="Error", message="The output filename is not chosen!", icon="warning")

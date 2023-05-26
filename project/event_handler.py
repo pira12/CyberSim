@@ -45,8 +45,10 @@ def start_simulation():
     generate_defender(env, N)
 
     # Run the simulation with multiple termination cireteria.
-    env.run(until=glob.MAX_RUMTIME)
+    env.run(until=glob.MAX_RUNTIME)
 
     glob.logger.info(f"Simulation ended at time: {env.now}")
+
+
 
     nw.draw_network(N)
