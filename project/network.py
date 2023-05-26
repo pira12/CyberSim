@@ -132,6 +132,15 @@ class Host:
         return self.processes
 
 
+    def update_processes(self, new_processes):
+        """
+        Change the processes of the host.
+        ----------
+        new_processes: [string]
+        """
+        self.processes = new_processes
+
+
     def get_services(self):
         """
         Return the services of the host.
@@ -139,11 +148,29 @@ class Host:
         return self.services
 
 
+    def update_services(self, new_services):
+        """
+        Change the services of the host.
+        ----------
+        new_services: [string]
+        """
+        self.services = new_services
+
+
     def get_os(self):
         """
         Return the os of the host.
         """
         return self.os
+
+
+    def update_os(self, new_os):
+        """
+        Change the os of the host.
+        ----------
+        new_os: string
+        """
+        self.os = new_os
 
 
     def harden(self, attack_type):
@@ -230,8 +257,16 @@ class Edge:
     def get_servs_allowed(self):
         """
         Return the services that are allowed on this edge.
+        These are the services that are not blocked by the firewall.
         """
         return self.servs_allowed
+
+
+    def update_servs_allowed(self, new_servs):
+        """
+        Change the services that are allowed on this edge.
+        """
+        self.servs_allowed = new_servs
 
 
     def possible_exploits(self):
@@ -559,15 +594,19 @@ class Network:
     def get_all_compromised_hosts(self):
         """
         Return the place in the array hosts of all hosts that are
-        compromised.
+        compromised. We distinguish between the different levels
+        at which the hosts can be compromised.
         """
-        compromised_host = []
+        compromised_host_lvl1 = []
+        compromised_host_lvl2 = []
 
         for i in range(0, len(self.hosts)):
-            if self.hosts[i].get_attacker_access_lvl() != 0:
-                compromised_host.append(i)
+            if self.hosts[i].get_attacker_access_lvl() == 1:
+                compromised_host_lvl1.append(i)
+            elif self.hosts[i].get_attacker_access_lvl() == 2:
+                compromised_host_lvl2.append(i)
 
-        return compromised_host
+        return compromised_host_lvl1, compromised_host_lvl2
 
 
     def get_failed_att_hosts(self):
@@ -702,8 +741,9 @@ def draw_network(network):
             colors.append("black")
 
 
-    compromised_hosts = network.get_all_compromised_hosts()
-    nx.draw(G, pos, nodelist=compromised_hosts, node_color="tab:red", edgelist=edges, edge_color=colors)
+    compr_hosts_lvl1, compr_hosts_lvl2 = network.get_all_compromised_hosts()
+    nx.draw(G, pos, nodelist=compr_hosts_lvl1, node_color="tab:red")
+    nx.draw(G, pos, nodelist=compr_hosts_lvl2, node_color="maroon", edgelist=edges, edge_color=colors)
 
     # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
     # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")

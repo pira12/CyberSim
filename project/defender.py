@@ -38,6 +38,8 @@ class Defender:
     def subtract_score(self, numb):
         """
         Subtract a number from the score.
+        ----------
+        numb: int
         """
         self.score -= numb
 
@@ -75,6 +77,20 @@ class Defender:
         self.failed_att_edges.append(edge)
 
 
+    def get_harden_host_allowed(self):
+        """
+        Return whether hosts can be hardened.
+        """
+        return self.harden_host_allowed
+
+
+    def get_harden_edge_allowed(self):
+        """
+        Return whether edges can be hardened.
+        """
+        return self.harden_edge_allowed
+
+
     def run(self):
         """
         The main process, which the attacker repeats until the simulation
@@ -90,11 +106,6 @@ class Defender:
             # while True:
             #     yield self.env.process(self.random_defense())
 
-            # yield self.env.process(self.first_layer_defense())
-            # yield self.env.process(self.lazy_defense())
-            while True:
-                yield self.env.process(self.most_central())
-
             while True:
                 yield self.env.process(self.random_defense())
 
@@ -107,14 +118,8 @@ class Defender:
         elif self.strategy == "lazy":
             yield self.env.process(self.lazy_defense(1))
 
-        elif self.strategy == "first_layer_central":
-            yield self.env.process(self.most_central())
-
-
-    def most_central(self):
-
-        yield self.env.process(self.lazy_defense(2))
-
+        elif self.strategy == "reactive and random":
+            yield self.env.process(self.lazy_defense(2))
 
 
 
@@ -136,11 +141,14 @@ class Defender:
 
         for host in att_hosts:
             self.add_failed_att_hosts(host)
-            yield self.env.process(self.fully_harden_host(host))
+
+            if self.get_harden_host_allowed():
+                yield self.env.process(self.fully_harden_host(host))
 
         for edge in att_edges:
             self.add_failed_att_edges(edge)
-            yield self.env.process(self.fully_harden_edge(edge))
+            if self.get_harden_edge_allowed():
+                yield self.env.process(self.fully_harden_edge(edge))
 
         self.network.reset_failed_att_hosts()
         self.network.reset_failed_att_edges()
@@ -153,20 +161,20 @@ class Defender:
                 yield self.env.process(self.random_defense())
 
 
-    def first_layer_defense(self):
-        """
-        Harden the first layer
-        """
+    # def first_layer_defense(self):
+    #     """
+    #     Harden the first layer
+    #     """
 
-        att_hosts = self.network.get_failed_att_hosts()
-        # att_edges = self.network.get_failed_att_edge()
-        att_edges = [self.network.get_edge(((1,0), (2,2)))]
-        print(att_edges)
+    #     att_hosts = self.network.get_failed_att_hosts()
+    #     # att_edges = self.network.get_failed_att_edge()
+    #     att_edges = [self.network.get_edge(((1,0), (2,2)))]
+    #     print(att_edges)
 
-        if att_edges != []:
-            yield self.env.process(self.fully_harden_edge(att_edges[0]))
-        else:
-            yield self.env.process(self.random_defense())
+    #     if att_edges != []:
+    #         yield self.env.process(self.fully_harden_edge(att_edges[0]))
+    #     else:
+    #         yield self.env.process(self.random_defense())
 
 
     def last_layer_defense(self):
@@ -178,24 +186,32 @@ class Defender:
         importants = self.network.get_sensitive_hosts2()
 
         for imp in importants:
-            yield self.env.process(self.fully_harden_host(imp))
+            if self.get_harden_host_allowed():
+                yield self.env.process(self.fully_harden_host(imp))
 
         for imp in importants:
-            out_going = self.network.get_all_edges_to(imp.get_address())
+            if self.get_harden_edge_allowed():
+                incoming = self.network.get_all_edges_to(imp.get_address())
 
-            for out in out_going:
-                yield self.env.process(self.fully_harden_edge(out))
+                for income in incoming:
+                    yield self.env.process(self.fully_harden_edge(income))
 
 
     def fully_harden_host(self, host):
         """
         Use all relevant hardenings on the given host.
+        Wait a little bit if there are none to prevent infinite loops
+        when everything is already hardened.
+        ----------
         host : Host
         """
         useful = self.get_useful_hardenings_host(host)
 
         for u in useful:
             yield self.env.process(self.harden_host(host, u))
+
+        if u == []:
+            self.env.timeout(0.1)
 
 
     def get_useful_hardenings_host(self, host):
@@ -204,6 +220,7 @@ class Defender:
         This is done by looking which attacks can be performed
         on this host. Hardenings that target those attacks are
         the useful hardenings.
+        ----------
         host : Host
         """
         attack_names = host.possible_attacks_names()
@@ -219,12 +236,18 @@ class Defender:
     def fully_harden_edge(self, edge):
         """
         Use all relevant hardenings on the given edge.
+        Wait a little bit if there are none to prevent infinite loops
+        when everything is already hardened.
+        ----------
         edge : Edge
         """
         useful = self.get_useful_hardenings_edge(edge)
 
         for u in useful:
             yield self.env.process(self.harden_edge(edge, u))
+
+        if u == []:
+            self.env.timeout(0.1)
 
 
     def get_useful_hardenings_edge(self, edge):
@@ -233,6 +256,7 @@ class Defender:
         This is done by looking which exploits can be performed
         on this edge. Hardenings that target those exploits are
         the useful hardenings.
+        ----------
         edge : Edge
         """
         exploit_names = edge.possible_exploits_names()
@@ -254,8 +278,17 @@ class Defender:
     def random_defense(self):
         """
         Add a defense to a random host or edge.
+        It is assumed that either hosts or edges are allowed
+        to be hardened, or both.
         """
-        if random.random() >= 0.5:
+        threshold = 0.5
+        if not self.get_harden_host_allowed():
+            threshold = 1
+        elif not self.get_harden_edge_allowed():
+            threshold = 0
+
+
+        if random.random() >= threshold:
             random_host = self.network.get_random_host()
             yield self.env.process(self.harden_host(random_host, self.get_random_def_h()))
 
@@ -267,6 +300,7 @@ class Defender:
     def harden_host(self, target_host, harden_action):
         """
         Harden a host against a certain type of attack.
+        ----------
         target_host : Host
         harden_action : Harden_host
         """
@@ -281,6 +315,7 @@ class Defender:
     def harden_edge(self, target_edge, harden_action):
         """
         Harden an edge against a certain type of attack.
+        ----------
         target_edge : Edge
         harden_action : Harden_edge
         """
