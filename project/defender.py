@@ -27,6 +27,15 @@ class Defender:
         self.failed_att_edges = [] #hmmmmm, nodig?
 
 
+    def total_score(self):
+        """
+        Return the score of the defender and the network.
+        """
+        max_score, compromised_score = self.network.calculate_score()
+        cost_actions = self.get_score()
+
+        return cost_actions - compromised_score
+
 
     def get_score(self):
         """
@@ -42,6 +51,13 @@ class Defender:
         numb: int
         """
         self.score -= numb
+
+    def get_strategy(self):
+        """
+        Return the strategy of the defender.
+        """
+
+        return self.strategy
 
     def get_failed_att_hosts(self):
         """
@@ -102,23 +118,23 @@ class Defender:
                    afterwards.
         """
 
-        if self.strategy == "random":
+        if self.get_strategy() == "random":
             # while True:
             #     yield self.env.process(self.random_defense())
 
             while True:
                 yield self.env.process(self.random_defense())
 
-        elif self.strategy == "last layer":
+        elif self.get_strategy() == "last layer":
             yield self.env.process(self.last_layer_defense())
 
             while True:
                 yield self.env.process(self.random_defense())
 
-        elif self.strategy == "lazy":
+        elif self.get_strategy() == "lazy":
             yield self.env.process(self.lazy_defense(1))
 
-        elif self.strategy == "reactive and random":
+        elif self.get_strategy() == "reactive and random":
             yield self.env.process(self.lazy_defense(2))
 
 
@@ -159,22 +175,6 @@ class Defender:
                 yield self.env.timeout(0.5)
             elif if_noone == 2:
                 yield self.env.process(self.random_defense())
-
-
-    # def first_layer_defense(self):
-    #     """
-    #     Harden the first layer
-    #     """
-
-    #     att_hosts = self.network.get_failed_att_hosts()
-    #     # att_edges = self.network.get_failed_att_edge()
-    #     att_edges = [self.network.get_edge(((1,0), (2,2)))]
-    #     print(att_edges)
-
-    #     if att_edges != []:
-    #         yield self.env.process(self.fully_harden_edge(att_edges[0]))
-    #     else:
-    #         yield self.env.process(self.random_defense())
 
 
     def last_layer_defense(self):
@@ -304,12 +304,12 @@ class Defender:
         target_host : Host
         harden_action : Harden_host
         """
-        glob.logger.info(f"Start Harden_host at {self.env.now} on host {target_host.get_address()}.")
+        glob.logger.info(f"Start Harden_host on host {target_host.get_address()} at {self.env.now}. Score Def {self.total_score()}")
         yield self.env.timeout(harden_action.get_duration())
         target_host.harden(harden_action.get_attack_type())
 
         self.subtract_score(harden_action.get_cost())
-        glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
+        glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}. Score Def {self.total_score()}")
 
 
     def harden_edge(self, target_edge, harden_action):
@@ -319,9 +319,9 @@ class Defender:
         target_edge : Edge
         harden_action : Harden_edge
         """
-        glob.logger.info(f"Start Harden_edge at {self.env.now} on edge {target_edge.get_both_addr()}.")
+        glob.logger.info(f"Start Harden_edge on edge {target_edge.get_both_addr()} at {self.env.now}. Score Def {self.total_score()}")
         yield self.env.timeout(harden_action.get_duration())
         target_edge.harden(harden_action.get_attack_type())
 
         self.subtract_score(harden_action.get_cost())
-        glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
+        glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}. Score Def {self.total_score()}")
