@@ -68,6 +68,13 @@ class Host:
         return self.score
 
 
+    def change_score(self, new_score):
+        """
+        Return the score of the host.
+        """
+        self.score = new_score
+
+
     def get_access_for_score(self):
         """
         Return the access needed to get the score of this host.
@@ -753,10 +760,16 @@ def create_small_world(n, k, p):
         N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:1])
         N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:1])
 
-    if n >= 18:
+    if n >= 17:
         N.add_edge((1, 0), (2, 4), glob.services[0:1])
         N.add_edge((1, 0), (2, 10), glob.services[0:1])
         N.add_edge((1, 0), (2, 17), glob.services[0:1])
+
+        N.add_sensitive_hosts((2,0))
+        N.get_host((2,0)).change_score(100)
+
+        N.add_sensitive_hosts((2,12))
+        N.get_host((2,12)).change_score(200)
 
 
     return N
@@ -797,6 +810,10 @@ def create_power_law(n, k, p):
         N.add_edge((1, 0), (2, 13), glob.services[0:1])
         N.add_edge((1, 0), (2, 14), glob.services[0:1])
         N.add_edge((1, 0), (2, 18), glob.services[0:1])
+
+        N.add_sensitive_hosts((2,0))
+        N.get_host((2,0)).change_score(200)
+
 
     return N
 
