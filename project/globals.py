@@ -12,6 +12,7 @@ MAX_RUNTIME = 60
 NUM_SIMS = 1
 OUT_FOLDERNAME = "output"
 
+attackers = []
 progress_bar = None
 network_selection = None
 attacker_list= []

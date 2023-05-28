@@ -7,8 +7,10 @@ import defender as defend
 
 
 def generate_attackers(env, N):
+    glob.attackers = []
     for id, attacker_settings in enumerate(glob.attacker_list):
         attacker  = att.Attacker(env, N, attacker_settings, id)
+        glob.attackers.append(attacker)
         env.process(attacker.run())
 
 def generate_defender(env, N):
@@ -51,6 +53,9 @@ def start_simulation():
 
     max_score, compromised_score = N.calculate_score()
     def_cost = defender.get_score()
+
+    for i, attacker in enumerate(glob.attackers):
+        print(f"Attacker {i} has score: {attacker.score}")
 
     print("Cost of defending actions:", def_cost)
     print("Sum of compromised score:", compromised_score)
