@@ -12,7 +12,7 @@ def generate_attackers(env, N):
         env.process(attacker.run())
 
 def generate_defender(env, N):
-    defender  = defend.Defender(env, N, "random")
+    defender  = defend.Defender(env, N, glob.defender_strategy.get())
     env.process(defender.run())
     return defender
 
