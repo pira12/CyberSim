@@ -275,6 +275,8 @@ class App(customtkinter.CTk):
         self.log.insert("0.0", log)
         self.log.configure(state="disabled")
         os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
+        os.remove("./log.txt")
+
 
         self.progressbar.set(1)
         CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check")

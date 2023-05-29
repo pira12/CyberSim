@@ -1,0 +1,48 @@
+2023-05-30 01:21:47,770 Attacker actions and strategy have been loaded for attacker 0 at 0.
+2023-05-30 01:21:47,771 Start SubnetScan at 0.
+2023-05-30 01:21:47,771 Start Harden_edge on edge ((2, 2), (2, 0)) at 0. Score Def 0
+2023-05-30 01:21:47,771 SubnetScan succeeded on host (1, 0) at 10.
+2023-05-30 01:21:47,771 Edge ((2, 2), (2, 0)) hardened against att_e2 at 10. Score Def -1
+2023-05-30 01:21:47,771 Start Exploit at 10.
+2023-05-30 01:21:47,771 Start Harden_host on host (2, 3) at 10. Score Def -1
+2023-05-30 01:21:47,771 Exploit succeeded on edge ((1, 0), (2, 3)) at 20.
+2023-05-30 01:21:47,771 Host (2, 3) hardened against att_h2 at 20. Score Def -2
+2023-05-30 01:21:47,772 Start Harden_edge on edge ((2, 0), (2, 4)) at 20. Score Def -2
+2023-05-30 01:21:47,774 Start PrivilegeEscalation at 20.
+2023-05-30 01:21:47,774 Edge ((2, 0), (2, 4)) hardened against att_e2 at 30. Score Def -3
+2023-05-30 01:21:47,774 Privilege escalation succeeded on host (2, 3) at 30.
+2023-05-30 01:21:47,774 Start SubnetScan at 30.
+2023-05-30 01:21:47,774 Start Harden_host on host (2, 3) at 30. Score Def -3
+2023-05-30 01:21:47,775 SubnetScan succeeded on host (2, 3) at 40.
+2023-05-30 01:21:47,775 Host (2, 3) hardened against att_h1 at 40. Score Def -4
+2023-05-30 01:21:47,775 Start Exploit at 40.
+2023-05-30 01:21:47,775 Start Harden_host on host (2, 3) at 40. Score Def -4
+2023-05-30 01:21:47,775 Exploit succeeded on edge ((2, 3), (2, 0)) at 50.
+2023-05-30 01:21:47,775 Host (2, 3) hardened against att_h1 at 50. Score Def -5
+2023-05-30 01:21:47,776 Start Harden_edge on edge ((3, 0), (3, 1)) at 50. Score Def -5
+2023-05-30 01:21:47,777 Start PrivilegeEscalation at 50.
+2023-05-30 01:21:47,777 Edge ((3, 0), (3, 1)) hardened against att_e1 at 60. Score Def -6
+2023-05-30 01:21:47,777 Privilege escalation succeeded on host (2, 0) at 60.
+2023-05-30 01:21:47,777 Start SubnetScan at 60.
+2023-05-30 01:21:47,777 Start Harden_host on host (3, 2) at 60. Score Def -6
+2023-05-30 01:21:47,777 SubnetScan succeeded on host (2, 0) at 70.
+2023-05-30 01:21:47,777 Host (3, 2) hardened against att_h2 at 70. Score Def -7
+2023-05-30 01:21:47,777 Start Exploit at 70.
+2023-05-30 01:21:47,777 Start Harden_edge on edge ((1, 0), (2, 3)) at 70. Score Def -7
+2023-05-30 01:21:47,777 Exploit succeeded on edge ((2, 0), (3, 0)) at 80.
+2023-05-30 01:21:47,778 Edge ((1, 0), (2, 3)) hardened against att_e2 at 80. Score Def -8
+2023-05-30 01:21:47,778 Start Harden_host on host (3, 2) at 80. Score Def -8
+2023-05-30 01:21:47,779 Start PrivilegeEscalation at 80.
+2023-05-30 01:21:47,779 Host (3, 2) hardened against att_h2 at 90. Score Def -9
+2023-05-30 01:21:47,779 Privilege escalation succeeded on host (3, 0) at 90.
+2023-05-30 01:21:47,779 Start SubnetScan at 90.
+2023-05-30 01:21:47,779 Start Harden_host on host (2, 4) at 90. Score Def -9
+2023-05-30 01:21:47,779 SubnetScan succeeded on host (3, 0) at 100.
+2023-05-30 01:21:47,779 Host (2, 4) hardened against att_h2 at 100. Score Def -10
+2023-05-30 01:21:47,779 Start Exploit at 100.
+2023-05-30 01:21:47,779 Start Harden_host on host (3, 2) at 100. Score Def -10
+2023-05-30 01:21:47,779 Exploit succeeded on edge ((3, 0), (3, 2)) at 110.
+2023-05-30 01:21:47,780 Host (3, 2) hardened against att_h3 at 110. Score Def -11
+2023-05-30 01:21:47,780 Start Harden_host on host (2, 0) at 110. Score Def -11
+2023-05-30 01:21:47,781 Start PrivilegeEscalation at 110.
+2023-05-30 01:21:47,782 Simulation ended at time: 120.0
