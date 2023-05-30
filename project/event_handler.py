@@ -6,6 +6,17 @@ import attacker as att
 import defender as defend
 
 
+def generate_network():
+    """
+    Generates network according to selected network in GUI.
+    """
+    if glob.network_selection == "network1":
+        return nw.create_basic_network(5, 3)
+    if glob.network_selection == "network2":
+        return nw.create_small_world(20, 4, 0.8)
+    if glob.network_selection == "network3":
+        return nw.create_power_law(20, 1, 0.4)
+
 def generate_attackers(env, N):
     glob.attackers = []
     for id, attacker_settings in enumerate(glob.attacker_list):
@@ -29,10 +40,7 @@ def start_simulation():
     Function which will start the simulation.
     """
 
-    #Create network.
-    N = nw.create_basic_network(5, 3)
-    # nw.draw_network(N)
-
+    N = generate_network()
 
     """
     Create the Simpy enviroment and run it till one of termination criteria are
