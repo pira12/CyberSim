@@ -19,6 +19,9 @@ attacker_list= []
 defender_strategy = None
 harden_host_allowed = None
 harden_edge_allowed = None
+scan_host_allowed = None
+update_host_allowed = None
+update_firewall_allowed = None
 
 """
 Define logging settings.

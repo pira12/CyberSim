@@ -216,7 +216,13 @@ class App(customtkinter.CTk):
 
         self.harden_edge = customtkinter.CTkSwitch(master=self.edge_frame, text="Harden edge")
         self.harden_edge.grid(row=1, column=0, padx=20, pady=20, sticky="W")
+        self.harden_edge.select()
         glob.harden_edge_allowed = self.harden_edge
+
+        self.update_firewall = customtkinter.CTkSwitch(master=self.edge_frame, text="Update firewall")
+        self.update_firewall.grid(row=1, column=1, padx=20, pady=20, sticky="W")
+        self.update_firewall.select()
+        glob.update_firewall_allowed = self.update_firewall
 
         # Frame for host actions
         self.host_frame = customtkinter.CTkFrame(self.tabview.tab("Defender"))
@@ -227,7 +233,18 @@ class App(customtkinter.CTk):
 
         self.harden_host = customtkinter.CTkSwitch(master=self.host_frame, text="Harden host")
         self.harden_host.grid(row=1, column=0, padx=20, pady=20, sticky="W")
+        self.harden_host.select()
         glob.harden_host_allowed = self.harden_host
+
+        self.scan_host = customtkinter.CTkSwitch(master=self.host_frame, text="Scan host")
+        self.scan_host.grid(row=1, column=1, padx=20, pady=20, sticky="W")
+        self.scan_host.select()
+        glob.scan_host_allowed = self.scan_host
+
+        self.update_host = customtkinter.CTkSwitch(master=self.host_frame, text="Update host")
+        self.update_host.grid(row=1, column=2, padx=20, pady=20, sticky="W")
+        self.update_host.select()
+        glob.update_host_allowed = self.update_host
 
         """
         -------------------------------------------------------------------------------------------
@@ -318,6 +335,8 @@ class App(customtkinter.CTk):
             # List with actions
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Subnet Scan")
             switch.grid(row=1, column=0, padx=10, pady=20, sticky="W")
+            switch.select()
+            switch.configure(state="disabled")
             glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Operating System Scan")
@@ -338,10 +357,14 @@ class App(customtkinter.CTk):
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Exploit")
             switch.grid(row=2, column=1, padx=10, pady=20, sticky="W")
+            switch.select()
+            switch.configure(state="disabled")
             glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Privilege Escalation")
             switch.grid(row=3, column=1, padx=10, pady=20, sticky="W")
+            switch.select()
+            switch.configure(state="disabled")
             glob.attacker_list[i].append(switch)
 
             switch = customtkinter.CTkSwitch(master=self.attacker_frame, text="Denial Of Service")
