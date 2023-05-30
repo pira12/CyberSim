@@ -314,6 +314,10 @@ class App(customtkinter.CTk):
             CTkMessagebox(master=app, title="Error", message="Choose number of attackers!", icon="warning")
             return True
 
+        if self.att_entry.get().isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The input for number of attackers is not a number!", icon="warning")
+            return True
+
         glob.attacker_list = [[] for _ in range(int(self.att_entry.get()))]
         for widgets in self.scrollable_frame.winfo_children():
             widgets.destroy()
@@ -378,11 +382,17 @@ class App(customtkinter.CTk):
         if self.sim_entry.get() == "":
             CTkMessagebox(master=app, title="Error", message="The number of simulations is not set!", icon="warning")
             return True
+        elif self.sim_entry.get().isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The input for number of simulations is not a number!", icon="warning")
+            return True
         else:
             glob.NUM_SIMS = self.sim_entry.get()
 
         if self.runtime.get() == "":
             CTkMessagebox(master=app, title="Error", message="The simulation time entry is empty!", icon="warning")
+            return True
+        elif self.runtime.get().isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The input for max runtime is not a number!", icon="warning")
             return True
         else:
             glob.MAX_RUNTIME = self.runtime.get()
@@ -397,9 +407,13 @@ class App(customtkinter.CTk):
             except FileExistsError:
                 pass
 
-        if self.att_entry.get() == "" or len(glob.attacker_list) <= 0:
+        if self.att_entry.get().isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The input for number of attackers is not a number!", icon="warning")
+            return True
+        elif self.att_entry.get() == "" or len(glob.attacker_list) <= 0:
             CTkMessagebox(master=app, title="Error", message="There not enough attakers generated!", icon="warning")
             return True
+
 
         for i, attacker in enumerate(glob.attacker_list):
             switch_check = 0
