@@ -26,13 +26,30 @@ update_firewall_allowed = None
 """
 Define logging settings.
 """
-logging.basicConfig(filename='log.txt', filemode='w',
-                    format='%(asctime)s %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+formatter = logging.Formatter('%(asctime)s %(message)s')
 
-logging.basicConfig(filename='score_log.txt', filemode='w',
-                    format='%(asctime)s %(message)s', level=logging.INFO)
-score_logger = logging.getLogger(__name__)
+def setup_logger(name, log_file, level=logging.INFO):
+    """To setup as many loggers as you want"""
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
+# The action logger
+logger = setup_logger('logger', 'log.txt')
+
+# The score logger
+score_logger = setup_logger('score_logger', 'score_log.txt')
+
+# logging.basicConfig(filename='log.txt', filemode='w',
+#                     format='%(asctime)s %(message)s', level=logging.INFO)
+# logger = logging.getLogger(__name__)
+
 
 class AccessLevel(enum.IntEnum):
     NONE = 0
