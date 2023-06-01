@@ -791,8 +791,6 @@ def create_power_law(n, k, p):
 
     G = nx.powerlaw_cluster_graph(n, k, p, seed=3113794652)
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
-    nx.draw(G, pos)
-    plt.show()
 
     N = Network()
 
@@ -823,6 +821,19 @@ def draw_network(network):
     G = nx.DiGraph(network.adjacency_matrix)
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
+    plt.figure()
+    plt.title(str(glob.network_selection) + ", " + str(len(glob.attackers)) + " attacker(s), time: " + str(glob.MAX_RUNTIME))
+
+    from matplotlib.lines import Line2D
+    legend_elements = [
+        Line2D([0], [0], marker='o', color='w', label='Normal',markerfacecolor='tab:orange', markersize=10),
+        Line2D([0], [0], marker='o', color='w', label='Hardened',markerfacecolor='tab:blue', markersize=10),
+        Line2D([0], [0], marker='o', color='w', label='User comp',markerfacecolor='tab:red', markersize=10),
+        Line2D([0], [0], marker='o', color='w', label='Admin comp',markerfacecolor='maroon', markersize=10),
+        # Line2D([0], [0], marker='o', color='w', label="DoS'ed",markerfacecolor='black', markersize=10),
+    ]
+    plt.legend(handles=legend_elements, loc='upper right')
+
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()
     nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
@@ -851,7 +862,15 @@ def draw_network(network):
         add1, add2 = network.hosts[n].get_address()
         labels[n] = str(add1) + ", " + str(add2)
 
+    # plt.title("Score over time")
+    # plt.xlabel("Timer")
+    # plt.ylabel("Score")
+    # plt.legend()
+
+
     nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
+
+
     # plt.show()
     plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
 
