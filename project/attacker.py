@@ -13,16 +13,26 @@ class Attacker:
         The Simpy enviroment of the simulator.
     network : Network
         The Netork with all the hosts and edges.
-    process : Process
-        The process of the attacker running.
     attacker_settings : []
         The attacker_settings consist of which strategy and actions are set.
-    strategy : int
+    id : int
+        The attacker id set in the GUI
+    strategy : string
         The strategy chosen for the attacker
-    compromised hosts : [hosts]
+    actions : {}
+        A dictionary filled with the available attacks for the attacker.
+    compromised_hosts : [hosts]
         The list with hosts which have been compromised by this attacker.
-    score : AccessLevel,
+    scanned_hosts : [hosts]
+        The list with hosts which have been scanned by this attacker.
+    score : int
         The won score by compromising the network for this attacker.
+    cost : int
+        The lost score by performing actions.
+    start : (int, int)
+        The host where the attacker starts in a round.
+    target : (int, int)
+        The host where the attacker focusses on in a round.
     """
 
     def __init__(self, env, network, attacker_settings, attacker_id):
@@ -44,7 +54,7 @@ class Attacker:
         """
         The main process, which the attacker repeats untill the simulation is terminated.
         """
-        # Load attacks to launch based on attack strategy
+        # Load attacks to launch based on attack strategy.
         self.load_actions()
         self.add_compromised_host(((1, 0), 2))
 
@@ -86,6 +96,9 @@ class Attacker:
         glob.logger.info(f"Attacker actions and strategy have been loaded for attacker {self.id} at {self.env.now}.")
 
     def random_strategy(self):
+        """
+        Random strategy for the attacker.
+        """
         # Check if host is already compromised.
         host = self.network.get_host(self.start)
 
@@ -150,6 +163,9 @@ class Attacker:
 
 
     def advanced_persistant_threats(self):
+        """
+        This is the advanced persistant threat strategy where the focus is on gaining access on as many hots as possible.
+        """
         # Make a temp host for the run.
         host = self.network.get_host(self.start)
 
@@ -181,6 +197,7 @@ class Attacker:
         The subnet scan function which checks for reachable hosts.
         """
         yield self.env.timeout(self.actions["snscan"].get_duration())
+        # After waiting scan the hosts and update scanned hosts list.
         self.scanned_hosts = self.network.reachable_hosts(self.start)
         self.update_cost(self.actions["snscan"].get_cost())
         glob.logger.info(f"SubnetScan succeeded on host {self.start} at {self.env.now}.")
@@ -191,6 +208,7 @@ class Attacker:
         """
         exploit = self.lowest_cost(vulnerable_edge.possible_exploits())
 
+        # Try to start an exploit if it fails then that means the defender was quicker.
         try:
             self.update_cost(exploit.get_cost())
             yield self.env.timeout(exploit.get_duration())
@@ -199,6 +217,7 @@ class Attacker:
             self.network.add_failed_att_edges(vulnerable_edge)
             return
 
+        # Continue with registering the exploit in the network and adding the score to the attacker.
         if exploit.get_name() in vulnerable_edge.get_hardened():
             glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
             self.network.add_failed_att_edges(vulnerable_edge)
@@ -214,6 +233,7 @@ class Attacker:
         """
         priv_esc = self.lowest_cost(host.possible_attacks())
 
+        # Try to start an exploit if it fails then that means the defender was quicker.
         try:
             self.update_cost(priv_esc.get_cost())
             yield self.env.timeout(priv_esc.get_duration())
@@ -252,6 +272,9 @@ class Attacker:
         self.score += score
 
     def lowest_cost(self, exploits):
+        """
+        This function will return the exploit with the lowest cost.
+        """
         best_exploit = None
         for exploit in exploits:
             if best_exploit == None:

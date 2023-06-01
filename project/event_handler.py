@@ -19,6 +19,16 @@ def generate_network():
         return nw.create_power_law(20, 1, 0.4)
 
 def generate_attackers(env, N):
+    """
+    This funtion will generate the right amount of attackers with the information we  got from the GUI.
+    ...
+    Attributes
+    ----------
+    env : Simpy Enviroment
+        The Simpy enviroment of the simulator.
+    N : Network
+        The Netork with all the hosts and edges.
+    """
     glob.attackers = []
     for id, attacker_settings in enumerate(glob.attacker_list):
         attacker  = att.Attacker(env, N, attacker_settings, id)
@@ -26,6 +36,16 @@ def generate_attackers(env, N):
         env.process(attacker.run())
 
 def generate_defender(env, N):
+    """
+    This funtion will generate the defender with the information we got from the GUI.
+    ...
+    Attributes
+    ----------
+    env : Simpy Enviroment
+        The Simpy enviroment of the simulator.
+    N : Network
+        The Netork with all the hosts and edges.
+    """
     defender  = defend.Defender(env, N, glob.defender_strategy.get())
     env.process(defender.run())
     return defender
@@ -43,10 +63,7 @@ def start_simulation():
 
     N = generate_network()
 
-    """
-    Create the Simpy enviroment and run it till one of termination criteria are
-    triggered.
-    """
+    #Create the Simpy enviroment
     env = simpy.Environment()
 
 

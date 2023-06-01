@@ -10,11 +10,15 @@ customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
 class ResultsWindow(customtkinter.CTkToplevel):
+    """
+    This class is made for the results window.
+    """
     def __init__(self):
         super().__init__()
         self.geometry(f"{800}x{400}")
         self.title("Results Window")
 
+        # Import the image in the window.
         self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
                                                    dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
                                                    size=(780, 380))
@@ -23,6 +27,9 @@ class ResultsWindow(customtkinter.CTkToplevel):
 
 
 class App(customtkinter.CTk):
+    """
+    This class is made for the main GUI window and is split in parts.
+    """
     def __init__(self):
         super().__init__()
         """
@@ -46,13 +53,16 @@ class App(customtkinter.CTk):
         -------------------------------------------------------------------------------------------
         Sidebar
         """
+        # Creating the sidebar frame.
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
 
+        # Adding a logo/text to the sidebar.
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Simulator settings", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
+        # Adding buttons to the sidebar.
         self.sidebar_start = customtkinter.CTkButton(self.sidebar_frame, text="Start", command=self.start_event)
         self.sidebar_start.grid(row=1, column=0, padx=20, pady=10)
         self.sidebar_stop = customtkinter.CTkButton(self.sidebar_frame, text="Stop", command=self.stop_event)
@@ -60,6 +70,7 @@ class App(customtkinter.CTk):
         self.sidebar_results = customtkinter.CTkButton(self.sidebar_frame, text="Results", command=self.results_event)
         self.sidebar_results.grid(row=3, column=0, padx=20, pady=10)
 
+        # Adding a selection tool for the appearance mode and the scale.
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
         self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
@@ -80,6 +91,7 @@ class App(customtkinter.CTk):
         -------------------------------------------------------------------------------------------
         Main frame
         """
+        # Creating a switchable tab frame for the main frame.
         self.tabview = customtkinter.CTkTabview(self, width=880, height=550)
         self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=5, pady=5, sticky="nesw")
         self.tabview.add("System")
@@ -262,13 +274,22 @@ class App(customtkinter.CTk):
 
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
+        """
+        Function which will change the appearance of the GUI.
+        """
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def change_scaling_event(self, new_scaling: str):
+        """
+        Function which will change the scaling of the GUI.
+        """
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
     def update_network_entry(self, dummy):
+        """
+        Function which will change the network preview according to its selction.
+        """
         self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
                                               dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
                                               size=(420,225))
@@ -303,13 +324,18 @@ class App(customtkinter.CTk):
         print("Stop simulation")
 
     def results_event(self):
+        """
+        Function which will show the resuls by spawning a  results window.
+        """
         if self.results_window is None or not self.results_window.winfo_exists():
             self.results_window = ResultsWindow()  # create window if its None or destroyed
         else:
             self.results_window.focus()  # if window exists focus it
 
     def set_attackers(self):
-        """ Function which generates attacker frames based on input from entry form."""
+        """
+        Function which generates attacker frames based on input from entry form.
+        """
         if self.att_entry.get() == "":
             CTkMessagebox(master=app, title="Error", message="Choose number of attackers!", icon="warning")
             return True
