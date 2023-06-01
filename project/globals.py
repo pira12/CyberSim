@@ -30,6 +30,10 @@ logging.basicConfig(filename='log.txt', filemode='w',
                     format='%(asctime)s %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+logging.basicConfig(filename='score_log.txt', filemode='w',
+                    format='%(asctime)s %(message)s', level=logging.INFO)
+score_logger = logging.getLogger(__name__)
+
 class AccessLevel(enum.IntEnum):
     NONE = 0
     USER = 1

@@ -4,6 +4,7 @@ import globals as glob
 import network as nw
 import attacker as att
 import defender as defend
+from defender import log_scores
 
 
 def generate_network():
@@ -54,21 +55,24 @@ def start_simulation():
 
     defender = generate_defender(env, N)
 
+    env.process(log_scores(glob.attackers, defender, N, env))
+
     # Run the simulation with multiple termination cireteria.
     env.run(until=glob.MAX_RUNTIME)
 
     glob.logger.info(f"Simulation ended at time: {env.now}")
 
-    max_score, compromised_score = N.calculate_score()
-    def_cost = defender.get_score()
+    # max_score, compromised_score = N.calculate_score()
+    # def_cost = defender.get_score()
 
-    for i, attacker in enumerate(glob.attackers):
-        print(f"Attacker {i} has score: {attacker.score}")
+    # for i, attacker in enumerate(glob.attackers):
+    #     print(f"Attacker {i} has score: {attacker.score}")
 
-    print("Cost of defending actions:", def_cost)
-    print("Sum of compromised score:", compromised_score)
-    print("Max score:", max_score)
+    # print("Cost of defending actions:", def_cost)
+    # print("Sum of compromised score:", compromised_score)
+    # print("Max score:", max_score)
 
-    print("Added costs and comprimised:", def_cost - compromised_score)
+    # print("Added costs and comprimised:", def_cost - compromised_score)
+
 
     nw.draw_network(N)

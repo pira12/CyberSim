@@ -14,6 +14,31 @@ import globals as glob
 # last-layer defense
 # minimum-cost defense en dan ook voor duration I guess... of kan alles tegelijk hmmmm
 
+def log_scores(attackers, defender, network, env):
+
+    max_score, compromised_score = network.calculate_score()
+    def_cost = defender.get_score()
+
+    for i, attacker in enumerate(attackers):
+        print(f"Attacker {i} has score: {attacker.score}")
+
+    print("Cost of defending actions:", def_cost)
+    print("Sum of compromised score:", compromised_score)
+    print("Max score:", max_score)
+
+    print("Added costs and comprimised:", def_cost - compromised_score)
+
+    while True:
+        max_score, compromised_score = network.calculate_score()
+        def_cost = defender.get_score()
+        glob.score_logger.info(f"{env.now} Defender compromised cost {compromised_score} actions cost {def_cost}")
+
+        for i, attacker in enumerate(attackers):
+            glob.score_logger.info(f"{env.now} Attacker {i} score {attacker.score}")
+
+        yield env.timeout(1)
+
+
 class Defender:
     def __init__(self, env, network, strategy):
         self.env = env
