@@ -79,8 +79,13 @@ def start_simulation():
 
     glob.logger.info(f"Simulation ended at time: {env.now}")
 
-    # max_score, compromised_score = N.calculate_score()
-    # def_cost = defender.get_score()
+    max_score, compromised_score = N.calculate_score()
+    def_cost = defender.get_score()
+
+    glob.max_score = max_score
+    glob.compromised_score = compromised_score
+    glob.def_cost = def_cost
+    glob.def_total_cost = def_cost + compromised_score
 
     # for i, attacker in enumerate(glob.attackers):
     #     print(f"Attacker {i} has score: {attacker.score}")
@@ -89,7 +94,7 @@ def start_simulation():
     # print("Sum of compromised score:", compromised_score)
     # print("Max score:", max_score)
 
-    # print("Added costs and comprimised:", def_cost - compromised_score)
+    # print("Added costs and comprimised:", def_cost + compromised_score)
 
 
     nw.draw_network(N)

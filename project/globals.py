@@ -23,6 +23,15 @@ scan_host_allowed = None
 update_host_allowed = None
 update_firewall_allowed = None
 
+# Total score of all nodes
+max_score = None
+# Total score of compromised nodes
+compromised_score = None
+# Cost of all actions done
+def_cost = None
+#  Compromised score + def cost
+def_total_cost = None
+
 """
 Define logging settings.
 """
