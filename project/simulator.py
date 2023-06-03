@@ -301,6 +301,8 @@ class App(customtkinter.CTk):
         """
         Function connected to the start button.
         """
+        open("log.txt", 'w').close()
+
         self.progressbar.set(0)
         if self.check_edge_cases() == True:
             return
@@ -313,6 +315,8 @@ class App(customtkinter.CTk):
             self.log.delete("0.0","end")
         with open("log.txt") as f:
             log = f.read()
+
+        self.log.delete("0.0","end")
         self.log.insert("0.0", f" SIMULATION RUN {self.run_index}\n-----------------------------\n{log}\n\n")
         self.log.configure(state="disabled")
         os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
