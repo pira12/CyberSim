@@ -1,0 +1,484 @@
+2023-06-04 01:26:42,110 0 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,110 0 Attacker 0 score 0
+2023-06-04 01:26:42,111 1 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,111 1 Attacker 0 score 0
+2023-06-04 01:26:42,111 2 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,111 2 Attacker 0 score 0
+2023-06-04 01:26:42,111 3 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,111 3 Attacker 0 score 0
+2023-06-04 01:26:42,111 4 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,111 4 Attacker 0 score 0
+2023-06-04 01:26:42,111 5 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,111 5 Attacker 0 score 0
+2023-06-04 01:26:42,112 6 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,112 6 Attacker 0 score 0
+2023-06-04 01:26:42,112 7 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,112 7 Attacker 0 score 0
+2023-06-04 01:26:42,112 8 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,112 8 Attacker 0 score 0
+2023-06-04 01:26:42,112 9 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:42,112 9 Attacker 0 score 0
+2023-06-04 01:26:42,112 10 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 10 Attacker 0 score 0
+2023-06-04 01:26:42,113 11 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 11 Attacker 0 score 0
+2023-06-04 01:26:42,113 12 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 12 Attacker 0 score 0
+2023-06-04 01:26:42,113 13 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 13 Attacker 0 score 0
+2023-06-04 01:26:42,113 14 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 14 Attacker 0 score 0
+2023-06-04 01:26:42,113 15 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,113 15 Attacker 0 score 0
+2023-06-04 01:26:42,113 16 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,114 16 Attacker 0 score 0
+2023-06-04 01:26:42,114 17 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,114 17 Attacker 0 score 0
+2023-06-04 01:26:42,114 18 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,114 18 Attacker 0 score 0
+2023-06-04 01:26:42,114 19 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:42,114 19 Attacker 0 score 0
+2023-06-04 01:26:42,114 20 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,114 20 Attacker 0 score 0
+2023-06-04 01:26:42,115 21 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 21 Attacker 0 score 0
+2023-06-04 01:26:42,116 22 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 22 Attacker 0 score 0
+2023-06-04 01:26:42,116 23 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 23 Attacker 0 score 0
+2023-06-04 01:26:42,116 24 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 24 Attacker 0 score 0
+2023-06-04 01:26:42,116 25 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 25 Attacker 0 score 0
+2023-06-04 01:26:42,116 26 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 26 Attacker 0 score 0
+2023-06-04 01:26:42,116 27 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,116 27 Attacker 0 score 0
+2023-06-04 01:26:42,117 28 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,117 28 Attacker 0 score 0
+2023-06-04 01:26:42,117 29 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:42,117 29 Attacker 0 score 0
+2023-06-04 01:26:42,117 30 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,117 30 Attacker 0 score 0
+2023-06-04 01:26:42,118 31 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 31 Attacker 0 score 0
+2023-06-04 01:26:42,118 32 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 32 Attacker 0 score 0
+2023-06-04 01:26:42,118 33 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 33 Attacker 0 score 0
+2023-06-04 01:26:42,118 34 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 34 Attacker 0 score 0
+2023-06-04 01:26:42,118 35 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 35 Attacker 0 score 0
+2023-06-04 01:26:42,118 36 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,118 36 Attacker 0 score 0
+2023-06-04 01:26:42,119 37 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,119 37 Attacker 0 score 0
+2023-06-04 01:26:42,119 38 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,119 38 Attacker 0 score 0
+2023-06-04 01:26:42,119 39 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:42,119 39 Attacker 0 score 0
+2023-06-04 01:26:42,119 40 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,119 40 Attacker 0 score 0
+2023-06-04 01:26:42,120 41 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,120 41 Attacker 0 score 0
+2023-06-04 01:26:42,120 42 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,120 42 Attacker 0 score 0
+2023-06-04 01:26:42,120 43 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,120 43 Attacker 0 score 0
+2023-06-04 01:26:42,120 44 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,120 44 Attacker 0 score 0
+2023-06-04 01:26:42,121 45 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,121 45 Attacker 0 score 0
+2023-06-04 01:26:42,121 46 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,121 46 Attacker 0 score 0
+2023-06-04 01:26:42,121 47 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,121 47 Attacker 0 score 0
+2023-06-04 01:26:42,121 48 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,121 48 Attacker 0 score 0
+2023-06-04 01:26:42,121 49 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:42,121 49 Attacker 0 score 0
+2023-06-04 01:26:42,122 50 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,122 50 Attacker 0 score 0
+2023-06-04 01:26:42,124 51 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 51 Attacker 0 score 0
+2023-06-04 01:26:42,124 52 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 52 Attacker 0 score 0
+2023-06-04 01:26:42,124 53 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 53 Attacker 0 score 0
+2023-06-04 01:26:42,124 54 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 54 Attacker 0 score 0
+2023-06-04 01:26:42,124 55 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 55 Attacker 0 score 0
+2023-06-04 01:26:42,124 56 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 56 Attacker 0 score 0
+2023-06-04 01:26:42,124 57 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,124 57 Attacker 0 score 0
+2023-06-04 01:26:42,125 58 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,125 58 Attacker 0 score 0
+2023-06-04 01:26:42,125 59 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:42,125 59 Attacker 0 score 0
+2023-06-04 01:26:42,125 60 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,125 60 Attacker 0 score 0
+2023-06-04 01:26:42,126 61 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 61 Attacker 0 score 0
+2023-06-04 01:26:42,126 62 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 62 Attacker 0 score 0
+2023-06-04 01:26:42,126 63 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 63 Attacker 0 score 0
+2023-06-04 01:26:42,126 64 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 64 Attacker 0 score 0
+2023-06-04 01:26:42,126 65 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 65 Attacker 0 score 0
+2023-06-04 01:26:42,126 66 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,126 66 Attacker 0 score 0
+2023-06-04 01:26:42,127 67 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,127 67 Attacker 0 score 0
+2023-06-04 01:26:42,127 68 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,127 68 Attacker 0 score 0
+2023-06-04 01:26:42,127 69 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:42,127 69 Attacker 0 score 0
+2023-06-04 01:26:42,127 70 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,128 70 Attacker 0 score 0
+2023-06-04 01:26:42,128 71 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,128 71 Attacker 0 score 0
+2023-06-04 01:26:42,128 72 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,128 72 Attacker 0 score 0
+2023-06-04 01:26:42,128 73 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,128 73 Attacker 0 score 0
+2023-06-04 01:26:42,128 74 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 74 Attacker 0 score 0
+2023-06-04 01:26:42,129 75 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 75 Attacker 0 score 0
+2023-06-04 01:26:42,129 76 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 76 Attacker 0 score 0
+2023-06-04 01:26:42,129 77 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 77 Attacker 0 score 0
+2023-06-04 01:26:42,129 78 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 78 Attacker 0 score 0
+2023-06-04 01:26:42,129 79 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:42,129 79 Attacker 0 score 0
+2023-06-04 01:26:42,130 80 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,130 80 Attacker 0 score 0
+2023-06-04 01:26:42,131 81 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,131 81 Attacker 0 score 0
+2023-06-04 01:26:42,131 82 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,131 82 Attacker 0 score 0
+2023-06-04 01:26:42,131 83 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,131 83 Attacker 0 score 0
+2023-06-04 01:26:42,131 84 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 84 Attacker 0 score 0
+2023-06-04 01:26:42,132 85 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 85 Attacker 0 score 0
+2023-06-04 01:26:42,132 86 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 86 Attacker 0 score 0
+2023-06-04 01:26:42,132 87 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 87 Attacker 0 score 0
+2023-06-04 01:26:42,132 88 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 88 Attacker 0 score 0
+2023-06-04 01:26:42,132 89 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:42,132 89 Attacker 0 score 0
+2023-06-04 01:26:42,133 90 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,133 90 Attacker 0 score 10
+2023-06-04 01:26:42,133 91 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,133 91 Attacker 0 score 10
+2023-06-04 01:26:42,134 92 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,134 92 Attacker 0 score 10
+2023-06-04 01:26:42,134 93 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,134 93 Attacker 0 score 10
+2023-06-04 01:26:42,134 94 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,134 94 Attacker 0 score 10
+2023-06-04 01:26:42,134 95 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,134 95 Attacker 0 score 10
+2023-06-04 01:26:42,134 96 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,134 96 Attacker 0 score 10
+2023-06-04 01:26:42,134 97 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,135 97 Attacker 0 score 10
+2023-06-04 01:26:42,135 98 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,135 98 Attacker 0 score 10
+2023-06-04 01:26:42,135 99 Defender compromised cost 10 actions cost -9
+2023-06-04 01:26:42,135 99 Attacker 0 score 10
+2023-06-04 01:26:42,135 100 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,135 100 Attacker 0 score 10
+2023-06-04 01:26:42,136 101 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 101 Attacker 0 score 10
+2023-06-04 01:26:42,136 102 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 102 Attacker 0 score 10
+2023-06-04 01:26:42,136 103 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 103 Attacker 0 score 10
+2023-06-04 01:26:42,136 104 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 104 Attacker 0 score 10
+2023-06-04 01:26:42,136 105 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 105 Attacker 0 score 10
+2023-06-04 01:26:42,136 106 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,136 106 Attacker 0 score 10
+2023-06-04 01:26:42,137 107 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,137 107 Attacker 0 score 10
+2023-06-04 01:26:42,137 108 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,137 108 Attacker 0 score 10
+2023-06-04 01:26:42,137 109 Defender compromised cost 10 actions cost -10
+2023-06-04 01:26:42,137 109 Attacker 0 score 10
+2023-06-04 01:26:42,137 110 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,137 110 Attacker 0 score 10
+2023-06-04 01:26:42,139 111 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,139 111 Attacker 0 score 10
+2023-06-04 01:26:42,139 112 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,139 112 Attacker 0 score 10
+2023-06-04 01:26:42,139 113 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,139 113 Attacker 0 score 10
+2023-06-04 01:26:42,139 114 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,139 114 Attacker 0 score 10
+2023-06-04 01:26:42,140 115 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,140 115 Attacker 0 score 10
+2023-06-04 01:26:42,140 116 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,140 116 Attacker 0 score 10
+2023-06-04 01:26:42,140 117 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,140 117 Attacker 0 score 10
+2023-06-04 01:26:42,140 118 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,140 118 Attacker 0 score 10
+2023-06-04 01:26:42,140 119 Defender compromised cost 10 actions cost -11
+2023-06-04 01:26:42,140 119 Attacker 0 score 10
+2023-06-04 01:26:42,141 120 Defender compromised cost 10 actions cost -12
+2023-06-04 01:26:42,141 120 Attacker 0 score 10
+2023-06-04 01:26:48,472 0 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,473 0 Attacker 0 score 0
+2023-06-04 01:26:48,473 1 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,473 1 Attacker 0 score 0
+2023-06-04 01:26:48,473 2 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,473 2 Attacker 0 score 0
+2023-06-04 01:26:48,473 3 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,473 3 Attacker 0 score 0
+2023-06-04 01:26:48,473 4 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,473 4 Attacker 0 score 0
+2023-06-04 01:26:48,473 5 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,474 5 Attacker 0 score 0
+2023-06-04 01:26:48,474 6 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,474 6 Attacker 0 score 0
+2023-06-04 01:26:48,474 7 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,474 7 Attacker 0 score 0
+2023-06-04 01:26:48,474 8 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,474 8 Attacker 0 score 0
+2023-06-04 01:26:48,474 9 Defender compromised cost 0 actions cost 0
+2023-06-04 01:26:48,474 9 Attacker 0 score 0
+2023-06-04 01:26:48,475 10 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,475 10 Attacker 0 score 0
+2023-06-04 01:26:48,475 11 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,475 11 Attacker 0 score 0
+2023-06-04 01:26:48,476 12 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 12 Attacker 0 score 0
+2023-06-04 01:26:48,476 13 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 13 Attacker 0 score 0
+2023-06-04 01:26:48,476 14 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 14 Attacker 0 score 0
+2023-06-04 01:26:48,476 15 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 15 Attacker 0 score 0
+2023-06-04 01:26:48,476 16 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 16 Attacker 0 score 0
+2023-06-04 01:26:48,476 17 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 17 Attacker 0 score 0
+2023-06-04 01:26:48,476 18 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,476 18 Attacker 0 score 0
+2023-06-04 01:26:48,477 19 Defender compromised cost 0 actions cost -1
+2023-06-04 01:26:48,477 19 Attacker 0 score 0
+2023-06-04 01:26:48,477 20 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,477 20 Attacker 0 score 0
+2023-06-04 01:26:48,481 21 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 21 Attacker 0 score 0
+2023-06-04 01:26:48,481 22 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 22 Attacker 0 score 0
+2023-06-04 01:26:48,481 23 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 23 Attacker 0 score 0
+2023-06-04 01:26:48,481 24 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 24 Attacker 0 score 0
+2023-06-04 01:26:48,481 25 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 25 Attacker 0 score 0
+2023-06-04 01:26:48,481 26 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,481 26 Attacker 0 score 0
+2023-06-04 01:26:48,481 27 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,482 27 Attacker 0 score 0
+2023-06-04 01:26:48,482 28 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,482 28 Attacker 0 score 0
+2023-06-04 01:26:48,482 29 Defender compromised cost 0 actions cost -2
+2023-06-04 01:26:48,482 29 Attacker 0 score 0
+2023-06-04 01:26:48,482 30 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,482 30 Attacker 0 score 0
+2023-06-04 01:26:48,482 31 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 31 Attacker 0 score 0
+2023-06-04 01:26:48,483 32 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 32 Attacker 0 score 0
+2023-06-04 01:26:48,483 33 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 33 Attacker 0 score 0
+2023-06-04 01:26:48,483 34 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 34 Attacker 0 score 0
+2023-06-04 01:26:48,483 35 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 35 Attacker 0 score 0
+2023-06-04 01:26:48,483 36 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,483 36 Attacker 0 score 0
+2023-06-04 01:26:48,484 37 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,484 37 Attacker 0 score 0
+2023-06-04 01:26:48,484 38 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,484 38 Attacker 0 score 0
+2023-06-04 01:26:48,484 39 Defender compromised cost 0 actions cost -3
+2023-06-04 01:26:48,484 39 Attacker 0 score 0
+2023-06-04 01:26:48,484 40 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,484 40 Attacker 0 score 0
+2023-06-04 01:26:48,485 41 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,485 41 Attacker 0 score 0
+2023-06-04 01:26:48,485 42 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,485 42 Attacker 0 score 0
+2023-06-04 01:26:48,485 43 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,485 43 Attacker 0 score 0
+2023-06-04 01:26:48,485 44 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,485 44 Attacker 0 score 0
+2023-06-04 01:26:48,485 45 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,486 45 Attacker 0 score 0
+2023-06-04 01:26:48,486 46 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,486 46 Attacker 0 score 0
+2023-06-04 01:26:48,486 47 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,486 47 Attacker 0 score 0
+2023-06-04 01:26:48,486 48 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,486 48 Attacker 0 score 0
+2023-06-04 01:26:48,486 49 Defender compromised cost 0 actions cost -4
+2023-06-04 01:26:48,486 49 Attacker 0 score 0
+2023-06-04 01:26:48,486 50 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,486 50 Attacker 0 score 0
+2023-06-04 01:26:48,490 51 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,490 51 Attacker 0 score 0
+2023-06-04 01:26:48,490 52 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,490 52 Attacker 0 score 0
+2023-06-04 01:26:48,490 53 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,490 53 Attacker 0 score 0
+2023-06-04 01:26:48,490 54 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,490 54 Attacker 0 score 0
+2023-06-04 01:26:48,490 55 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,490 55 Attacker 0 score 0
+2023-06-04 01:26:48,491 56 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,491 56 Attacker 0 score 0
+2023-06-04 01:26:48,491 57 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,491 57 Attacker 0 score 0
+2023-06-04 01:26:48,491 58 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,491 58 Attacker 0 score 0
+2023-06-04 01:26:48,491 59 Defender compromised cost 0 actions cost -5
+2023-06-04 01:26:48,491 59 Attacker 0 score 0
+2023-06-04 01:26:48,492 60 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,492 60 Attacker 0 score 0
+2023-06-04 01:26:48,492 61 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,492 61 Attacker 0 score 0
+2023-06-04 01:26:48,492 62 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,492 62 Attacker 0 score 0
+2023-06-04 01:26:48,492 63 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,492 63 Attacker 0 score 0
+2023-06-04 01:26:48,492 64 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,492 64 Attacker 0 score 0
+2023-06-04 01:26:48,493 65 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,493 65 Attacker 0 score 0
+2023-06-04 01:26:48,493 66 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,493 66 Attacker 0 score 0
+2023-06-04 01:26:48,493 67 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,493 67 Attacker 0 score 0
+2023-06-04 01:26:48,493 68 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,493 68 Attacker 0 score 0
+2023-06-04 01:26:48,493 69 Defender compromised cost 0 actions cost -6
+2023-06-04 01:26:48,493 69 Attacker 0 score 0
+2023-06-04 01:26:48,494 70 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,494 70 Attacker 0 score 0
+2023-06-04 01:26:48,494 71 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,494 71 Attacker 0 score 0
+2023-06-04 01:26:48,494 72 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,494 72 Attacker 0 score 0
+2023-06-04 01:26:48,495 73 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,495 73 Attacker 0 score 0
+2023-06-04 01:26:48,495 74 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,495 74 Attacker 0 score 0
+2023-06-04 01:26:48,495 75 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,495 75 Attacker 0 score 0
+2023-06-04 01:26:48,495 76 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,495 76 Attacker 0 score 0
+2023-06-04 01:26:48,495 77 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,495 77 Attacker 0 score 0
+2023-06-04 01:26:48,496 78 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,496 78 Attacker 0 score 0
+2023-06-04 01:26:48,496 79 Defender compromised cost 0 actions cost -7
+2023-06-04 01:26:48,496 79 Attacker 0 score 0
+2023-06-04 01:26:48,496 80 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,496 80 Attacker 0 score 0
+2023-06-04 01:26:48,498 81 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,498 81 Attacker 0 score 0
+2023-06-04 01:26:48,498 82 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,498 82 Attacker 0 score 0
+2023-06-04 01:26:48,498 83 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,498 83 Attacker 0 score 0
+2023-06-04 01:26:48,498 84 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,498 84 Attacker 0 score 0
+2023-06-04 01:26:48,498 85 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,498 85 Attacker 0 score 0
+2023-06-04 01:26:48,498 86 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,499 86 Attacker 0 score 0
+2023-06-04 01:26:48,499 87 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,499 87 Attacker 0 score 0
+2023-06-04 01:26:48,499 88 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,499 88 Attacker 0 score 0
+2023-06-04 01:26:48,499 89 Defender compromised cost 0 actions cost -8
+2023-06-04 01:26:48,499 89 Attacker 0 score 0
+2023-06-04 01:26:48,499 90 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,500 90 Attacker 0 score 0
+2023-06-04 01:26:48,500 91 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,500 91 Attacker 0 score 0
+2023-06-04 01:26:48,500 92 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,500 92 Attacker 0 score 0
+2023-06-04 01:26:48,500 93 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,500 93 Attacker 0 score 0
+2023-06-04 01:26:48,500 94 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,500 94 Attacker 0 score 0
+2023-06-04 01:26:48,500 95 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,501 95 Attacker 0 score 0
+2023-06-04 01:26:48,501 96 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,501 96 Attacker 0 score 0
+2023-06-04 01:26:48,501 97 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,501 97 Attacker 0 score 0
+2023-06-04 01:26:48,501 98 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,501 98 Attacker 0 score 0
+2023-06-04 01:26:48,501 99 Defender compromised cost 0 actions cost -9
+2023-06-04 01:26:48,501 99 Attacker 0 score 0
+2023-06-04 01:26:48,502 100 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,502 100 Attacker 0 score 0
+2023-06-04 01:26:48,502 101 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,502 101 Attacker 0 score 0
+2023-06-04 01:26:48,502 102 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,502 102 Attacker 0 score 0
+2023-06-04 01:26:48,502 103 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 103 Attacker 0 score 0
+2023-06-04 01:26:48,503 104 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 104 Attacker 0 score 0
+2023-06-04 01:26:48,503 105 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 105 Attacker 0 score 0
+2023-06-04 01:26:48,503 106 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 106 Attacker 0 score 0
+2023-06-04 01:26:48,503 107 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 107 Attacker 0 score 0
+2023-06-04 01:26:48,503 108 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 108 Attacker 0 score 0
+2023-06-04 01:26:48,503 109 Defender compromised cost 0 actions cost -10
+2023-06-04 01:26:48,503 109 Attacker 0 score 0
+2023-06-04 01:26:48,504 110 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,504 110 Attacker 0 score 0
+2023-06-04 01:26:48,506 111 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,506 111 Attacker 0 score 0
+2023-06-04 01:26:48,506 112 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,506 112 Attacker 0 score 0
+2023-06-04 01:26:48,506 113 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,506 113 Attacker 0 score 0
+2023-06-04 01:26:48,506 114 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,506 114 Attacker 0 score 0
+2023-06-04 01:26:48,506 115 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,507 115 Attacker 0 score 0
+2023-06-04 01:26:48,507 116 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,507 116 Attacker 0 score 0
+2023-06-04 01:26:48,507 117 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,507 117 Attacker 0 score 0
+2023-06-04 01:26:48,507 118 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,507 118 Attacker 0 score 0
+2023-06-04 01:26:48,507 119 Defender compromised cost 0 actions cost -11
+2023-06-04 01:26:48,507 119 Attacker 0 score 0
+2023-06-04 01:26:48,508 120 Defender compromised cost 0 actions cost -12
+2023-06-04 01:26:48,508 120 Attacker 0 score 0

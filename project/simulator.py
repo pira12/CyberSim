@@ -15,15 +15,56 @@ class ResultsWindow(customtkinter.CTkToplevel):
     """
     def __init__(self):
         super().__init__()
-        self.geometry(f"{800}x{400}")
+        self.geometry(f"{950}x{640}")
         self.title("Results Window")
 
-        # Import the image in the window.
+        # Import the image in the window for the network.
         self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
                                                    dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
-                                                   size=(780, 380))
+                                                   size=(600, 300))
         self.result_preview = customtkinter.CTkLabel(self, image=self.result_image, text="")
-        self.result_preview.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.result_preview.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+
+        # Import the image in the window for the graph.
+        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
+                                                   dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
+                                                   size=(600, 300))
+        self.result_preview = customtkinter.CTkLabel(self, image=self.result_image, text="")
+        self.result_preview.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+
+        # Create a frame for the score results.
+        self.score_frame = customtkinter.CTkScrollableFrame(self, width=300, corner_radius=5)
+        self.score_frame.grid(row=0, column=1, rowspan=4, padx=5, pady=10, sticky="nsew")
+        self.score_frame.grid_rowconfigure(4, weight=1)
+
+        # Add all the results in labels.
+        self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Network:", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label.grid(row=0, column=0, padx=20, pady=10, sticky="nw")
+
+        self.maxscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of all hosts: {glob.max_score}")
+        self.maxscore.grid(row=1, column=0, padx=20, pady=5, sticky="nw")
+
+        self.compscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of compromised hosts: {glob.compromised_score}")
+        self.compscore.grid(row=2, column=0, padx=20, pady=5, sticky="nw")
+
+        self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Defender:", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label.grid(row=3, column=0, padx=20, pady=10, sticky="nw")
+
+        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total cost of the defender: {glob.def_cost}")
+        self.defcost.grid(row=4, column=0, padx=20, pady=5, sticky="nw")
+
+        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of the defender: {glob.def_total_cost}")
+        self.defcost.grid(row=5, column=0, padx=20, pady=5, sticky="nw")
+
+        self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Attacker:", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label.grid(row=6, column=0, padx=20, pady=10, sticky="nw")
+
+        for i, attacker in enumerate(glob.attackers):
+            self.attack_score = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of attacker {i}: {attacker.score}")
+            self.attack_score.grid(row=7+2*i, column=0, padx=20, pady=5, sticky="nw")
+
+            self.attack_cost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total cost of  attacker {i}: {attacker.cost}")
+            self.attack_cost.grid(row=8+2*i, column=0, padx=20, pady=5, sticky="nw")
 
 
 class App(customtkinter.CTk):
@@ -65,9 +106,9 @@ class App(customtkinter.CTk):
         # Adding buttons to the sidebar.
         self.sidebar_start = customtkinter.CTkButton(self.sidebar_frame, text="Start", command=self.start_event)
         self.sidebar_start.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_stop = customtkinter.CTkButton(self.sidebar_frame, text="Stop", command=self.stop_event)
-        self.sidebar_stop.grid(row=2, column=0, padx=20, pady=10)
-        self.sidebar_results = customtkinter.CTkButton(self.sidebar_frame, text="Results", command=self.results_event)
+        # self.sidebar_stop = customtkinter.CTkButton(self.sidebar_frame, text="Stop", command=self.stop_event)
+        # self.sidebar_stop.grid(row=2, column=0, padx=20, pady=10)
+        self.sidebar_results = customtkinter.CTkButton(self.sidebar_frame, text="Results", command=self.results_event, state="disabled")
         self.sidebar_results.grid(row=3, column=0, padx=20, pady=10)
 
         # Adding a selection tool for the appearance mode and the scale.
@@ -119,7 +160,7 @@ class App(customtkinter.CTk):
         """
         # The manual textbox
         self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"))
-        self.textbox.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.textbox.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
         self.textbox.insert("0.0", "Manual?\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
         self.textbox.configure(state="disabled")
 
@@ -272,6 +313,13 @@ class App(customtkinter.CTk):
         self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
         self.log.grid_rowconfigure(0, weight=3)
 
+    def show_succes(self):
+        msg = CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check",
+                            option_1="Thanks", option_2="Show results")
+
+        if msg.get()=="Show results":
+            self.results_event()
+
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         """
@@ -320,9 +368,11 @@ class App(customtkinter.CTk):
         self.log.insert("0.0", f" SIMULATION RUN {self.run_index}\n-----------------------------\n{log}\n\n")
         self.log.configure(state="disabled")
         os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
+        os.system(f"cp ./score_log.txt ./{glob.OUT_FOLDERNAME}/score_log.txt")
 
         self.progressbar.set(1)
-        CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check")
+        self.show_succes()
+        self.sidebar_results.configure(state="normal")
 
     def stop_event(self):
         print("Stop simulation")
@@ -463,3 +513,4 @@ if __name__ == "__main__":
     app = App()
     app.mainloop()
     os.remove("./log.txt")
+    os.remove("./score_log.txt")
