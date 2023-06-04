@@ -1,76 +1,52 @@
-2023-06-04 13:59:01,362 Attacker actions and strategy have been loaded for attacker 0 at 0.
-2023-06-04 13:59:01,364 Attacker actions and strategy have been loaded for attacker 1 at 0.
-2023-06-04 13:59:01,366 Start SubnetScan at 0.
-2023-06-04 13:59:01,366 Start SubnetScan at 0.
-2023-06-04 13:59:01,367 Start Harden_host on host (2, 4) at 0.
-2023-06-04 13:59:01,371 SubnetScan succeeded on host (1, 0) at 10.
-2023-06-04 13:59:01,371 SubnetScan succeeded on host (1, 0) at 10.
-2023-06-04 13:59:01,371 Host (2, 4) hardened against host_att1 at 10.
-2023-06-04 13:59:01,372 Start Exploit at 10.
-2023-06-04 13:59:01,372 Start Exploit at 10.
-2023-06-04 13:59:01,372 Start Harden_edge on edge ((2, 1), (2, 0)) at 10.
-2023-06-04 13:59:01,378 Exploit succeeded on edge ((1, 0), (2, 2)) at 20.
-2023-06-04 13:59:01,378 Exploit succeeded on edge ((1, 0), (2, 1)) at 20.
-2023-06-04 13:59:01,378 Edge ((2, 1), (2, 0)) hardened against edge_att1 at 20.
-2023-06-04 13:59:01,383 Start PrivilegeEscalation at 20.
-2023-06-04 13:59:01,385 Start PrivilegeEscalation at 20.
-2023-06-04 13:59:01,385 Start Harden_host on host (3, 0) at 20.
-2023-06-04 13:59:01,389 Privilege escalation succeeded on host (2, 2) at 30.
-2023-06-04 13:59:01,389 Privilege escalation succeeded on host (2, 1) at 30.
-2023-06-04 13:59:01,389 Host (3, 0) hardened against host_att1 at 30.
-2023-06-04 13:59:01,389 Start SubnetScan at 30.
-2023-06-04 13:59:01,389 Start SubnetScan at 30.
-2023-06-04 13:59:01,390 Start Harden_edge on edge ((1, 0), (2, 2)) at 30.
-2023-06-04 13:59:01,393 SubnetScan succeeded on host (2, 2) at 40.
-2023-06-04 13:59:01,393 SubnetScan succeeded on host (2, 1) at 40.
-2023-06-04 13:59:01,393 Edge ((1, 0), (2, 2)) hardened against edge_att1 at 40.
-2023-06-04 13:59:01,393 Start Exploit at 40.
-2023-06-04 13:59:01,394 Start Exploit at 40.
-2023-06-04 13:59:01,394 Start Harden_host on host (2, 3) at 40.
-2023-06-04 13:59:01,395 Exploit failed on edge ((2, 1), (2, 0)) at 45.
-2023-06-04 13:59:01,397 Start PrivilegeEscalation at 45.
-2023-06-04 13:59:01,398 Exploit succeeded on edge ((2, 2), (2, 0)) at 50.
-2023-06-04 13:59:01,398 Host (2, 3) hardened against host_att1 at 50.
-2023-06-04 13:59:01,398 Start PrivilegeEscalation at 50.
-2023-06-04 13:59:01,399 Start Harden_edge on edge ((3, 1), (3, 0)) at 50.
-2023-06-04 13:59:01,399 Privilege escalation succeeded on host (2, 1) at 55.
-2023-06-04 13:59:01,400 Start SubnetScan at 55.
-2023-06-04 13:59:01,400 Privilege escalation succeeded on host (2, 0) at 60.
-2023-06-04 13:59:01,400 Edge ((3, 1), (3, 0)) hardened against edge_att1 at 60.
-2023-06-04 13:59:01,400 Start SubnetScan at 60.
-2023-06-04 13:59:01,401 Start Harden_edge on edge ((2, 0), (2, 3)) at 60.
-2023-06-04 13:59:01,401 SubnetScan succeeded on host (2, 1) at 65.
-2023-06-04 13:59:01,402 Start Exploit at 65.
-2023-06-04 13:59:01,402 SubnetScan succeeded on host (2, 0) at 70.
-2023-06-04 13:59:01,402 Edge ((2, 0), (2, 3)) hardened against edge_att1 at 70.
-2023-06-04 13:59:01,402 Exploit failed on edge ((2, 1), (2, 0)) at 70.
-2023-06-04 13:59:01,403 Start Exploit at 70.
-2023-06-04 13:59:01,403 Start PrivilegeEscalation at 70.
-2023-06-04 13:59:01,403 Start Harden_host on host (2, 1) at 70.
-2023-06-04 13:59:01,404 Exploit succeeded on edge ((2, 0), (2, 2)) at 80.
-2023-06-04 13:59:01,404 Privilege escalation succeeded on host (2, 1) at 80.
-2023-06-04 13:59:01,404 Host (2, 1) hardened against host_att1 at 80.
-2023-06-04 13:59:01,405 Start SubnetScan at 80.
-2023-06-04 13:59:01,405 Start PrivilegeEscalation at 80.
-2023-06-04 13:59:01,405 Start Harden_edge on edge ((2, 3), (2, 0)) at 80.
-2023-06-04 13:59:01,407 SubnetScan succeeded on host (2, 1) at 90.
-2023-06-04 13:59:01,407 Privilege escalation succeeded on host (2, 2) at 90.
-2023-06-04 13:59:01,407 Edge ((2, 3), (2, 0)) hardened against edge_att1 at 90.
-2023-06-04 13:59:01,407 Start Exploit at 90.
-2023-06-04 13:59:01,407 Start SubnetScan at 90.
-2023-06-04 13:59:01,407 Start Harden_host on host (3, 1) at 90.
-2023-06-04 13:59:01,408 Exploit failed on edge ((2, 1), (2, 0)) at 95.
-2023-06-04 13:59:01,408 Start SubnetScan at 95.
-2023-06-04 13:59:01,409 SubnetScan succeeded on host (2, 2) at 100.
-2023-06-04 13:59:01,409 Host (3, 1) hardened against host_att1 at 100.
-2023-06-04 13:59:01,409 Start Exploit at 100.
-2023-06-04 13:59:01,409 Start Harden_host on host (2, 0) at 100.
-2023-06-04 13:59:01,409 SubnetScan succeeded on host (2, 1) at 105.
-2023-06-04 13:59:01,410 Start Exploit at 105.
-2023-06-04 13:59:01,410 Exploit succeeded on edge ((2, 2), (2, 0)) at 110.
-2023-06-04 13:59:01,410 Host (2, 0) hardened against host_att1 at 110.
-2023-06-04 13:59:01,410 Exploit failed on edge ((2, 1), (2, 0)) at 110.
-2023-06-04 13:59:01,411 Start SubnetScan at 110.
-2023-06-04 13:59:01,411 Start SubnetScan at 110.
-2023-06-04 13:59:01,411 Start Harden_host on host (3, 2) at 110.
-2023-06-04 13:59:01,411 Simulation ended at time: 111.0
+2023-06-04 17:31:13,734 Attacker actions and strategy have been loaded for attacker 0 at 0.
+2023-06-04 17:31:13,736 Start SubnetScan at 0.
+2023-06-04 17:31:13,736 Start Harden_edge on edge ((2, 5), (2, 0)) at 0.
+2023-06-04 17:31:13,738 SubnetScan succeeded on host (1, 0) at 10.
+2023-06-04 17:31:13,738 Edge ((2, 5), (2, 0)) hardened against edge_att1 at 10.
+2023-06-04 17:31:13,738 Start Exploit at 10.
+2023-06-04 17:31:13,738 Start Harden_edge on edge ((2, 18), (2, 16)) at 10.
+2023-06-04 17:31:13,739 Exploit succeeded on edge ((1, 0), (2, 18)) at 20.
+2023-06-04 17:31:13,740 Edge ((2, 18), (2, 16)) hardened against edge_att1 at 20.
+2023-06-04 17:31:13,740 Start PrivilegeEscalation at 20.
+2023-06-04 17:31:13,741 Start Harden_host on host (2, 7) at 20.
+2023-06-04 17:31:13,742 Privilege escalation succeeded on host (2, 18) at 30.
+2023-06-04 17:31:13,742 Host (2, 7) hardened against host_att1 at 30.
+2023-06-04 17:31:13,742 Start SubnetScan at 30.
+2023-06-04 17:31:13,742 Start Harden_host on host (2, 14) at 30.
+2023-06-04 17:31:13,743 SubnetScan succeeded on host (2, 18) at 40.
+2023-06-04 17:31:13,743 Host (2, 14) hardened against host_att1 at 40.
+2023-06-04 17:31:13,743 Start Exploit at 40.
+2023-06-04 17:31:13,744 Start Harden_edge on edge ((2, 16), (2, 11)) at 40.
+2023-06-04 17:31:13,744 Exploit failed on edge ((2, 18), (2, 16)) at 45.
+2023-06-04 17:31:13,745 Start SubnetScan at 45.
+2023-06-04 17:31:13,745 Edge ((2, 16), (2, 11)) hardened against edge_att1 at 50.
+2023-06-04 17:31:13,746 Start Harden_edge on edge ((2, 12), (2, 0)) at 50.
+2023-06-04 17:31:13,746 SubnetScan succeeded on host (2, 18) at 55.
+2023-06-04 17:31:13,746 Start Exploit at 55.
+2023-06-04 17:31:13,747 Edge ((2, 12), (2, 0)) hardened against edge_att1 at 60.
+2023-06-04 17:31:13,747 Exploit failed on edge ((2, 18), (2, 16)) at 60.
+2023-06-04 17:31:13,747 Start SubnetScan at 60.
+2023-06-04 17:31:13,748 Start Harden_edge on edge ((2, 11), (2, 14)) at 60.
+2023-06-04 17:31:13,749 SubnetScan succeeded on host (2, 18) at 70.
+2023-06-04 17:31:13,749 Edge ((2, 11), (2, 14)) hardened against edge_att1 at 70.
+2023-06-04 17:31:13,749 Start Exploit at 70.
+2023-06-04 17:31:13,749 Start Harden_host on host (2, 12) at 70.
+2023-06-04 17:31:13,750 Exploit failed on edge ((2, 18), (2, 16)) at 75.
+2023-06-04 17:31:13,750 Start SubnetScan at 75.
+2023-06-04 17:31:13,751 Host (2, 12) hardened against host_att1 at 80.
+2023-06-04 17:31:13,751 Start Harden_host on host (2, 17) at 80.
+2023-06-04 17:31:13,751 SubnetScan succeeded on host (2, 18) at 85.
+2023-06-04 17:31:13,751 Start Exploit at 85.
+2023-06-04 17:31:13,752 Host (2, 17) hardened against host_att1 at 90.
+2023-06-04 17:31:13,752 Exploit failed on edge ((2, 18), (2, 16)) at 90.
+2023-06-04 17:31:13,752 Start PrivilegeEscalation at 90.
+2023-06-04 17:31:13,753 Start Harden_host on host (2, 0) at 90.
+2023-06-04 17:31:13,753 Privilege escalation succeeded on host (2, 18) at 100.
+2023-06-04 17:31:13,753 Host (2, 0) hardened against host_att1 at 100.
+2023-06-04 17:31:13,754 Start SubnetScan at 100.
+2023-06-04 17:31:13,754 Start Harden_host on host (2, 19) at 100.
+2023-06-04 17:31:13,755 SubnetScan succeeded on host (2, 18) at 110.
+2023-06-04 17:31:13,755 Host (2, 19) hardened against host_att1 at 110.
+2023-06-04 17:31:13,755 Start Exploit at 110.
+2023-06-04 17:31:13,755 Start Harden_edge on edge ((2, 15), (2, 5)) at 110.
+2023-06-04 17:31:13,755 Simulation ended at time: 111.0

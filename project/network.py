@@ -425,6 +425,13 @@ class Network:
         return [self.get_host(x) for x in self.sensitive_hosts]
 
 
+    def get_number_of_hosts(self):
+        """
+        Number of hosts in the network.
+        """
+        return len(self.hosts)
+
+
     def get_host_place(self, address):
         """
         Return the place of the host in hosts.
@@ -469,11 +476,26 @@ class Network:
         """
         Return the edge given the places of the hosts the edge connects.
         ----------
-        (u, v) : (int, int)
+        u : int
+            Place of the source host.
+        v : int
+            Place of the destination host.
         """
         address_source = self.get_host_given_place(u).get_address()
         address_destination = self.get_host_given_place(v).get_address()
         return self.get_edge((address_source, address_destination))
+
+
+    def check_edge(self, u, v):
+        """
+        Check if an edge exists.
+        ----------
+        u : int
+            Place of the source host.
+        v : int
+            Place of the destination host.
+        """
+        return self.adjacency_matrix[u][v]
 
 
     def reachable_hosts(self, source_addr):
@@ -538,6 +560,41 @@ class Network:
                 edges.append(self.edges[(i, dest)])
 
         return edges
+
+
+    def get_most_connected_neighbour(self, host_numb):
+        """
+        Get the neighbour of the given host that has the most edges.
+        All hosts that have an edge to or from the given host are considered
+        a neighbour. A random host among the best will be picked when there
+        are multiple hosts with the most edges.
+        """
+        all_neighbours = []
+
+        # Find all neighbours.
+        for i in range(0, len(self.adjacency_matrix)):
+            if self.adjacency_matrix[i][host_numb] == 1:
+                all_neighbours.append(i)
+            elif self.adjacency_matrix[host_numb][i] == 1:
+                all_neighbours.append(i)
+
+        best = 0
+        best_edges = 0
+
+        # Find the neighbour with the most edges.
+        for n in all_neighbours:
+            edges_out = np.sum(self.adjacency_matrix[n])
+            edges_in = np.sum(self.adjacency_matrix[:, n])
+            total_edges = edges_out + edges_in
+
+            if total_edges > best_edges:
+                best = n
+                best_edges = total_edges
+            elif total_edges == best_edges:
+                if random.randint(0, 1):
+                    best = n
+
+        return best
 
 
     def get_random_host(self):
@@ -832,7 +889,8 @@ def draw_network(network):
         Line2D([0], [0], marker='o', color='w', label='Admin comp',markerfacecolor='maroon', markersize=10),
         # Line2D([0], [0], marker='o', color='w', label="DoS'ed",markerfacecolor='black', markersize=10),
     ]
-    plt.legend(handles=legend_elements, loc='upper right')
+    plt.legend(handles=legend_elements, loc='best')
+    # plt.legend(handles=legend_elements, loc='upper right')
 
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()

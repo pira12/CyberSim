@@ -17,6 +17,11 @@ import globals as glob
 def log_scores(attackers, defender, network, env):
 
     while True:
+
+        if env.now == 20:
+            print("oi")
+            # glob.atts_h.append (PrivilegeEscalation("host_att3", 0.5, 10, 0.8, 1, process="p1"))
+
         max_score, compromised_score = network.calculate_score()
         def_cost = defender.get_cost()
         glob.score_logger.info(f"{env.now} Defender damage {compromised_score} actions cost {def_cost}")
@@ -122,6 +127,7 @@ class Defender:
         """
 
         if self.get_strategy() == "random":
+            yield self.env.process(self.highest_degree_def())
             # while True:
             #     yield self.env.process(self.random_defense())
 
@@ -139,6 +145,44 @@ class Defender:
 
         elif self.get_strategy() == "reactive and random":
             yield self.env.process(self.lazy_defense(2))
+
+        elif self.get_strategy() == "highest degree":
+            yield self.env.process(self.highest_degree_def())
+
+
+    def highest_degree_def(self):
+
+        max_host = self.network.get_number_of_hosts()
+        random_numb = random.randint(0, max_host-1)
+
+        best1 = self.network.get_most_connected_neighbour(random_numb)
+        best2 = self.network.get_most_connected_neighbour(best1)
+
+        the_edge = None
+
+        if self.network.check_edge(best1, best2) and self.network.check_edge(best2, best1):
+            if random.randint(0, 1):
+                the_edge = self.network.get_edge_given_places(best1, best2)
+            else:
+                the_edge = self.network.get_edge_given_places(best2, best1)
+
+        elif self.network.check_edge(best1, best2):
+            the_edge = self.network.get_edge_given_places(best1, best2)
+
+        elif self.network.check_edge(best2, best1):
+            the_edge = self.network.get_edge_given_places(best2, best1)
+
+        else:
+            print("Two neighbours do not have any connection, something went wrong.")
+            exit(1)
+
+        if self.get_harden_edge_allowed():
+            yield self.env.process(self.fully_harden_edge(the_edge))
+        else:
+            yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2)))
+
+        print(self.network.get_host_given_place(random_numb).get_address(),self.network.get_host_given_place(best1).get_address(), self.network.get_host_given_place(best2).get_address())
+
 
 
 
