@@ -235,7 +235,7 @@ class Defender:
         for u in useful:
             yield self.env.process(self.harden_host(host, u))
 
-        if u == []:
+        if useful == []:
             self.env.timeout(0.1)
 
 
@@ -271,7 +271,7 @@ class Defender:
         for u in useful:
             yield self.env.process(self.harden_edge(edge, u))
 
-        if u == []:
+        if useful == []:
             self.env.timeout(0.1)
 
 
@@ -315,6 +315,28 @@ class Defender:
 
         if random.random() >= threshold:
             random_host = self.network.get_random_host()
+            yield self.env.process(self.fully_harden_host(random_host))
+
+        else:
+            random_edge = self.network.get_random_edge()
+            yield self.env.process(self.fully_harden_edge(random_edge))
+
+
+    def double_random_defense(self):
+        """
+        Add a defense to a random host or edge.
+        It is assumed that either hosts or edges are allowed
+        to be hardened, or both.
+        """
+        threshold = 0.5
+        if not self.get_harden_host_allowed():
+            threshold = 1
+        elif not self.get_harden_edge_allowed():
+            threshold = 0
+
+
+        if random.random() >= threshold:
+            random_host = self.network.get_random_host()
             yield self.env.process(self.harden_host(random_host, self.get_random_def_h()))
 
         else:
@@ -329,12 +351,12 @@ class Defender:
         target_host : Host
         harden_action : Harden_host
         """
-        glob.logger.info(f"Start Harden_host on host {target_host.get_address()} at {self.env.now}. Score Def {self.total_score()}")
+        glob.logger.info(f"Start Harden_host on host {target_host.get_address()} at {self.env.now}.")
         yield self.env.timeout(harden_action.get_duration())
         target_host.harden(harden_action.get_attack_type())
 
         self.subtract_score(harden_action.get_cost())
-        glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}. Score Def {self.total_score()}")
+        glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
 
 
     def harden_edge(self, target_edge, harden_action):
@@ -344,9 +366,9 @@ class Defender:
         target_edge : Edge
         harden_action : Harden_edge
         """
-        glob.logger.info(f"Start Harden_edge on edge {target_edge.get_both_addr()} at {self.env.now}. Score Def {self.total_score()}")
+        glob.logger.info(f"Start Harden_edge on edge {target_edge.get_both_addr()} at {self.env.now}.")
         yield self.env.timeout(harden_action.get_duration())
         target_edge.harden(harden_action.get_attack_type())
 
         self.subtract_score(harden_action.get_cost())
-        glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}. Score Def {self.total_score()}")
+        glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")

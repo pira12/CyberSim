@@ -29,7 +29,7 @@ max_score = None
 compromised_score = None
 # Cost of all actions done
 def_cost = None
-#  Compromised score + def cost
+# Compromised score + def cost
 def_total_cost = None
 
 """
@@ -96,10 +96,10 @@ class DefenseStrat(enum.IntEnum):
         return self.name
 
 
-atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("att_h2", 1, 10, 0.8, 1, process="p7")]
-atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1"), Exploit("att_e2", 1, 10, 0.8, service="s1")]
-hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
-hard_e = [Harden_edge("harden att_e1", 1, 10, "att_e1"), Harden_edge("harden att_e2", 1, 10, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
+atts_h = [PrivilegeEscalation("host_att1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("host_att2", 1, 10, 0.8, 1, process="p7")]
+atts_e = [Exploit("edge_att1", 1, 10, 0.8, service="s1"), Exploit("edge_att2", 1, 10, 0.8, service="s2")]
+hard_h = [Harden_host("harden host_att2", 1, 10, "host_att1"), Harden_host("harden host_att2", 1, 10, "host_att2")]
+hard_e = [Harden_edge("harden edge_att1", 1, 10, "edge_att1"), Harden_edge("harden edge_att2", 1, 10, "edge_att2")]
 
 
 hardware = ["Lenovo"]
