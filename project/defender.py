@@ -16,25 +16,13 @@ import globals as glob
 
 def log_scores(attackers, defender, network, env):
 
-    max_score, compromised_score = network.calculate_score()
-    def_cost = defender.get_score()
-
-    for i, attacker in enumerate(attackers):
-        print(f"Attacker {i} has score: {attacker.score}")
-
-    print("Cost of defending actions:", def_cost)
-    print("Sum of compromised score:", compromised_score)
-    print("Max score:", max_score)
-
-    print("Added costs and comprimised:", def_cost - compromised_score)
-
     while True:
         max_score, compromised_score = network.calculate_score()
-        def_cost = defender.get_score()
-        glob.score_logger.info(f"{env.now} Defender compromised cost {compromised_score} actions cost {def_cost}")
+        def_cost = defender.get_cost()
+        glob.score_logger.info(f"{env.now} Defender damage {compromised_score} actions cost {def_cost}")
 
         for i, attacker in enumerate(attackers):
-            glob.score_logger.info(f"{env.now} Attacker {i} score {attacker.score}")
+            glob.score_logger.info(f"{env.now} Attacker{i} score {attacker.score} actions cost {attacker.cost}")
 
         yield env.timeout(1)
 
@@ -44,7 +32,7 @@ class Defender:
         self.env = env
         self.network = network
         self.strategy = strategy
-        self.score = 0
+        self.cost = 0
         self.harden_host_allowed = glob.harden_host_allowed.get()
         self.harden_edge_allowed = glob.harden_edge_allowed.get()
 
@@ -52,30 +40,20 @@ class Defender:
         self.failed_att_edges = [] #hmmmmm, nodig?
 
 
-    def total_score(self):
-        """
-        Return the score of the defender and the network.
-        """
-        max_score, compromised_score = self.network.calculate_score()
-        cost_actions = self.get_score()
-
-        return cost_actions - compromised_score
-
-
-    def get_score(self):
+    def get_cost(self):
         """
         Return the score of the defender.
         """
-        return self.score
+        return self.cost
 
 
-    def subtract_score(self, numb):
+    def add_cost(self, numb):
         """
-        Subtract a number from the score.
+        Add the number to the cost.
         ----------
         numb: int
         """
-        self.score -= numb
+        self.cost += numb
 
     def get_strategy(self):
         """
@@ -355,7 +333,7 @@ class Defender:
         yield self.env.timeout(harden_action.get_duration())
         target_host.harden(harden_action.get_attack_type())
 
-        self.subtract_score(harden_action.get_cost())
+        self.add_cost(harden_action.get_cost())
         glob.logger.info(f"Host {target_host.get_address()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
 
 
@@ -370,5 +348,5 @@ class Defender:
         yield self.env.timeout(harden_action.get_duration())
         target_edge.harden(harden_action.get_attack_type())
 
-        self.subtract_score(harden_action.get_cost())
+        self.add_cost(harden_action.get_cost())
         glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")

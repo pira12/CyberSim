@@ -1,31 +1,36 @@
 
 import matplotlib.pyplot as plt
 
-f = open("test/log.txt", "r")
+f = open("test/score_log.txt", "r")
 results = {}
 times = {}
 
 for x in f:
     words = x.split(" ")
-    if len(words) < 4:
-        continue
 
-    score = words[-1]
-    score = score[:-1]
-    role = words[-2]
-    time = words[-4]
-    time = time[:-1]
+    time = int(words[2])
+    role = words[3]
+    score = int(words[5])
+    cost = words[8]
+    cost = int(cost[:-1])
 
-    if words[-3] == "Score":
-        if role in results:
-            results[role].append(int(score))
-            times[role].append(int(time))
-        else:
-            results[role] = [int(score)]
-            times[role] = [int(time)]
+    # The score is the damage for the defender.
+    # The total score is how bad the attack went for the defender,
+    # the lower the better.
+    if role == "Defender":
+        total_score = score + cost
+    else:
+        total_score = score - cost
+
+    if role in results:
+        results[role].append(total_score)
+        times[role].append(time)
+    else:
+        results[role] = [total_score]
+        times[role] = [time]
 
 for participant in results.keys():
-    plt.plot(times[participant], results[participant], '*', label=participant)
+    plt.plot(times[participant], results[participant], label=participant)
 
 plt.title("Score over time")
 plt.xlabel("Timer")

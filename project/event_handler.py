@@ -80,7 +80,7 @@ def start_simulation():
     glob.logger.info(f"Simulation ended at time: {env.now}")
 
     max_score, compromised_score = N.calculate_score()
-    def_cost = defender.get_score()
+    def_cost = defender.get_cost()
 
     glob.max_score = max_score
     glob.compromised_score = compromised_score
