@@ -60,7 +60,7 @@ class Attacker:
 
         while True:
             glob.progress_bar.set(self.env.now / int(glob.MAX_RUNTIME))
-            print(self.compromised_hosts)
+            # print(self.compromised_hosts)
             if self.strategy == "Random Strategy":
                 # Run RST
                 yield self.env.process(self.random_strategy())

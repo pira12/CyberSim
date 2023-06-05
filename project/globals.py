@@ -22,15 +22,20 @@ harden_edge_allowed = None
 scan_host_allowed = None
 update_host_allowed = None
 update_firewall_allowed = None
+current_run = 0
 
 # Total score of all nodes
-max_score = None
+max_score = 0
 # Total score of compromised nodes
-compromised_score = None
+compromised_score = 0
 # Cost of all actions done
-def_cost = None
+def_cost = 0
 # Compromised score + def cost
-def_total_cost = None
+def_total_cost = 0
+# Attacker scores
+att_scores = []
+# Attacker costs
+att_costs = []
 
 """
 Define logging settings.

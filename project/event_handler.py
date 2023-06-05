@@ -83,20 +83,39 @@ def start_simulation():
     max_score, compromised_score = N.calculate_score()
     def_cost = defender.get_cost()
 
-    glob.max_score = max_score
-    glob.compromised_score = compromised_score
-    glob.def_cost = def_cost
-    glob.def_total_cost = def_cost + compromised_score
+    if glob.NUM_SIMS > 1:
+        glob.max_score += max_score
+        glob.compromised_score += compromised_score
+        glob.def_cost += def_cost
+        glob.def_total_cost += def_cost + compromised_score
 
-    # for i, attacker in enumerate(glob.attackers):
-    #     print(f"Attacker {i} has score: {attacker.score}")
+        if glob.att_scores == [] or glob.att_costs ==[]:
+            glob.att_scores = [0 for _ in range(len(glob.attackers))]
+            glob.att_costs = [0 for _ in range(len(glob.attackers))]
 
-    # print("Cost of defending actions:", def_cost)
-    # print("Sum of compromised score:", compromised_score)
-    # print("Max score:", max_score)
+        # print(glob.att_scores)
+        # print(glob.att_costs)
+        # print(len(glob.attackers))
 
-    # print("Added costs and comprimised:", def_cost + compromised_score)
+        for i, attacker in enumerate(glob.attackers):
+            glob.att_scores[i] += attacker.score
+            glob.att_costs[i] += attacker.cost
 
+    else:
+        glob.max_score = max_score
+        glob.compromised_score = compromised_score
+        glob.def_cost = def_cost
+        glob.def_total_cost = def_cost + compromised_score
 
-    nw.draw_network(N)
-    draw_plot()
+        glob.att_scores = [0 for _ in range(len(glob.attackers))]
+        glob.att_costs = [0 for _ in range(len(glob.attackers))]
+
+        for i, attacker in enumerate(glob.attackers):
+            glob.att_scores[i] = attacker.score
+            glob.att_costs[i] = attacker.cost
+
+    glob.current_run += 1
+
+    if glob.current_run == glob.NUM_SIMS:
+        nw.draw_network(N)
+        draw_plot()
