@@ -15,7 +15,7 @@ class ResultsWindow(customtkinter.CTkToplevel):
     """
     def __init__(self):
         super().__init__()
-        self.geometry(f"{950}x{640}")
+        self.geometry(f"{1000}x{640}")
         self.title("Results Window")
 
         # Import the image in the window for the network.
@@ -33,7 +33,7 @@ class ResultsWindow(customtkinter.CTkToplevel):
         self.result_preview.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
 
         # Create a frame for the score results.
-        self.score_frame = customtkinter.CTkScrollableFrame(self, width=300, corner_radius=5)
+        self.score_frame = customtkinter.CTkScrollableFrame(self, width=360, corner_radius=5)
         self.score_frame.grid(row=0, column=1, rowspan=4, padx=5, pady=10, sticky="nsew")
         self.score_frame.grid_rowconfigure(4, weight=1)
 
@@ -41,30 +41,39 @@ class ResultsWindow(customtkinter.CTkToplevel):
         self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Network:", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=10, sticky="nw")
 
-        self.maxscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of all hosts: {glob.max_score}")
+        self.maxscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}score of all hosts: {round(glob.max_score/glob.NUM_SIMS, 1)}")
         self.maxscore.grid(row=1, column=0, padx=20, pady=5, sticky="nw")
 
-        self.compscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of compromised hosts: {glob.compromised_score}")
+        self.compscore = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}score of compromised hosts: {round(glob.compromised_score/glob.NUM_SIMS, 1)}")
         self.compscore.grid(row=2, column=0, padx=20, pady=5, sticky="nw")
 
         self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Defender:", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=3, column=0, padx=20, pady=10, sticky="nw")
 
-        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total cost of the defender: {glob.def_cost}")
+        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}cost of the defender: {round(glob.def_cost/glob.NUM_SIMS, 1)}")
         self.defcost.grid(row=4, column=0, padx=20, pady=5, sticky="nw")
 
-        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total loss of the defender: {glob.def_total_cost}")
+        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}loss of the defender: {round(glob.def_total_cost/glob.NUM_SIMS, 1)}")
         self.defcost.grid(row=5, column=0, padx=20, pady=5, sticky="nw")
 
         self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Attacker:", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=6, column=0, padx=20, pady=10, sticky="nw")
 
-        for i, attacker in enumerate(glob.attackers):
-            self.attack_score = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of attacker {i}: {attacker.score}")
+        for i in range(len(glob.att_scores)):
+            self.attack_score = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}score of attacker {i}: {round(glob.att_scores[i]/glob.NUM_SIMS, 1)}")
             self.attack_score.grid(row=7+2*i, column=0, padx=20, pady=5, sticky="nw")
 
-            self.attack_cost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total cost of  attacker {i}: {attacker.cost}")
+            self.attack_cost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total{self.is_mult_runs()}cost of  attacker {i}: {round(glob.att_costs[i]/glob.NUM_SIMS, 1)}")
             self.attack_cost.grid(row=8+2*i, column=0, padx=20, pady=5, sticky="nw")
+
+    def is_mult_runs(self):
+        """
+        Function which will check if there are multiple runs and if there are return average else 1 space.
+        """
+        if glob.NUM_SIMS > 1:
+            return " average "
+        else:
+            return " "
 
 
 class App(customtkinter.CTk):
@@ -314,6 +323,9 @@ class App(customtkinter.CTk):
         self.log.grid_rowconfigure(0, weight=3)
 
     def show_succes(self):
+        """
+        Function which will show the succes pop-up box.
+        """
         msg = CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check",
                             option_1="Thanks", option_2="Show results")
 
@@ -345,18 +357,37 @@ class App(customtkinter.CTk):
         self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
         glob.network_selection = self.network_options.get()
 
+    def reset_results(self):
+        """
+        Function which will reset the result values between runs.
+        """
+        glob.max_score = 0
+        glob.compromised_score = 0
+        glob.def_cost = 0
+        glob.def_total_cost = 0
+        glob.att_scores = []
+        glob.att_costs = []
+
     def start_event(self):
         """
         Function connected to the start button.
         """
+        self.reset_results()
+
         open("log.txt", 'w').close()
 
         self.progressbar.set(0)
         if self.check_edge_cases() == True:
             return
 
-        start_simulation()
-        self.run_index += 1
+        if glob.NUM_SIMS > 1:
+            for i in range(0, glob.NUM_SIMS):
+                start_simulation()
+                self.run_index += 1
+        else:
+            start_simulation()
+            self.run_index += 1
+
         # Update the log to the GUI.
         self.log.configure(state="normal")
         if self.run_index == 1:
@@ -367,6 +398,7 @@ class App(customtkinter.CTk):
         self.log.delete("0.0","end")
         self.log.insert("0.0", f" SIMULATION RUN {self.run_index}\n-----------------------------\n{log}\n\n")
         self.log.configure(state="disabled")
+
         os.system(f"cp ./log.txt ./{glob.OUT_FOLDERNAME}/log.txt")
         os.system(f"cp ./score_log.txt ./{glob.OUT_FOLDERNAME}/score_log.txt")
 
@@ -469,7 +501,7 @@ class App(customtkinter.CTk):
             CTkMessagebox(master=app, title="Error", message="The input for number of simulations is not a number!", icon="warning")
             return True
         else:
-            glob.NUM_SIMS = self.sim_entry.get()
+            glob.NUM_SIMS = int(self.sim_entry.get())
 
         if self.runtime.get() == "":
             CTkMessagebox(master=app, title="Error", message="The simulation time entry is empty!", icon="warning")

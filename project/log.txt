@@ -1,0 +1,1 @@
+2023-06-05 19:32:10,279 Privilege escalation failed on host (2, 3) at 111.0.
