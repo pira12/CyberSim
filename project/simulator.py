@@ -471,6 +471,9 @@ class App(customtkinter.CTk):
         if self.runtime.get() == "":
             CTkMessagebox(master=app, title="Error", message="The simulation time entry is empty!", icon="warning")
             return True
+        elif int(self.runtime.get()) == 0:
+            CTkMessagebox(master=app, title="Error", message="The input for max runtime must be higher than 0!", icon="warning")
+            return True
         elif self.runtime.get().isdigit() == False:
             CTkMessagebox(master=app, title="Error", message="The input for max runtime is not a number!", icon="warning")
             return True
