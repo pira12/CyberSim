@@ -219,7 +219,7 @@ class Attacker:
             return
 
         # Continue with registering the exploit in the network and adding the score to the attacker.
-        if exploit.get_name() in vulnerable_edge.get_hardened():
+        if exploit.get_name() in vulnerable_edge.get_hardened() and exploit.get_prob() >= random.randint(0,1):
             glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
             self.network.add_failed_att_edges(vulnerable_edge)
         else:
@@ -235,7 +235,7 @@ class Attacker:
         priv_esc = self.lowest_cost(host.possible_attacks())
         yield self.env.timeout(5)
 
-        # Try to start an exploit if it fails then that means the defender was quicker.
+        # Try to start an priv_esc if it fails then that means the defender was quicker.
         try:
             self.update_cost(priv_esc.get_cost())
             yield self.env.timeout(priv_esc.get_duration())
@@ -246,7 +246,7 @@ class Attacker:
             self.start = (random.choice(self.compromised_hosts)[0])
             return
 
-        if priv_esc.get_name() in host.get_hardened():
+        if priv_esc.get_name() in host.get_hardened() and priv_esc.get_prob() >= random.randint(0,1):
             # Priv_esc has failed.
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
             self.network.add_failed_att_hosts(host)
