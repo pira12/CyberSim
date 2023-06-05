@@ -53,7 +53,7 @@ class ResultsWindow(customtkinter.CTkToplevel):
         self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total cost of the defender: {glob.def_cost}")
         self.defcost.grid(row=4, column=0, padx=20, pady=5, sticky="nw")
 
-        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total score of the defender: {glob.def_total_cost}")
+        self.defcost = customtkinter.CTkLabel(master=self.score_frame, text=f"Total loss of the defender: {glob.def_total_cost}")
         self.defcost.grid(row=5, column=0, padx=20, pady=5, sticky="nw")
 
         self.logo_label = customtkinter.CTkLabel(self.score_frame, text="Attacker:", font=customtkinter.CTkFont(size=20, weight="bold"))

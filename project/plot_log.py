@@ -2,6 +2,7 @@ import globals as glob
 import matplotlib.pyplot as plt
 
 def draw_plot():
+    plt.clf()
     f = open(f"{glob.OUT_FOLDERNAME}/score_log.txt", "r")
     results = {}
     times = {}
@@ -9,11 +10,11 @@ def draw_plot():
     for x in f:
         words = x.split(" ")
 
-        time = int(words[2])
+        time = float(words[2])
         role = words[3]
-        score = int(words[5])
+        score = float(words[5])
         cost = words[8]
-        cost = int(cost[:-1])
+        cost = float(cost[:-1])
 
         # The score is the damage for the defender.
         # The total score is how bad the attack went for the defender,
