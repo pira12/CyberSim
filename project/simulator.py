@@ -26,8 +26,8 @@ class ResultsWindow(customtkinter.CTkToplevel):
         self.result_preview.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 
         # Import the image in the window for the graph.
-        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
-                                                   dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Network_fig.png"),
+        self.result_image = customtkinter.CTkImage(light_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Plot_fig.png"),
+                                                   dark_image=Image.open(f"./{glob.OUT_FOLDERNAME}/Plot_fig.png"),
                                                    size=(600, 300))
         self.result_preview = customtkinter.CTkLabel(self, image=self.result_image, text="")
         self.result_preview.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")

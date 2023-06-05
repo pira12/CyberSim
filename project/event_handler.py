@@ -5,6 +5,7 @@ import network as nw
 import attacker as att
 import defender as defend
 from defender import log_scores
+from plot_log import draw_plot
 
 
 def generate_network():
@@ -98,3 +99,4 @@ def start_simulation():
 
 
     nw.draw_network(N)
+    draw_plot()
