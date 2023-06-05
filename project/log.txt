@@ -1,0 +1,2 @@
+2023-06-05 12:48:37,678 Privilege escalation failed on host (2, 1) at 111.0.
+2023-06-05 12:48:37,678 Privilege escalation failed on host (2, 0) at 111.0.

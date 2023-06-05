@@ -207,13 +207,13 @@ class Attacker:
         The exploit function which tries to exploit a link to hop to another node.
         """
         exploit = self.lowest_cost(vulnerable_edge.possible_exploits())
+        yield self.env.timeout(5)
 
         # Try to start an exploit if it fails then that means the defender was quicker.
         try:
             self.update_cost(exploit.get_cost())
             yield self.env.timeout(exploit.get_duration())
         except:
-            yield self.env.timeout(5)
             glob.logger.info(f"Exploit failed on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
             self.network.add_failed_att_edges(vulnerable_edge)
             return
@@ -233,6 +233,7 @@ class Attacker:
         The privilege escalation function which tries to escalate privelege.
         """
         priv_esc = self.lowest_cost(host.possible_attacks())
+        yield self.env.timeout(5)
 
         # Try to start an exploit if it fails then that means the defender was quicker.
         try:
@@ -240,7 +241,6 @@ class Attacker:
             yield self.env.timeout(priv_esc.get_duration())
         except:
             # Priv_esc has failed.
-            yield self.env.timeout(5)
             glob.logger.info(f"Privilege escalation failed on host {host.get_address()} at {self.env.now}.")
             self.network.add_failed_att_hosts(host)
             self.start = (random.choice(self.compromised_hosts)[0])

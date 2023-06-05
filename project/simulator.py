@@ -256,7 +256,7 @@ class App(customtkinter.CTk):
         self.label_d1 = customtkinter.CTkLabel(master=self.defender_frame, text="Choose defence strategy:")
         self.label_d1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.defense_strategy = customtkinter.CTkOptionMenu(master=self.defender_frame, dynamic_resizing=False,
-                                                            values=["random", "last layer", "lazy", "reactive and random"])
+                                                            values=["random", "last layer", "minimum", "reactive and random", "highest degree neighbour"])
         self.defense_strategy.grid(row=0, column=1, padx=10, pady=20)
         glob.defender_strategy = self.defense_strategy
 
