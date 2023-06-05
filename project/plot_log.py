@@ -1,9 +1,10 @@
 import globals as glob
 import matplotlib.pyplot as plt
+import numpy as np
 
 def draw_plot():
     plt.clf()
-    f = open(f"{glob.OUT_FOLDERNAME}/score_log.txt", "r")
+    f = open(f"score_log.txt", "r")
     results = {}
     times = {}
 
@@ -31,8 +32,26 @@ def draw_plot():
             results[role] = [total_score]
             times[role] = [time]
 
+    # All the simualtions have the same length and thus the same number of
+    # results and the same timesteps.
+    numb_of_res = int(len(results["Defender"]) / glob.NUM_SIMS)
+    all_time = times["Defender"][0:0 + numb_of_res]
+
     for participant in results.keys():
-        plt.plot(times[participant], results[participant], label=participant)
+        # plt.plot(times[participant], results[participant], label=participant)
+        res = []
+
+        # Add all the results with the same place together.
+        for i in range(0, len(results[participant]), numb_of_res):
+            one_sim = results[participant][i:i + numb_of_res]
+
+            if i == 0:
+                res = one_sim
+            else:
+                res = np.add(res, one_sim)
+
+        res = np.divide(res, glob.NUM_SIMS)
+        plt.plot(all_time, res, label=participant)
 
     plt.title("Score over time")
     plt.xlabel("Timer")

@@ -375,6 +375,8 @@ class App(customtkinter.CTk):
         self.reset_results()
 
         open("log.txt", 'w').close()
+        open('score_log.txt', 'w').close()
+        glob.current_run = 0
 
         self.progressbar.set(0)
         if self.check_edge_cases() == True:

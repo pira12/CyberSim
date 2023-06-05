@@ -20,7 +20,7 @@ def log_scores(attackers, defender, network, env):
 
         if env.now == 20:
             print("oi")
-            glob.atts_h.append (PrivilegeEscalation("host_att3", 0.5, 10, 0.8, 1, process="p1"))
+            glob.atts_h.append(PrivilegeEscalation("host_att3", 0.5, 10, 0.8, 1, process="p1"))
 
         max_score, compromised_score = network.calculate_score()
         def_cost = defender.get_cost()

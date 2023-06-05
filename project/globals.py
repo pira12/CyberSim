@@ -22,6 +22,7 @@ harden_edge_allowed = None
 scan_host_allowed = None
 update_host_allowed = None
 update_firewall_allowed = None
+current_run = 0
 
 # Total score of all nodes
 max_score = 0

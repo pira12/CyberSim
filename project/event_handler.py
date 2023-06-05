@@ -114,7 +114,8 @@ def start_simulation():
             glob.att_scores[i] = attacker.score
             glob.att_costs[i] = attacker.cost
 
+    glob.current_run += 1
 
-
-    nw.draw_network(N)
-    draw_plot()
+    if glob.current_run == glob.NUM_SIMS:
+        nw.draw_network(N)
+        draw_plot()
