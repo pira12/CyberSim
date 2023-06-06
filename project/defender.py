@@ -159,11 +159,13 @@ class Defender:
         best1 = self.network.get_most_connected_neighbour(random_numb)
         best2 = self.network.get_most_connected_neighbour(best1)
 
+        r = random.randint(0, 1)
+
         # Depending on what is allowed, do an edge hardening or host hardening.
         # Edge hardening is tried first.
         if not self.get_harden_edge_allowed():
             yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2), 1))
-        else:
+        elif not self.get_harden_host_allowed() or r:
             the_edge = None
 
             # Determine in which direction the edge between the neighbours
@@ -185,6 +187,8 @@ class Defender:
                 exit(1)
 
             yield self.env.process(self.fully_harden_edge(the_edge, 1))
+        else:
+            yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2), 1))
 
         # print(self.network.get_host_given_place(random_numb).get_address(),self.network.get_host_given_place(best1).get_address(), self.network.get_host_given_place(best2).get_address())
 
