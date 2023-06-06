@@ -787,7 +787,7 @@ def create_basic_network(numb1, numb2):
     return N
 
 
-def create_small_world(n, k, p):
+def create_small_world(n, k, p, numb_process):
     """
     Creates a random graph and create a network based on the graph.
     Return the graph, the network and the positions.
@@ -798,29 +798,32 @@ def create_small_world(n, k, p):
         Each node is joined with its k nearest neighbors in a ring topology.
     p: int
         The probability of rewiring each edge
-
+    numb_process: int
+        The number of processes and services that hosts and edges should have.
+        The number will be lower if there are less processes or services than
+        asked for.
     """
 
-    G = nx.watts_strogatz_graph(n, k, p, seed=3113794652)
-    pos = nx.spring_layout(G, seed=3113794652)
-    # nx.draw(G, pos)
-    # plt.show()
+    min_numb = min(numb_process, len(glob.services), len(glob.processes))
+    if min_numb != numb_process:
+        print(f"The number of processes and services is lowered to {min_numb}.")
 
+    G = nx.watts_strogatz_graph(n, k, p, seed=3113794652)
     N = Network()
 
     for numb in range(0, len(G.nodes())):
-        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:min_numb], glob.services[0:min_numb], glob.os[0]))
 
     # Add 1 to both source and destination because host 0 is the internet.
     for edge in G.edges():
         source, dest = edge
-        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:1])
-        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:1])
+        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:min_numb])
+        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:min_numb])
 
     if n >= 17:
-        N.add_edge((1, 0), (2, 4), glob.services[0:1])
-        N.add_edge((1, 0), (2, 10), glob.services[0:1])
-        N.add_edge((1, 0), (2, 17), glob.services[0:1])
+        N.add_edge((1, 0), (2, 4), glob.services[0:min_numb])
+        N.add_edge((1, 0), (2, 10), glob.services[0:min_numb])
+        N.add_edge((1, 0), (2, 17), glob.services[0:min_numb])
 
         N.add_sensitive_hosts((2,0))
         N.get_host((2,0)).change_score(100)
@@ -832,7 +835,7 @@ def create_small_world(n, k, p):
     return N
 
 
-def create_power_law(n, k, p):
+def create_power_law(n, k, p, numb_process):
     """
     Creates a random graph and create a network based on the graph.
     Return the graph, the network and the positions.
@@ -843,28 +846,33 @@ def create_power_law(n, k, p):
         The number of random edges to add for each new node
     p: int
         Probability of adding a triangle after adding a random edge
-
+    numb_process: int
+        The number of processes and services that hosts and edges should have.
+        The number will be lower if there are less processes or services than
+        asked for.
     """
 
-    G = nx.powerlaw_cluster_graph(n, k, p, seed=3113794652)
-    pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+    min_numb = min(numb_process, len(glob.services), len(glob.processes))
+    if min_numb != numb_process:
+        print(f"The number of processes and services is lowered to {min_numb}.")
 
+    G = nx.powerlaw_cluster_graph(n, k, p, seed=3113794652)
     N = Network()
 
     for numb in range(0, len(G.nodes())):
-        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
+        N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:min_numb], glob.services[0:min_numb], glob.os[0]))
 
     # Add 1 to both source and destination because host 0 is the internet.
     for edge in G.edges():
         source, dest = edge
-        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:1])
-        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:1])
+        N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:min_numb])
+        N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:min_numb])
 
     if n >= 18:
-        N.add_edge((1, 0), (2, 10), glob.services[0:1])
-        N.add_edge((1, 0), (2, 13), glob.services[0:1])
-        N.add_edge((1, 0), (2, 14), glob.services[0:1])
-        N.add_edge((1, 0), (2, 18), glob.services[0:1])
+        N.add_edge((1, 0), (2, 10), glob.services[0:min_numb])
+        N.add_edge((1, 0), (2, 13), glob.services[0:min_numb])
+        N.add_edge((1, 0), (2, 14), glob.services[0:min_numb])
+        N.add_edge((1, 0), (2, 18), glob.services[0:min_numb])
 
         N.add_sensitive_hosts((2,0))
         N.get_host((2,0)).change_score(200)
