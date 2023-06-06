@@ -127,10 +127,6 @@ class Defender:
         """
 
         if self.get_strategy() == "random":
-            yield self.env.process(self.highest_degree_def())
-            # while True:
-            #     yield self.env.process(self.random_defense())
-
             while True:
                 yield self.env.process(self.random_defense())
 
@@ -140,14 +136,17 @@ class Defender:
             while True:
                 yield self.env.process(self.random_defense())
 
-        elif self.get_strategy() == "lazy":
-            yield self.env.process(self.lazy_defense(1))
+        elif self.get_strategy() == "minimum":
+            while True:
+                yield self.env.process(self.lazy_defense(1))
 
         elif self.get_strategy() == "reactive and random":
-            yield self.env.process(self.lazy_defense(2))
+            while True:
+                yield self.env.process(self.lazy_defense(2))
 
-        elif self.get_strategy() == "highest degree":
-            yield self.env.process(self.highest_degree_def())
+        elif self.get_strategy() == "highest degree neighbour":
+            while True:
+                yield self.env.process(self.highest_degree_def())
 
 
     def highest_degree_def(self):
@@ -155,35 +154,39 @@ class Defender:
         max_host = self.network.get_number_of_hosts()
         random_numb = random.randint(0, max_host-1)
 
+        # Determine the most connected neighbour and the most connected
+        # neighbour of the most connected neighbour.
         best1 = self.network.get_most_connected_neighbour(random_numb)
         best2 = self.network.get_most_connected_neighbour(best1)
 
-        the_edge = None
+        # Depending on what is allowed, do an edge hardening or host hardening.
+        # Edge hardening is tried first.
+        if not self.get_harden_edge_allowed():
+            yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2), 1))
+        else:
+            the_edge = None
 
-        if self.network.check_edge(best1, best2) and self.network.check_edge(best2, best1):
-            if random.randint(0, 1):
+            # Determine in which direction the edge between the neighbours
+            # will be hardened.
+            if self.network.check_edge(best1, best2) and self.network.check_edge(best2, best1):
+                if random.randint(0, 1):
+                    the_edge = self.network.get_edge_given_places(best1, best2)
+                else:
+                    the_edge = self.network.get_edge_given_places(best2, best1)
+
+            elif self.network.check_edge(best1, best2):
                 the_edge = self.network.get_edge_given_places(best1, best2)
-            else:
+
+            elif self.network.check_edge(best2, best1):
                 the_edge = self.network.get_edge_given_places(best2, best1)
 
-        elif self.network.check_edge(best1, best2):
-            the_edge = self.network.get_edge_given_places(best1, best2)
+            else:
+                print("Two neighbours do not have any connection, something went wrong.")
+                exit(1)
 
-        elif self.network.check_edge(best2, best1):
-            the_edge = self.network.get_edge_given_places(best2, best1)
+            yield self.env.process(self.fully_harden_edge(the_edge, 1))
 
-        else:
-            print("Two neighbours do not have any connection, something went wrong.")
-            exit(1)
-
-        if self.get_harden_edge_allowed():
-            yield self.env.process(self.fully_harden_edge(the_edge))
-        else:
-            yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2)))
-
-        print(self.network.get_host_given_place(random_numb).get_address(),self.network.get_host_given_place(best1).get_address(), self.network.get_host_given_place(best2).get_address())
-
-
+        # print(self.network.get_host_given_place(random_numb).get_address(),self.network.get_host_given_place(best1).get_address(), self.network.get_host_given_place(best2).get_address())
 
 
     def lazy_defense(self, if_noone):
@@ -206,12 +209,12 @@ class Defender:
             self.add_failed_att_hosts(host)
 
             if self.get_harden_host_allowed():
-                yield self.env.process(self.fully_harden_host(host))
+                yield self.env.process(self.fully_harden_host(host, 0))
 
         for edge in att_edges:
             self.add_failed_att_edges(edge)
             if self.get_harden_edge_allowed():
-                yield self.env.process(self.fully_harden_edge(edge))
+                yield self.env.process(self.fully_harden_edge(edge, 0))
 
         self.network.reset_failed_att_hosts()
         self.network.reset_failed_att_edges()
@@ -234,23 +237,27 @@ class Defender:
 
         for imp in importants:
             if self.get_harden_host_allowed():
-                yield self.env.process(self.fully_harden_host(imp))
+                yield self.env.process(self.fully_harden_host(imp, 0))
 
         for imp in importants:
             if self.get_harden_edge_allowed():
                 incoming = self.network.get_all_edges_to(imp.get_address())
 
                 for income in incoming:
-                    yield self.env.process(self.fully_harden_edge(income))
+                    yield self.env.process(self.fully_harden_edge(income, 0))
 
 
-    def fully_harden_host(self, host):
+    def fully_harden_host(self, host, if_fail):
         """
         Use all relevant hardenings on the given host.
         Wait a little bit if there are none to prevent infinite loops
         when everything is already hardened.
         ----------
         host : Host
+        if_fail: int
+            What to do when the host could not be hardened:
+            0: wait a short time
+            1: do a random hardening instead
         """
         useful = self.get_useful_hardenings_host(host)
 
@@ -258,7 +265,10 @@ class Defender:
             yield self.env.process(self.harden_host(host, u))
 
         if useful == []:
-            self.env.timeout(0.1)
+            if if_fail == 0:
+                self.env.timeout(0.1)
+            if if_fail == 1:
+                yield self.env.process(self.random_defense())
 
 
     def get_useful_hardenings_host(self, host):
@@ -280,13 +290,17 @@ class Defender:
         return useful_harden
 
 
-    def fully_harden_edge(self, edge):
+    def fully_harden_edge(self, edge, if_fail):
         """
         Use all relevant hardenings on the given edge.
         Wait a little bit if there are none to prevent infinite loops
         when everything is already hardened.
         ----------
         edge : Edge
+        if_fail: int
+            What to do when the edge could not be hardened:
+            0: wait a short time
+            1: do a random hardening instead
         """
         useful = self.get_useful_hardenings_edge(edge)
 
@@ -294,7 +308,10 @@ class Defender:
             yield self.env.process(self.harden_edge(edge, u))
 
         if useful == []:
-            self.env.timeout(0.1)
+            if if_fail == 0:
+                self.env.timeout(0.1)
+            if if_fail == 1:
+                yield self.env.process(self.random_defense())
 
 
     def get_useful_hardenings_edge(self, edge):
@@ -334,14 +351,13 @@ class Defender:
         elif not self.get_harden_edge_allowed():
             threshold = 0
 
-
         if random.random() >= threshold:
             random_host = self.network.get_random_host()
-            yield self.env.process(self.fully_harden_host(random_host))
+            yield self.env.process(self.fully_harden_host(random_host, 0))
 
         else:
             random_edge = self.network.get_random_edge()
-            yield self.env.process(self.fully_harden_edge(random_edge))
+            yield self.env.process(self.fully_harden_edge(random_edge, 0))
 
 
     def double_random_defense(self):
