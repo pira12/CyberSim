@@ -83,6 +83,7 @@ def start_simulation():
     max_score, compromised_score = N.calculate_score()
     def_cost = defender.get_cost()
 
+    # This part handles multiple runs.
     if glob.NUM_SIMS > 1:
         glob.max_score += max_score
         glob.compromised_score += compromised_score

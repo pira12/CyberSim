@@ -322,11 +322,11 @@ class App(customtkinter.CTk):
         self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
         self.log.grid_rowconfigure(0, weight=3)
 
-    def show_succes(self):
+    def show_success(self):
         """
-        Function which will show the succes pop-up box.
+        Function which will show the success pop-up box.
         """
-        msg = CTkMessagebox(master=app, title="Succes", message="The simulation is done!", icon="check",
+        msg = CTkMessagebox(master=app, title="success", message="The simulation is done!", icon="check",
                             option_1="Thanks", option_2="Show results")
 
         if msg.get()=="Show results":
@@ -405,7 +405,7 @@ class App(customtkinter.CTk):
         os.system(f"cp ./score_log.txt ./{glob.OUT_FOLDERNAME}/score_log.txt")
 
         self.progressbar.set(1)
-        self.show_succes()
+        self.show_success()
         self.sidebar_results.configure(state="normal")
 
     def stop_event(self):
