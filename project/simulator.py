@@ -352,7 +352,7 @@ class App(customtkinter.CTk):
         """
         self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
                                               dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              size=(420,225))
+                                              size=(420,235))
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
         self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
         glob.network_selection = self.network_options.get()
