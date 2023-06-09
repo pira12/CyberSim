@@ -85,7 +85,7 @@ class App(customtkinter.CTk):
         """
         Window configuration
         """
-        self.title("Cyber Security Simulator")
+        self.title("NeDeS")
         self.geometry(f"{1100}x{580}")
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
@@ -179,7 +179,7 @@ Network 2: 620
 Network 3: 1040
 Network 4: 1030
 Network 5: 1860"""
-        self.textbox.insert("0.0", "Manual?\n\n" + temp_text)
+        self.textbox.insert("0.0", "Manual:\n\n" + temp_text)
         self.textbox.configure(state="disabled")
 
         # Create the frame for system settings
