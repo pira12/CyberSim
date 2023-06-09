@@ -102,9 +102,9 @@ class Attacker:
         # Check if host is already compromised.
         host = self.network.get_host(self.start)
 
-        if random.randint(0, 1) > 0.3:
+        if self.start != (1, 0):
             # Else run a privilege escalation.
-            if self.start != (1, 0):
+            if random.randint(0, 1) > 0.5:
                 glob.logger.info(f"Start PrivilegeEscalation at {self.env.now}.")
                 yield self.env.process(self.privilege_escalation(host))
 
@@ -155,6 +155,7 @@ class Attacker:
             else:
                 glob.logger.info(f"Start Exploit at {self.env.now}.")
                 yield self.env.process(self.exploit(edge))
+            return
 
         if self.start != (1,0):
             # Else run a privilege escalation till you have the score.
