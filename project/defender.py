@@ -4,15 +4,6 @@ from actions_def import Harden_host, Harden_edge
 from actions_att import Exploit, PrivilegeEscalation
 import globals as glob
 
-# glob_atts_h = [PrivilegeEscalation("att_h1", 1, 10, 0.8, 1, process="p1")]
-# glob_atts_e = [Exploit("att_e1", 1, 10, 0.8, service="s1")]
-
-# glob_hard_h = [Harden_host("harden att_h1", 1, 10, "att_h1"), Harden_host("harden att_h2", 1, 10, "att_h2"), Harden_host("harden att_h3", 1, 10, "att_h3")]
-# glob_hard_e = [Harden_edge("harden att_e1", 1, 1, "att_e1"), Harden_edge("harden att_e2", 1, 1, "att_e2"), Harden_edge("harden att_e3", 1, 10, "att_e3")]
-
-# first-layer defense
-# last-layer defense
-# minimum-cost defense en dan ook voor duration I guess... of kan alles tegelijk hmmmm
 
 def log_scores(attackers, defender, network, env):
 
