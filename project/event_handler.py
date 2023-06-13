@@ -4,7 +4,6 @@ import globals as glob
 import network as nw
 import attacker as att
 import defender as defend
-from defender import log_scores
 from plot_log import draw_plot
 
 
@@ -55,6 +54,38 @@ def generate_defender(env, N):
     defender  = defend.Defender(env, N, glob.defender_strategy.get())
     env.process(defender.run())
     return defender
+
+
+def log_scores(attackers, defender, network, env):
+    """
+    A function that logs the scores of the attackers and defender regularly.
+    ----------
+    attackers: [Attacker]
+        An array with all attackers.
+    defender: Defender
+        The defender of the network.
+    network: Network
+        The Netork with all the hosts and edges.
+    env : Simpy Enviroment
+        The Simpy enviroment of the simulator.
+    """
+
+    while True:
+        # Use an if-statement to do something at a particular time.
+        # In that if-statement, add attacks or hardenngs to the array
+        # in globals to create an event.
+        # if env.now == 20:
+        #     glob.atts_h.append(PrivilegeEscalation("host_att3", 0.5, 10, 0.8, 1, process="p1"))
+
+        _, compromised_score = network.calculate_score()
+        def_cost = defender.get_cost()
+        glob.score_logger.info(f"{env.now} Defender damage {compromised_score} actions cost {def_cost}")
+
+        for i, attacker in enumerate(attackers):
+            glob.score_logger.info(f"{env.now} Attacker{i} score {attacker.score} actions cost {attacker.cost}")
+
+        yield env.timeout(1)
+
 
 def stop_simulation():
     """
