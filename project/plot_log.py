@@ -21,7 +21,7 @@ def draw_plot():
         # The total score is how bad the attack went for the defender,
         # the lower the better.
         if role == "Defender":
-            total_score = score + cost
+            total_score = -1 * (score + cost)
         else:
             total_score = score - cost
 
