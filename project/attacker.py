@@ -225,7 +225,9 @@ class Attacker:
             self.network.add_failed_att_edges(vulnerable_edge)
         else:
             glob.logger.info(f"Exploit succeeded on edge {vulnerable_edge.get_both_addr()} at {self.env.now}.")
-            self.add_compromised_host((vulnerable_edge.get_dest_addr(), 0))
+            host = self.network.get_host(vulnerable_edge.get_dest_addr())
+            host.set_attacker_access_lvl(1)
+            self.add_compromised_host((vulnerable_edge.get_dest_addr(), 1))
             self.start = vulnerable_edge.get_dest_addr()
 
 
