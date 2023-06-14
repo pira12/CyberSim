@@ -170,16 +170,8 @@ class App(customtkinter.CTk):
         # The manual textbox
         self.textbox = customtkinter.CTkTextbox(self.tabview.tab("System"))
         self.textbox.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-        temp_text = """The defender does not check if there are any hardenings left that can be done.
-This results in an infinite loop if the run time is set high enough to do all hardenings.
-We are going to fix this problem in the coming two weeks.
-For now, please use the following values as a max for the run time:
-Network 1: 250
-Network 2: 620
-Network 3: 1040
-Network 4: 1030
-Network 5: 1860"""
-        self.textbox.insert("0.0", "Manual:\n\n" + temp_text)
+        temp_text = glob.manual
+        self.textbox.insert("0.0", "Manual:\n" + temp_text)
         self.textbox.configure(state="disabled")
 
         # Create the frame for system settings
