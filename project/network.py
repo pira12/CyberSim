@@ -668,7 +668,7 @@ class Network:
         for i in range(0, len(self.hosts)):
             if self.hosts[i].get_attacker_access_lvl() == 1:
                 compromised_host_lvl1.append(i)
-            elif self.hosts[i].get_attacker_access_lvl() == 2:
+            elif self.hosts[i].get_attacker_access_lvl() >= 2:
                 compromised_host_lvl2.append(i)
 
         return compromised_host_lvl1, compromised_host_lvl2
@@ -919,19 +919,11 @@ def draw_network(network):
     nx.draw(G, pos, nodelist=compr_hosts_lvl1, node_color="tab:red")
     nx.draw(G, pos, nodelist=compr_hosts_lvl2, node_color="maroon", edgelist=edges, edge_color=colors)
 
-    # nx.draw(N.graph, pos, nodelist=N.public, node_color="tab:orange")
-    # nx.draw(N.graph, pos, nodelist=N.non_public, node_color="tab:blue")
-    # nx.draw(N.graph, pos, nodelist=N.compromised_nodes, node_color="tab:red")
 
     labels = {}
     for n in G.nodes:
         add1, add2 = network.hosts[n].get_address()
         labels[n] = str(add1) + ", " + str(add2)
-
-    # plt.title("Score over time")
-    # plt.xlabel("Timer")
-    # plt.ylabel("Score")
-    # plt.legend()
 
 
     nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")

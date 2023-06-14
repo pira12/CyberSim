@@ -12,7 +12,7 @@ Some of the features that NeDeS has are:
 Getting Started with NeDeS
 ===============================
 
-{Simulator name} is very easy to use, and you do not need a lot to get
+NeDeS is very easy to use, and you do not need a lot to get
 started!
 
 Installation

@@ -1,29 +1,20 @@
 import random
 import simpy
-from actions_def import Harden_host, Harden_edge
-from actions_att import Exploit, PrivilegeEscalation
 import globals as glob
 
 
-def log_scores(attackers, defender, network, env):
-
-    while True:
-
-        if env.now == 20:
-            print("oi")
-            glob.atts_h.append(PrivilegeEscalation("host_att3", 0.5, 10, 0.8, 1, process="p1"))
-
-        max_score, compromised_score = network.calculate_score()
-        def_cost = defender.get_cost()
-        glob.score_logger.info(f"{env.now} Defender damage {compromised_score} actions cost {def_cost}")
-
-        for i, attacker in enumerate(attackers):
-            glob.score_logger.info(f"{env.now} Attacker{i} score {attacker.score} actions cost {attacker.cost}")
-
-        yield env.timeout(1)
-
-
 class Defender:
+    """
+    The class for the defender of the network.
+    There is only one defender per network.
+    ----------
+    env : Simpy Enviroment
+        The Simpy enviroment of the simulator.
+    network: Network
+        The Netork with all the hosts and edges.
+    strategy: string
+        The strategy the defender is using to defend the network.
+    """
     def __init__(self, env, network, strategy):
         self.env = env
         self.network = network
@@ -32,8 +23,8 @@ class Defender:
         self.harden_host_allowed = glob.harden_host_allowed.get()
         self.harden_edge_allowed = glob.harden_edge_allowed.get()
 
-        self.failed_att_hosts = [] #hmmmmm, nodig?
-        self.failed_att_edges = [] #hmmmmm, nodig?
+        self.failed_att_hosts = []
+        self.failed_att_edges = []
 
 
     def get_cost(self):
@@ -141,6 +132,14 @@ class Defender:
 
 
     def highest_degree_def(self):
+        """
+        A defensive strategy that prioritises hosts with a lot of edges.
+        A random host is chosen.
+        The neighbour of that host with the most edges is best1.
+        The neighbour of host best1 with the most edges is best2.
+        An edge between best1 and best2 is fully hardened,
+        or either best1 or best2 is hardened.
+        """
 
         max_host = self.network.get_number_of_hosts()
         random_numb = random.randint(0, max_host-1)
@@ -181,12 +180,10 @@ class Defender:
         else:
             yield self.env.process(self.fully_harden_host(self.network.get_host_given_place(best2), 1))
 
-        # print(self.network.get_host_given_place(random_numb).get_address(),self.network.get_host_given_place(best1).get_address(), self.network.get_host_given_place(best2).get_address())
-
 
     def lazy_defense(self, if_noone):
         """
-        Only harden the hosts/edges which had a failed attack.
+        Harden the hosts/edges which had a failed attack.
         Also save which hosts/edges have been attacked.
         ----------
         if_noone : int
@@ -261,7 +258,7 @@ class Defender:
 
         if useful == []:
             if if_fail == 0:
-                self.env.timeout(0.1)
+                yield self.env.timeout(0.1)
             if if_fail == 1:
                 yield self.env.process(self.random_defense())
 
@@ -304,7 +301,7 @@ class Defender:
 
         if useful == []:
             if if_fail == 0:
-                self.env.timeout(0.1)
+                yield self.env.timeout(0.1)
             if if_fail == 1:
                 yield self.env.process(self.random_defense())
 
@@ -327,16 +324,10 @@ class Defender:
 
         return useful_harden
 
-    def get_random_def_h(self):
-        return random.choice(glob.hard_h)
-
-    def get_random_def_e(self):
-        return random.choice(glob.hard_e)
-
 
     def random_defense(self):
         """
-        Add a defense to a random host or edge.
+        Fully harden a random host or edge.
         It is assumed that either hosts or edges are allowed
         to be hardened, or both.
         """
@@ -353,28 +344,6 @@ class Defender:
         else:
             random_edge = self.network.get_random_edge()
             yield self.env.process(self.fully_harden_edge(random_edge, 0))
-
-
-    def double_random_defense(self):
-        """
-        Add a defense to a random host or edge.
-        It is assumed that either hosts or edges are allowed
-        to be hardened, or both.
-        """
-        threshold = 0.5
-        if not self.get_harden_host_allowed():
-            threshold = 1
-        elif not self.get_harden_edge_allowed():
-            threshold = 0
-
-
-        if random.random() >= threshold:
-            random_host = self.network.get_random_host()
-            yield self.env.process(self.harden_host(random_host, self.get_random_def_h()))
-
-        else:
-            random_edge = self.network.get_random_edge()
-            yield self.env.process(self.harden_edge(random_edge, self.get_random_def_e()))
 
 
     def harden_host(self, target_host, harden_action):
