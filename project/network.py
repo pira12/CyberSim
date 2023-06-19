@@ -22,8 +22,6 @@ class Host:
         The highest access level any of the attackers have
         in this host. This is the level the defender will see
         when it scans the host.
-    dos : boolean
-        Indicates if the host in under a DoS attack.
     priv_esc_hardened : [string]
         An array with all the privilege escalation attacks that this
         host is hardened against.
@@ -45,7 +43,6 @@ class Host:
         self.score = score                              # int
         self.access_for_score = access_for_score        # int
         self.attacker_access_lvl = attacker_access_lvl  # int
-        self.dos = False                                # boolean
         self.priv_esc_hardened = priv_esc_hardened      # [string]
         self.hardware = hardware                        # string
         self.processes = processes                      # [string]
@@ -98,27 +95,6 @@ class Host:
             self.attacker_access_lvl = lvl
 
 
-    def get_dos(self):
-        """
-        Return whether the host is under a DoS attack.
-        """
-        return self.dos
-
-
-    def dos_attack(self):
-        """
-        The host is under a DoS attack.
-        """
-        self.dos = True
-
-
-    def dos_attack_resolved(self):
-        """
-        The DoS attack is resolved
-        """
-        self.dos = False
-
-
     def get_hardened(self):
         """
         Return the array of hardened attacks.
@@ -156,29 +132,11 @@ class Host:
         return self.services
 
 
-    def update_services(self, new_services):
-        """
-        Change the services of the host.
-        ----------
-        new_services: [string]
-        """
-        self.services = new_services
-
-
     def get_os(self):
         """
         Return the os of the host.
         """
         return self.os
-
-
-    def update_os(self, new_os):
-        """
-        Change the os of the host.
-        ----------
-        new_os: string
-        """
-        self.os = new_os
 
 
     def harden(self, attack_type):
@@ -195,7 +153,7 @@ class Host:
 
     def possible_attacks(self):
         """
-        Return all the possible PrivilegeEscalations that work on this host.
+        Return all the possible Privilege Escalations that work on this host.
         """
         poss_atts = []
         for att in glob.atts_h:
@@ -207,15 +165,22 @@ class Host:
 
     def possible_attacks_names(self):
         """
-        Return all the names of the possible PrivilegeEscalations
+        Return all the names of the possible Privilege Escalations
         that work on this host.
         """
-        return [x.name for x in self.possible_attacks()]
+        return [x.get_name() for x in self.possible_attacks()]
 
 
 class Edge:
     """
     Class for edges in the network
+    ----------
+    source_addr: (int, int)
+        The address of the host that the edge is coming from.
+    dest_addr: (int, int)
+        The address of the host that the edge is going to.
+    servs_allowed: [string]
+        The services that the destination host accepts via this edge.
     """
     def __init__(self, source_addr, dest_addr, servs_allowed):
         self.source_addr = source_addr
@@ -225,9 +190,9 @@ class Edge:
 
     def harden(self, attack_type):
         """
-        Make it harder for attackers to use certain attacks on
-        this edge. The probability of succesfull with that attack will
-        be lowered.
+        Prevent the attackers from using the attack_type on
+        this edge. The attackers will fail if they use an attack
+        which this edge is hardened against.
         ----------
         attack_type : string
         """
@@ -330,7 +295,6 @@ class Network:
         host_map.
 
     """
-
     def __init__(self):
         self.hosts = [Host(1, 0, 0, 0, 2, [], "Internet", [], [], "windows")]
         self.host_map = {(1, 0):0}      # The key is (subnet addr, host addr)
@@ -877,6 +841,12 @@ def create_power_law(n, k, p, numb_process):
         N.add_sensitive_hosts((2,0))
         N.get_host((2,0)).change_score(200)
 
+        N.add_sensitive_hosts((2,2))
+        N.get_host((2,2)).change_score(50)
+
+        N.add_sensitive_hosts((2,5))
+        N.get_host((2,5)).change_score(50)
+
 
     return N
 
@@ -931,11 +901,12 @@ def draw_network(network):
 
     # plt.show()
     plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
+    plt.close()
 
 if __name__ == '__main__':
     # N = create_basic_network(5, 3)
-    N = create_small_world(20, 4, 0.8)
-    # N = create_power_law(20, 1, 0.4)
+    N = create_small_world(20, 4, 0.8, 1)
+    # N = create_power_law(20, 1, 0.4, 1)
 
     draw_network(N)
     # max_score, compromised_score = N.calculate_score()

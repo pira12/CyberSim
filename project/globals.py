@@ -101,8 +101,8 @@ class DefenseStrat(enum.IntEnum):
         return self.name
 
 
-atts_h = [PrivilegeEscalation("host_att1", 1, 10, 0.8, 1, process="p1"), PrivilegeEscalation("host_att2", 1, 10, 0.8, 1, process="p7")]
-atts_e = [Exploit("edge_att1", 1, 10, 0.8, service="s1"), Exploit("edge_att2", 1, 10, 0.8, service="s2")]
+atts_h = [PrivilegeEscalation("host_att1", 1, 10, 1, 1, process="p1"), PrivilegeEscalation("host_att2", 1, 10, 1, 1, process="p2")]
+atts_e = [Exploit("edge_att1", 1, 10, 1, service="s1"), Exploit("edge_att2", 1, 10, 1, service="s2")]
 hard_h = [Harden_host("harden host_att2", 1, 10, "host_att1"), Harden_host("harden host_att2", 1, 10, "host_att2")]
 hard_e = [Harden_edge("harden edge_att1", 1, 10, "edge_att1"), Harden_edge("harden edge_att2", 1, 10, "edge_att2")]
 
