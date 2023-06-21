@@ -8,12 +8,28 @@ class Defender:
     The class for the defender of the network.
     There is only one defender per network.
     ----------
-    env : Simpy Enviroment
+    env : Simpy Environment
         The Simpy enviroment of the simulator.
     network: Network
         The Netork with all the hosts and edges.
     strategy: string
         The strategy the defender is using to defend the network.
+    cost: int
+        The total cost of all actions taken by the defender.
+    harden_host_allowed: int
+        Indicates if host hardening is allowed.
+        0 means it is not allowed
+        1 means it is allowed
+    harden_edge_allowed: int
+        Indicates if edge hardening is allowed.
+        0 means it is not allowed
+        1 means it is allowed
+    failed_att_hosts : [(int, int)]
+        An array with all (subnet addr, host addr) of the hosts that
+        have been attack, but the attack failed.
+    failed_att_edges : [((int, int), (int, int))]
+        An array with all (source addr, destination addr) of the edges
+        that have been attack, but the attack failed.
     """
     def __init__(self, env, network, strategy):
         self.env = env
@@ -199,14 +215,17 @@ class Defender:
 
         for host in att_hosts:
             self.add_failed_att_hosts(host)
+            print(self.network.get_host(host))
 
             if self.get_harden_host_allowed():
-                yield self.env.process(self.fully_harden_host(host, 0))
+                yield self.env.process(self.fully_harden_host(self.network.get_host(host), 0))
 
         for edge in att_edges:
             self.add_failed_att_edges(edge)
+            print(self.network.get_edge(edge))
+
             if self.get_harden_edge_allowed():
-                yield self.env.process(self.fully_harden_edge(edge, 0))
+                yield self.env.process(self.fully_harden_edge(self.network.get_edge(edge), 0))
 
         self.network.reset_failed_att_hosts()
         self.network.reset_failed_att_edges()

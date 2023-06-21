@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 import globals as glob
+from matplotlib.lines import Line2D
 
 
 class Host:
@@ -718,9 +719,6 @@ def create_basic_network(numb1, numb2):
     if numb2 < 2:
         numb2 = 2
 
-    # G = nx.powerlaw_cluster_graph(numb1, 1, 0.4)
-    # pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
-
     N = Network()
     N.add_host(Host(2, 0, 100, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
     N.add_host(Host(3, 0, 110, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
@@ -731,11 +729,9 @@ def create_basic_network(numb1, numb2):
     for numb in range(1, numb2):
         N.add_host(Host(3, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
-
     N.add_sensitive_hosts((2,0))
     N.add_sensitive_hosts((3,1))
     N.add_sensitive_hosts((3,0))
-
 
     for numb in range(1, numb1):
         N.add_edge((1, 0), (2, numb), glob.services[0:1])
@@ -859,47 +855,38 @@ def draw_network(network):
     plt.figure()
     plt.title(str(glob.network_selection) + ", " + str(len(glob.attackers)) + " attacker(s), time: " + str(glob.MAX_RUNTIME))
 
-    from matplotlib.lines import Line2D
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', label='Normal',markerfacecolor='tab:orange', markersize=10),
         Line2D([0], [0], marker='o', color='w', label='Hardened',markerfacecolor='tab:blue', markersize=10),
         Line2D([0], [0], marker='o', color='w', label='User comp',markerfacecolor='tab:red', markersize=10),
         Line2D([0], [0], marker='o', color='w', label='Admin comp',markerfacecolor='maroon', markersize=10),
-        # Line2D([0], [0], marker='o', color='w', label="DoS'ed",markerfacecolor='black', markersize=10),
     ]
     plt.legend(handles=legend_elements, loc='best')
-    # plt.legend(handles=legend_elements, loc='upper right')
 
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()
     nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
 
-
     edges = G.edges
     colors = []
 
+    # Set the color of all the edges.
     for u,v in edges:
         if network.get_edge_given_places(u, v).get_hardened() != []:
             colors.append("blue")
         else:
             colors.append("black")
 
-
     compr_hosts_lvl1, compr_hosts_lvl2 = network.get_all_compromised_hosts()
     nx.draw(G, pos, nodelist=compr_hosts_lvl1, node_color="tab:red")
     nx.draw(G, pos, nodelist=compr_hosts_lvl2, node_color="maroon", edgelist=edges, edge_color=colors)
-
 
     labels = {}
     for n in G.nodes:
         add1, add2 = network.hosts[n].get_address()
         labels[n] = str(add1) + ", " + str(add2)
 
-
     nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
-
-
-    # plt.show()
     plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
     plt.close()
 
@@ -909,11 +896,3 @@ if __name__ == '__main__':
     # N = create_power_law(20, 1, 0.4, 1)
 
     draw_network(N)
-    # max_score, compromised_score = N.calculate_score()
-    # def_cost = defender.get_score()
-
-    # print("Cost of defending actions:", def_cost)
-    # print("Sum of compromised score:", compromised_score)
-    # print("Max score:", max_score)
-
-    # print("Added costs and comprimised:", def_cost - compromised_score)
