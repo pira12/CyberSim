@@ -56,11 +56,11 @@ class Defender:
         self.harden_host_allowed = glob.harden_host_allowed.get()
         self.harden_edge_allowed = glob.harden_edge_allowed.get()
 
-        self.scan_allowed = 0               # Not used, not connected to GUI
-        self.update_firewall_allowed = 0    # Not used, not connected to GUI
-        self.update_host_allowed = 0        # Not used, not connected to GUI
-        self.failed_att_hosts = []          # Not used
-        self.failed_att_edges = []          # Not used
+        self.scan_allowed = glob.scan_host_allowed.get()                    # Not used
+        self.update_firewall_allowed = glob.update_firewall_allowed.get()   # Not used
+        self.update_host_allowed = glob.update_host_allowed.get()           # Not used
+        self.failed_att_hosts = []                                          # Not used
+        self.failed_att_edges = []                                          # Not used
 
 
     def get_scan_cost(self):

@@ -859,13 +859,16 @@ def draw_network(network):
     pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
 
     plt.figure()
-    plt.title(str(glob.network_selection) + ", " + str(len(glob.attackers)) + " attacker(s), time: " + str(glob.MAX_RUNTIME))
+    # plt.title(str(glob.network_selection) + ", " + str(len(glob.attackers)) + " attacker(s), time: " + str(glob.MAX_RUNTIME))
 
     legend_elements = [
-        Line2D([0], [0], marker='o', color='w', label='Normal',markerfacecolor='tab:orange', markersize=10),
-        Line2D([0], [0], marker='o', color='w', label='Hardened',markerfacecolor='tab:blue', markersize=10),
-        Line2D([0], [0], marker='o', color='w', label='User comp',markerfacecolor='tab:red', markersize=10),
-        Line2D([0], [0], marker='o', color='w', label='Admin comp',markerfacecolor='maroon', markersize=10),
+        # Line2D([0], [0], marker='o', color='w', label='Normal',markerfacecolor='tab:orange', markersize=10),
+        # Line2D([0], [0], marker='o', color='w', label='Hardened',markerfacecolor='tab:blue', markersize=10),
+        # Line2D([0], [0], marker='o', color='w', label='User comp',markerfacecolor='tab:red', markersize=10),
+        # Line2D([0], [0], marker='o', color='w', label='Admin comp',markerfacecolor='maroon', markersize=10),
+        Line2D([0], [0], marker='o', color='w', label='The internet',markerfacecolor='maroon', markersize=10),
+        Line2D([0], [0], marker='o', color='w', label='The network',markerfacecolor='tab:orange', markersize=10),
+
     ]
     plt.legend(handles=legend_elements, loc='best')
 
