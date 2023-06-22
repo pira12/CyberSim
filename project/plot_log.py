@@ -38,7 +38,6 @@ def draw_plot():
     all_time = times["Defender"][0:0 + numb_of_res]
 
     for participant in results.keys():
-        # plt.plot(times[participant], results[participant], label=participant)
         res = []
 
         # Add all the results with the same place together.

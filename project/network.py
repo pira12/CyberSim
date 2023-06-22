@@ -120,6 +120,8 @@ class Host:
     def update_processes(self, new_processes):
         """
         Change the processes of the host.
+        The update host action is never used in any strategy, thus
+        this function is only used in a function that is never used.
         ----------
         new_processes: [string]
         """
@@ -239,6 +241,10 @@ class Edge:
     def update_servs_allowed(self, new_servs):
         """
         Change the services that are allowed on this edge.
+        The update firewall action is never used in any strategy, thus
+        this function is only used in a function that is never used.
+        ----------
+        new_servs: [string]
         """
         self.servs_allowed = new_servs
 

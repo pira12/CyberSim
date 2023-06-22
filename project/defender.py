@@ -18,18 +18,35 @@ class Defender:
         The total cost of all actions taken by the defender.
     harden_host_allowed: int
         Indicates if host hardening is allowed.
-        0 means it is not allowed
-        1 means it is allowed
+            0 means it is not allowed
+            1 means it is allowed
     harden_edge_allowed: int
         Indicates if edge hardening is allowed.
-        0 means it is not allowed
-        1 means it is allowed
+            0 means it is not allowed
+            1 means it is allowed
+    scan_allowed: int
+        Indicates if scanning is allowed.
+            0 means it is not allowed
+            1 means it is allowed
+        It is not currently being used.
+    update_firewall_allowed: int
+        Indicates if updating firewalls is allowed.
+            0 means it is not allowed
+            1 means it is allowed
+        It is not currently being used.
+    update_host_allowed: int
+        Indicates if updating hosts is allowed.
+            0 means it is not allowed
+            1 means it is allowed
+        It is not currently being used.
     failed_att_hosts : [(int, int)]
         An array with all (subnet addr, host addr) of the hosts that
         have been attack, but the attack failed.
+        It is not currently being used.
     failed_att_edges : [((int, int), (int, int))]
         An array with all (source addr, destination addr) of the edges
         that have been attack, but the attack failed.
+        It is not currently being used.
     """
     def __init__(self, env, network, strategy):
         self.env = env
@@ -39,8 +56,25 @@ class Defender:
         self.harden_host_allowed = glob.harden_host_allowed.get()
         self.harden_edge_allowed = glob.harden_edge_allowed.get()
 
-        self.failed_att_hosts = []
-        self.failed_att_edges = []
+        self.scan_allowed = 0               # Not used, not connected to GUI
+        self.update_firewall_allowed = 0    # Not used, not connected to GUI
+        self.update_host_allowed = 0        # Not used, not connected to GUI
+        self.failed_att_hosts = []          # Not used
+        self.failed_att_edges = []          # Not used
+
+
+    def get_scan_cost(self):
+        """
+        Return the scan_cost of the defender.
+        """
+        return self.scan_cost
+
+
+    def get_scan_duration(self):
+        """
+        Return the scan_duration of the defender.
+        """
+        return self.scan_duration
 
 
     def get_cost(self):
@@ -62,7 +96,6 @@ class Defender:
         """
         Return the strategy of the defender.
         """
-
         return self.strategy
 
     def get_failed_att_hosts(self):
@@ -246,10 +279,12 @@ class Defender:
         """
         importants = self.network.get_sensitive_hosts2()
 
+        # First harden the sensitive host.
         for imp in importants:
             if self.get_harden_host_allowed():
                 yield self.env.process(self.fully_harden_host(imp, 0))
 
+        # Then harden all incoming edges of the sensitive hosts.
         for imp in importants:
             if self.get_harden_edge_allowed():
                 incoming = self.network.get_all_edges_to(imp.get_address())
@@ -393,3 +428,46 @@ class Defender:
 
         self.add_cost(harden_action.get_cost())
         glob.logger.info(f"Edge {target_edge.get_both_addr()} hardened against {harden_action.get_attack_type()} at {self.env.now}.")
+
+
+    def scan_host(self, scan, target_host):
+        """
+        Scan a target host to check if the host is in any way compromised.
+        The scanning action is never used in any strategy, thus
+        this function is never used.
+        """
+        yield self.env.timeout(scan.get_duration())
+        self.add_cost(scan.get_cost())
+
+        if target_host.get_attacker_access_lvl() == 0:
+            return 0
+        else:
+            return 1
+
+
+    def update_host(self, host_update, target_host):
+        """
+        The processes of the target host are updated. This means that
+        the host will take the processes of the host_update as its new
+        processes.
+        The update host action is never used in any strategy, thus
+        this function is never used.
+        """
+        yield self.env.timeout(host_update.get_duration())
+        self.add_cost(host_update.get_cost())
+
+        target_host.update_processes(host_update.get_new_processes)
+
+
+    def update_firewall(self, firewall_update, target_edge):
+        """
+        The services that are allowed on the target edge are updated.
+        This means that the edge will take the services of the firewall_update
+        as its new servs_allowed.
+        The update firewall action is never used in any strategy, thus
+        this function is never used.
+        """
+        yield self.env.timeout(firewall_update.get_duration())
+        self.add_cost(firewall_update.get_cost())
+
+        target_edge.update_servs_allowed(firewall_update.get_new_processes)
