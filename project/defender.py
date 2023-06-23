@@ -150,11 +150,27 @@ class Defender:
         """
         The main process, which the attacker repeats until the simulation
         is terminated.
-        random = Randomly harden edges and hosts.
-        last_def = Harden first the sensitive hosts against the relevant
-                   Privilege Escalations. Then harden the edges towards the
-                   sensitive hosts against exploits. Do random hardenings
-                   afterwards.
+        random: Randomly fully harden edges and hosts.
+
+        last layer: Harden first the sensitive hosts against the relevant
+            Privilege Escalations. Then harden the edges towards the
+            sensitive hosts against exploits. Do random hardenings
+            afterwards.
+
+        minimum: Only fully harden hosts or edges that have been the target
+            of failed attacks.
+
+        reactive and random: A combination of random and minimum.
+            Random hosts and edges are fully hardened, until a failed
+            attack is noticed. The target of that attack is then fully
+            hardened. This is repeated indefinitely.
+
+        highest degree neighbour: Prioritises hosts with a lot of edges.
+            A random host is chosen.
+            The neighbour of that host with the most edges is best1.
+            The neighbour of host best1 with the most edges is best2.
+            An edge between best1 and best2 is fully hardened,
+            or either best1 or best2 is hardened.
         """
 
         if self.get_strategy() == "random":
@@ -189,7 +205,6 @@ class Defender:
         An edge between best1 and best2 is fully hardened,
         or either best1 or best2 is hardened.
         """
-
         max_host = self.network.get_number_of_hosts()
         random_numb = random.randint(0, max_host-1)
 
@@ -248,14 +263,12 @@ class Defender:
 
         for host in att_hosts:
             self.add_failed_att_hosts(host)
-            print(self.network.get_host(host))
 
             if self.get_harden_host_allowed():
                 yield self.env.process(self.fully_harden_host(self.network.get_host(host), 0))
 
         for edge in att_edges:
             self.add_failed_att_edges(edge)
-            print(self.network.get_edge(edge))
 
             if self.get_harden_edge_allowed():
                 yield self.env.process(self.fully_harden_edge(self.network.get_edge(edge), 0))
@@ -300,6 +313,7 @@ class Defender:
         when everything is already hardened.
         ----------
         host : Host
+            The host that is fully hardened.
         if_fail: int
             What to do when the host could not be hardened:
             0: wait a short time
@@ -325,6 +339,7 @@ class Defender:
         the useful hardenings.
         ----------
         host : Host
+            The host for which useful hardenings are determined.
         """
         attack_names = host.possible_attacks_names()
 
@@ -343,6 +358,7 @@ class Defender:
         when everything is already hardened.
         ----------
         edge : Edge
+            The edge that is fully hardened.
         if_fail: int
             What to do when the edge could not be hardened:
             0: wait a short time
@@ -368,6 +384,7 @@ class Defender:
         the useful hardenings.
         ----------
         edge : Edge
+            The edge for which useful hardenings are determined.
         """
         exploit_names = edge.possible_exploits_names()
 

@@ -3,15 +3,17 @@
 """
 **Actions_def:**
 
-Every defensive action inherits from the base :class:`Action_def` class,
+Every defensive action inherits from the base Action_def class,
 which defines some common attributes and functions. Different types of
-actions are implemented as subclasses of the Action class.
+actions are implemented as subclasses of the Action_def class.
 
 Defender action types implemented:
 
 - :class:`Harden_host`
 - :class:`Harden_edge`
-
+- :class:`Scan_host`
+- :class:`Update_host`
+- :class:`Update_firewall`
 
 """
 

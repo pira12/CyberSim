@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def draw_plot():
+    """
+    Draw the scores of the defender and attacker(s) over time.
+    The data is read from the score_log.txt file.
+    """
     plt.clf()
     f = open(f"score_log.txt", "r")
     results = {}

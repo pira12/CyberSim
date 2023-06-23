@@ -19,6 +19,7 @@ class Host:
     access_for_score : int
         The level of access the attacker needs to get to the data
         and thus get the amount of points that the data is worth.
+        This property is not used.
     attacker_access_lvl : int
         The highest access level any of the attackers have
         in this host. This is the level the defender will see
@@ -28,12 +29,15 @@ class Host:
         host is hardened against.
     hardware : string
         The hardware of the host. The host has only one hardware.
+        This property is not used.
     processes : [string]
         The processes run on the host. This could be multiple.
     services : [string]
         The services run on the host. This could be multiple.
+        This property is not used.
     os : string
         The operating system of the host.
+        This property is not used.
     """
     def __init__(self, subnet_addr, host_addr, score, access_for_score,
                  attacker_access_lvl, priv_esc_hardened, hardware,
@@ -42,13 +46,13 @@ class Host:
         self.subnet_addr = subnet_addr                  # int
         self.host_addr = host_addr                      # int
         self.score = score                              # int
-        self.access_for_score = access_for_score        # int
+        self.access_for_score = access_for_score        # int,      not used
         self.attacker_access_lvl = attacker_access_lvl  # int
         self.priv_esc_hardened = priv_esc_hardened      # [string]
-        self.hardware = hardware                        # string
+        self.hardware = hardware                        # string,   not used
         self.processes = processes                      # [string]
-        self.services = services                        # [string]
-        self.os = os                                    # string
+        self.services = services                        # [string], not used
+        self.os = os                                    # string,   not used
 
 
     def get_address(self):
@@ -76,6 +80,7 @@ class Host:
     def get_access_for_score(self):
         """
         Return the access needed to get the score of this host.
+        This function is not used, since access_for_score is not used.
         """
         return self.access_for_score
 
@@ -106,6 +111,7 @@ class Host:
     def get_hardware(self):
         """
         Return the hardware of the host.
+        This function is not used, since the hardware is not used.
         """
         return self.hardware
 
@@ -131,6 +137,7 @@ class Host:
     def get_services(self):
         """
         Return the services of the host.
+        This function is not used, since the services of the host are not used.
         """
         return self.services
 
@@ -138,6 +145,7 @@ class Host:
     def get_os(self):
         """
         Return the os of the host.
+        This function is not used, since the os is not used.
         """
         return self.os
 
@@ -148,7 +156,7 @@ class Host:
         this host. The probability of succesfull with that attack will
         be lowered.
         ----------
-        attack_type : string
+        attack_type: string
         """
         if attack_type not in self.priv_esc_hardened:
             self.priv_esc_hardened.append(attack_type)
@@ -182,6 +190,8 @@ class Edge:
         The address of the host that the edge is coming from.
     dest_addr: (int, int)
         The address of the host that the edge is going to.
+    exploits_hardened: [string]
+        The exploits that do not work anymore on this edge.
     servs_allowed: [string]
         The services that the destination host accepts via this edge.
     """
@@ -322,6 +332,7 @@ class Network:
         """
         self.hosts.append(host)
         addr = host.get_address()
+
         # Host_numb is the number the host has in the array self.hosts
         host_numb = len(self.host_map)
         self.host_map[addr] = host_numb
@@ -384,7 +395,7 @@ class Network:
 
     def get_sensitive_hosts(self):
         """
-        Get all addresses of the sensitive hosts of the network.
+        Get allthe  addresses of the sensitive hosts of the network.
         """
         return self.sensitive_hosts
 
@@ -398,7 +409,7 @@ class Network:
 
     def get_number_of_hosts(self):
         """
-        Number of hosts in the network.
+        Return the number of hosts in the network.
         """
         return len(self.hosts)
 
@@ -583,6 +594,7 @@ class Network:
         random_numb = random.randint(1, len(self.hosts)-1)
         return self.hosts[random_numb]
 
+
     def get_random_edge(self):
         """
         Return a random edge from the network and 1 otherwise.
@@ -726,6 +738,8 @@ def create_basic_network(numb1, numb2):
         numb2 = 2
 
     N = Network()
+
+    # Add the hosts to the network.
     N.add_host(Host(2, 0, 100, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
     N.add_host(Host(3, 0, 110, 2, 0, [], glob.hardware[0], glob.processes[0:2], glob.services[0:2], glob.os[0]))
 
@@ -739,6 +753,7 @@ def create_basic_network(numb1, numb2):
     N.add_sensitive_hosts((3,1))
     N.add_sensitive_hosts((3,0))
 
+    # Add the edges to the network.
     for numb in range(1, numb1):
         N.add_edge((1, 0), (2, numb), glob.services[0:1])
         N.add_edge((2, 0), (2, numb), glob.services[0:1])
@@ -777,20 +792,24 @@ def create_small_world(n, k, p, numb_process):
     G = nx.watts_strogatz_graph(n, k, p, seed=3113794652)
     N = Network()
 
+    # Add the hosts to the network
     for numb in range(0, len(G.nodes())):
         N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:min_numb], glob.services[0:min_numb], glob.os[0]))
 
+    # Add the edges to the network.
     # Add 1 to both source and destination because host 0 is the internet.
     for edge in G.edges():
         source, dest = edge
         N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:min_numb])
         N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:min_numb])
 
+    # Connect the host that sybolises the internet to the network.
     if n >= 17:
         N.add_edge((1, 0), (2, 4), glob.services[0:min_numb])
         N.add_edge((1, 0), (2, 10), glob.services[0:min_numb])
         N.add_edge((1, 0), (2, 17), glob.services[0:min_numb])
 
+        # Make some of the hosts sensitive hosts.
         N.add_sensitive_hosts((2,0))
         N.get_host((2,0)).change_score(100)
 
@@ -825,21 +844,25 @@ def create_power_law(n, k, p, numb_process):
     G = nx.powerlaw_cluster_graph(n, k, p, seed=3113794652)
     N = Network()
 
+    # Add the hosts to the network.
     for numb in range(0, len(G.nodes())):
         N.add_host(Host(2, numb, 10, 2, 0, [], glob.hardware[0], glob.processes[0:min_numb], glob.services[0:min_numb], glob.os[0]))
 
+    # Add the edges to the network.
     # Add 1 to both source and destination because host 0 is the internet.
     for edge in G.edges():
         source, dest = edge
         N.add_edge(N.get_host_given_place(source+1).get_address(), N.get_host_given_place(dest+1).get_address(), glob.services[0:min_numb])
         N.add_edge(N.get_host_given_place(dest+1).get_address(), N.get_host_given_place(source+1).get_address(), glob.services[0:min_numb])
 
+    # Connect the host that sybolises the internet to the network.
     if n >= 18:
         N.add_edge((1, 0), (2, 10), glob.services[0:min_numb])
         N.add_edge((1, 0), (2, 13), glob.services[0:min_numb])
         N.add_edge((1, 0), (2, 14), glob.services[0:min_numb])
         N.add_edge((1, 0), (2, 18), glob.services[0:min_numb])
 
+        # Make some of the hosts sensitive hosts.
         N.add_sensitive_hosts((2,0))
         N.get_host((2,0)).change_score(200)
 
@@ -849,9 +872,7 @@ def create_power_law(n, k, p, numb_process):
         N.add_sensitive_hosts((2,5))
         N.get_host((2,5)).change_score(50)
 
-
     return N
-
 
 
 def draw_network(network):
@@ -861,6 +882,7 @@ def draw_network(network):
     plt.figure()
     plt.title(str(glob.network_selection) + ", " + str(len(glob.attackers)) + " attacker(s), time: " + str(glob.MAX_RUNTIME))
 
+    # Create the legend.
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', label='Normal',markerfacecolor='tab:orange', markersize=10),
         Line2D([0], [0], marker='o', color='w', label='Hardened',markerfacecolor='tab:blue', markersize=10),
@@ -869,6 +891,7 @@ def draw_network(network):
     ]
     plt.legend(handles=legend_elements, loc='best')
 
+    # Draw the normal and hardened hosts.
     nx.draw(G, pos, node_color="tab:orange")
     hardened_hosts = network.get_all_hardened_hosts()
     nx.draw(G, pos, nodelist=hardened_hosts, node_color="tab:blue")
@@ -883,6 +906,7 @@ def draw_network(network):
         else:
             colors.append("black")
 
+    # Draw the compromised hosts and the hardened edges.
     compr_hosts_lvl1, compr_hosts_lvl2 = network.get_all_compromised_hosts()
     nx.draw(G, pos, nodelist=compr_hosts_lvl1, node_color="tab:red")
     nx.draw(G, pos, nodelist=compr_hosts_lvl2, node_color="maroon", edgelist=edges, edge_color=colors)
