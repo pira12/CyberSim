@@ -86,7 +86,7 @@ class App(customtkinter.CTk):
         Window configuration
         """
         self.title("NeDeS")
-        self.geometry(f"{1100}x{580}")
+        self.geometry(f"{1366}x{768}")
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.run_index = 0
@@ -353,7 +353,7 @@ class App(customtkinter.CTk):
         """
         self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
                                               dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              size=(420,235))
+                                              size=(680,420))
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
         self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
         glob.network_selection = self.network_options.get()
