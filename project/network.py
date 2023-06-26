@@ -671,7 +671,7 @@ class Network:
         ----------
         host : Host
         """
-        self.failed_att_hosts.append(host)
+        self.failed_att_hosts.append(host.get_address())
 
 
     def reset_failed_att_hosts(self):
@@ -695,7 +695,7 @@ class Network:
         ----------
         edge : Edge
         """
-        self.failed_att_edges.append(edge)
+        self.failed_att_edges.append(edge.get_both_addr())
 
 
     def reset_failed_att_edges(self):
