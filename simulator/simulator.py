@@ -4,6 +4,7 @@ import customtkinter
 from PIL import Image
 from CTkMessagebox import CTkMessagebox
 from event_handler import start_simulation, stop_simulation
+from network import Network, Host, Edge
 
 # System appearance settings
 customtkinter.set_appearance_mode("System")
@@ -90,6 +91,7 @@ class App(customtkinter.CTk):
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.run_index = 0
+        self.created_net = Network()
 
         """
         -------------------------------------------------------------------------------------------
@@ -148,6 +150,7 @@ class App(customtkinter.CTk):
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
         self.tabview.add("Simulation log")
+        self.tabview.add("Create network")
 
         self.progressbar = customtkinter.CTkProgressBar(self, orientation="horizontal", height=5)
         self.progressbar.grid(row=2, column=1, columnspan=4, padx=5, pady=5, sticky="esw")
@@ -162,6 +165,7 @@ class App(customtkinter.CTk):
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Simulation log").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Create network").grid_columnconfigure(0, weight=1)
 
         """
         -------------------------------------------------------------------------------------------
@@ -323,6 +327,93 @@ class App(customtkinter.CTk):
         self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
         self.log.grid_rowconfigure(0, weight=3)
 
+
+        """
+        -------------------------------------------------------------------------------------------
+        Create network tab
+        """
+
+        # Create the frame for system settings
+        self.network_frame = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.network_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+        # Network selection
+        self.label_n1 = customtkinter.CTkLabel(master=self.network_frame, text="Select a network:")
+        self.label_n1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        self.created_network = customtkinter.CTkOptionMenu(master=self.network_frame, dynamic_resizing=False,
+                                                           values=["network1", "network2", "network3", "network4", "network5"],
+                                                           command=self.update_preview_created_network)
+        self.created_network.grid(row=0, column=1, padx=20, pady=(20, 20), sticky="nw")
+
+        # The network preview frame
+        self.create_network_frame = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.create_network_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.update_preview_created_network(0)
+        self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, text="Network selection preview:")
+        self.network_created_preview.grid(row=0, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
+        self.network_created_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+
+        # Add a host to the network
+        self.label_n2 = customtkinter.CTkLabel(master=self.network_frame, text="Set the address of the new host:")
+        self.label_n2.grid(row=1, column=0, padx=20, pady=20, sticky="nw")
+        self.add_host_entry = customtkinter.CTkEntry(master=self.network_frame, placeholder_text="int")
+        self.add_host_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.add_host_button = customtkinter.CTkButton(master=self.network_frame, text="Add host", command=self.add_host)
+        self.add_host_button.grid(row=2, column=0, padx=20, pady=10)
+
+
+        # Add an edge to the network
+        self.label_n3 = customtkinter.CTkLabel(master=self.network_frame, text="Set the source address of the edge:")
+        self.label_n3.grid(row=3, column=0, padx=20, pady=20, sticky="nw")
+        self.add_edge_entry1 = customtkinter.CTkEntry(master=self.network_frame, placeholder_text="int")
+        self.add_edge_entry1.grid(row=3, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.label_n4 = customtkinter.CTkLabel(master=self.network_frame, text="Set the destination address of the edge:")
+        self.label_n4.grid(row=4, column=0, padx=20, pady=20, sticky="nw")
+        self.add_edge_entry2 = customtkinter.CTkEntry(master=self.network_frame, placeholder_text="int")
+        self.add_edge_entry2.grid(row=4, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.add_edge_button = customtkinter.CTkButton(master=self.network_frame, text="Add edge", command=self.add_edge)
+        self.add_edge_button.grid(row=5, column=0, padx=20, pady=10)
+
+
+    def add_host(self):
+        host_address = self.add_host_entry.get()
+
+        if host_address.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The address of the host must be a number", icon="warning")
+        elif (2, int(host_address)) in list(self.created_net.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The given address of the host already exists", icon="warning")
+
+        else:
+            self.created_net.add_host(Host(2, int(host_address), 10, 2, 0, [], glob.hardware[0], glob.processes[0:1], glob.services[0:1], glob.os[0]))
+            self.created_net.draw_pre_attack_network()
+
+
+    def add_edge(self):
+        source_address = self.add_edge_entry1.get()
+        dest_address = self.add_edge_entry2.get()
+
+        if source_address.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The source address of the edge must be a number", icon="warning")
+        elif (2, int(source_address)) not in list(self.created_net.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The given source address of the edge does not exist", icon="warning")
+
+        elif dest_address.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The destination address of the edge must be a number", icon="warning")
+        elif (2, int(dest_address)) not in list(self.created_net.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The given source address of the edge does not exist", icon="warning")
+
+        elif source_address == dest_address:
+            CTkMessagebox(master=app, title="Error", message="The edge has the same source and destination address", icon="warning")
+        else:
+            self.created_net.add_edge((2, int(source_address)), (2, int(dest_address)), glob.services[0:1])
+            self.created_net.draw_pre_attack_network()
+
+
+
     def show_success(self):
         """
         Function which will show the success pop-up box.
@@ -357,6 +448,17 @@ class App(customtkinter.CTk):
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
         self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
         glob.network_selection = self.network_options.get()
+
+    def update_preview_created_network(self, dummy):
+        """
+        Function which will change the network preview according to the created network.
+        """
+        self.created_image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.created_network.get()}.png"),
+                                              dark_image=Image.open(f"basic_networks/basic_{self.created_network.get()}.png"),
+                                              size=(680,420))
+        self.network_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        glob.network_selection = "created"
 
     def reset_results(self):
         """

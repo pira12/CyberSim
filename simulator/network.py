@@ -721,6 +721,38 @@ class Network:
         return total, comprimised_score
 
 
+    def draw_pre_attack_network(self):
+        G = nx.DiGraph(self.adjacency_matrix)
+        pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+
+        plt.figure()
+
+        # Create the legend.
+        legend_elements = [
+            Line2D([0], [0], marker='o', color='w', label='Network',markerfacecolor='tab:orange', markersize=10),
+            Line2D([0], [0], marker='o', color='w', label='Internet',markerfacecolor='maroon', markersize=10),
+        ]
+        plt.legend(handles=legend_elements, loc='best')
+
+        # Draw the normal and hardened hosts.
+        nx.draw(G, pos, node_color="tab:orange")
+
+
+        # Draw the internet.
+        _, internet = self.get_all_compromised_hosts()
+        nx.draw(G, pos, nodelist=internet, node_color="maroon")
+
+        labels = {}
+        for n in G.nodes:
+            add1, add2 = self.hosts[n].get_address()
+            labels[n] = str(add1) + ", " + str(add2)
+
+        nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
+        plt.show()
+        # plt.savefig(f"./{glob.OUT_FOLDERNAME}/Network_fig.png", format="PNG")
+        # plt.close()
+
+
 
 def create_basic_network(numb1, numb2):
     """
