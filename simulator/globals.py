@@ -21,6 +21,8 @@ harden_edge_allowed = None
 scan_host_allowed = None
 update_host_allowed = None
 update_firewall_allowed = None
+created_network = None
+use_created_network = None
 current_run = 0
 
 # Total score of all nodes

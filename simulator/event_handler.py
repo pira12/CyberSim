@@ -11,15 +11,17 @@ def generate_network():
     """
     Generates network according to selected network in GUI.
     """
-    if glob.network_selection == "network1":
+    if glob.use_created_network.get():
+        return glob.created_network
+    elif glob.network_selection == "network1":
         return nw.create_basic_network(5, 3)
-    if glob.network_selection == "network2":
+    elif glob.network_selection == "network2":
         return nw.create_power_law(20, 1, 0.4, 1)
-    if glob.network_selection == "network3":
+    elif glob.network_selection == "network3":
         return nw.create_power_law(20, 1, 0.4, 2)
-    if glob.network_selection == "network4":
+    elif glob.network_selection == "network4":
         return nw.create_small_world(20, 4, 0.8, 1)
-    if glob.network_selection == "network5":
+    elif glob.network_selection == "network5":
         return nw.create_small_world(20, 4, 0.8, 2)
 
 
