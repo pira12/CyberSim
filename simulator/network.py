@@ -443,6 +443,15 @@ class Network:
             print("The address", address, "is not in the network and can thus not be a sensitive host")
 
 
+    def delete_sensitive_hosts(self, address):
+        """
+        Delete a sensitive host from the network.
+        ---------
+        address : (int, int)
+        """
+        self.sensitive_hosts.remove(address)
+
+
     def get_score_host(self, address):
         """
         Return the score of the host of the given address.
