@@ -202,9 +202,9 @@ class App(customtkinter.CTk):
 
         self.update_network_entry(0)
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, text="Network selection preview:")
-        self.network_preview.grid(row=0, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=0, column=0, padx=10, pady=3, sticky="nsew")
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
-        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
 
         # Simulation number selection
         self.label_2 = customtkinter.CTkLabel(master=self.option_frame, text="Set the number of simulations:")
@@ -354,9 +354,9 @@ class App(customtkinter.CTk):
 
         self.update_preview_created_network()
         self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, text="Network selection preview:")
-        self.network_created_preview.grid(row=0, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_created_preview.grid(row=0, column=0, padx=10, pady=3, sticky="nsew")
         self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
-        self.network_created_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_created_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
 
         # Add or delete a host to the network
         self.label_n2 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set the address of the host:")
@@ -669,7 +669,7 @@ class App(customtkinter.CTk):
                                               dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
                                               size=(680,420))
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
-        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
         glob.network_selection = self.network_options.get()
 
     def update_preview_created_network(self):
@@ -681,7 +681,7 @@ class App(customtkinter.CTk):
                                               dark_image=Image.open("created_network.png"),
                                               size=(680,420))
         self.network_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
-        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
 
     def reset_results(self):
         """
