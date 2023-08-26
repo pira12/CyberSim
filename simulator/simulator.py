@@ -147,10 +147,10 @@ class App(customtkinter.CTk):
         self.tabview = customtkinter.CTkTabview(self, width=880, height=550)
         self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=5, pady=5, sticky="nesw")
         self.tabview.add("System")
+        self.tabview.add("Create network")
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
         self.tabview.add("Simulation log")
-        self.tabview.add("Create network")
         self.tabview.add("Actions")
 
         self.progressbar = customtkinter.CTkProgressBar(self, orientation="horizontal", height=5)
@@ -163,10 +163,10 @@ class App(customtkinter.CTk):
         Configure grid of individual tabs
         """
         self.tabview.tab("System").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Create network").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Simulation log").grid_columnconfigure(0, weight=1)
-        self.tabview.tab("Create network").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Actions").grid_columnconfigure(0, weight=1)
 
         """
@@ -345,7 +345,7 @@ class App(customtkinter.CTk):
 
         # Create the frame to create/delete the sensitive hosts
         self.sensitive_frame = customtkinter.CTkFrame(self.tabview.tab("Create network"))
-        self.sensitive_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+        self.sensitive_frame.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
 
 
         # The network preview frame
@@ -362,22 +362,22 @@ class App(customtkinter.CTk):
         self.label_n2 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set the address of the host:")
         self.label_n2.grid(row=1, column=0, padx=20, pady=20, sticky="nw")
         self.host_entry = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="int, int")
-        self.host_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.host_entry.grid(row=1, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
 
         self.label_n3 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set score of the host:")
         self.label_n3.grid(row=2, column=0, padx=20, pady=20, sticky="nw")
         self.host_score = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="int")
-        self.host_score.grid(row=2, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.host_score.grid(row=2, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
 
         self.label_n4 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set the processes of the host:")
         self.label_n4.grid(row=3, column=0, padx=20, pady=20, sticky="nw")
         self.host_processes = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="string, string, ..")
-        self.host_processes.grid(row=3, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+        self.host_processes.grid(row=3, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
 
         self.add_host_button = customtkinter.CTkButton(master=self.network_frame_host, text="Add host", command=self.add_host)
-        self.add_host_button.grid(row=4, column=0, padx=20, pady=10)
+        self.add_host_button.grid(row=4, column=0, padx=(60,20), pady=10)
         self.delete_host_button = customtkinter.CTkButton(master=self.network_frame_host, text="Delete host", command=self.delete_host)
-        self.delete_host_button.grid(row=4, column=1, padx=20, pady=10)
+        self.delete_host_button.grid(row=4, column=2, padx=(65,20), pady=10)
 
         # Add or delete an edge to the network
         self.label_n5 = customtkinter.CTkLabel(master=self.network_frame_edge, text="Set the source address of the edge:")
@@ -409,12 +409,12 @@ class App(customtkinter.CTk):
         self.sensitive_entry.grid(row=0, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
 
         self.add_sensitive_button = customtkinter.CTkButton(master=self.sensitive_frame, text="Add sensitive host", command=self.add_sensitive_host)
-        self.add_sensitive_button.grid(row=1, column=0, padx=20, pady=10)
+        self.add_sensitive_button.grid(row=0, column=2, padx=20, pady=10)
         self.delete_sensitive_button = customtkinter.CTkButton(master=self.sensitive_frame, text="Delete sensitive host", command=self.delete_sensitive_host)
-        self.delete_sensitive_button.grid(row=1, column=1, padx=20, pady=10)
+        self.delete_sensitive_button.grid(row=0, column=3, padx=20, pady=10)
 
         self.use_created_network = customtkinter.CTkSwitch(master=self.sensitive_frame, text="Use created network")
-        self.use_created_network.grid(row=2, column=0, padx=20, pady=20, sticky="W")
+        self.use_created_network.grid(row=0, column=4, padx=20, pady=20, sticky="W")
         glob.use_created_network = self.use_created_network
 
 
