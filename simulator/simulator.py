@@ -86,7 +86,7 @@ class App(customtkinter.CTk):
         """
         Window configuration
         """
-        self.title("NeDeS")
+        self.title("CyberSim")
         self.geometry(f"{1366}x{768}")
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
