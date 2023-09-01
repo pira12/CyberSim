@@ -11,7 +11,7 @@ def generate_network():
     """
     Generates network according to selected network in GUI.
     """
-    if glob.use_created_network.get():
+    if glob.use_created_network == True:
         return glob.created_network
     elif glob.network_selection == "network1":
         return nw.create_basic_network(5, 3)

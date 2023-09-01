@@ -151,7 +151,7 @@ class App(customtkinter.CTk):
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
         self.tabview.add("Simulation log")
-        self.tabview.add("Actions")
+        # self.tabview.add("Actions")
 
         self.progressbar = customtkinter.CTkProgressBar(self, orientation="horizontal", height=5)
         self.progressbar.grid(row=2, column=1, columnspan=4, padx=5, pady=5, sticky="esw")
@@ -167,7 +167,7 @@ class App(customtkinter.CTk):
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Simulation log").grid_columnconfigure(0, weight=1)
-        self.tabview.tab("Actions").grid_columnconfigure(0, weight=1)
+        # self.tabview.tab("Actions").grid_columnconfigure(0, weight=1)
 
         """
         -------------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ class App(customtkinter.CTk):
         self.label_1 = customtkinter.CTkLabel(master=self.option_frame, text="Select a network:")
         self.label_1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
         self.network_options = customtkinter.CTkOptionMenu(master=self.option_frame, dynamic_resizing=False,
-                                                           values=["network1", "network2", "network3", "network4", "network5"],
+                                                           values=["network1", "network2", "network3", "network4", "network5", "created_network"],
                                                            command=self.update_network_entry)
         self.network_options.grid(row=0, column=1, padx=20, pady=(20, 20), sticky="nw")
 
@@ -413,45 +413,41 @@ class App(customtkinter.CTk):
         self.delete_sensitive_button = customtkinter.CTkButton(master=self.sensitive_frame, text="Delete sensitive host", command=self.delete_sensitive_host)
         self.delete_sensitive_button.grid(row=0, column=3, padx=20, pady=10)
 
-        self.use_created_network = customtkinter.CTkSwitch(master=self.sensitive_frame, text="Use created network")
-        self.use_created_network.grid(row=0, column=4, padx=20, pady=20, sticky="W")
-        glob.use_created_network = self.use_created_network
 
+        # """
+        # -------------------------------------------------------------------------------------------
+        # Actions tab
+        # """
 
-        """
-        -------------------------------------------------------------------------------------------
-        Actions tab
-        """
+        # # Create the frame to create/delete hosts
+        # self.action_frame_attacks_h = customtkinter.CTkFrame(self.tabview.tab("Actions"))
+        # self.action_frame_attacks_h.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Create the frame to create/delete hosts
-        self.action_frame_attacks_h = customtkinter.CTkFrame(self.tabview.tab("Actions"))
-        self.action_frame_attacks_h.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        # # Create the frame to create/delete hosts
+        # self.action_frame_attacks_e = customtkinter.CTkFrame(self.tabview.tab("Actions"))
+        # self.action_frame_attacks_e.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Create the frame to create/delete hosts
-        self.action_frame_attacks_e = customtkinter.CTkFrame(self.tabview.tab("Actions"))
-        self.action_frame_attacks_e.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        # self.host_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="name")
+        # self.host_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        # self.host_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="cost")
+        # self.host_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
+        # self.host_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="duration")
+        # self.host_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
+        # self.host_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="process")
+        # self.host_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
 
-        self.host_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="name")
-        self.host_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
-        self.host_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="cost")
-        self.host_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
-        self.host_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="duration")
-        self.host_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
-        self.host_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="process")
-        self.host_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="name")
+        # self.edge_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="cost")
+        # self.edge_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="duration")
+        # self.edge_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="service")
+        # self.edge_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
 
-        self.edge_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="name")
-        self.edge_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
-        self.edge_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="cost")
-        self.edge_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
-        self.edge_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="duration")
-        self.edge_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
-        self.edge_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="service")
-        self.edge_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
-
-        # Show the current attacks
-        self.show_host_attacks()
-        self.show_edge_attacks()
+        # # Show the current attacks
+        # self.show_host_attacks()
+        # self.show_edge_attacks()
 
 
     def show_host_attacks(self):
@@ -527,6 +523,7 @@ class App(customtkinter.CTk):
         else:
             glob.created_network.add_host(Host(subnet_address, host_address, int(host_score), 2, 0, [], glob.hardware[0], host_processes, glob.services[0:1], glob.os[0]))
             self.update_preview_created_network()
+            self.update_network_entry(0)
 
 
     def delete_host(self):
@@ -544,6 +541,8 @@ class App(customtkinter.CTk):
         else:
             glob.created_network.delete_host((subnet_address, host_address))
             self.update_preview_created_network()
+            self.update_network_entry(0)
+
 
 
     def add_edge(self):
@@ -576,6 +575,7 @@ class App(customtkinter.CTk):
         else:
             glob.created_network.add_edge((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address), edge_services)
             self.update_preview_created_network()
+            self.update_network_entry(0)
 
 
     def delete_edge(self):
@@ -601,6 +601,7 @@ class App(customtkinter.CTk):
         else:
             glob.created_network.delete_edge((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address))
             self.update_preview_created_network()
+            self.update_network_entry(0)
 
 
     def add_sensitive_host(self):
@@ -665,9 +666,16 @@ class App(customtkinter.CTk):
         """
         Function which will change the network preview according to its selction.
         """
-        self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              size=(680,420))
+        if self.network_options.get() == "created_network":
+            glob.use_created_network = True
+            self.image = customtkinter.CTkImage(light_image=Image.open("created_network.png"),
+                                                dark_image=Image.open("created_network.png"),
+                                                size=(680,420))
+        else:
+            glob.use_created_network = False
+            self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                                dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                                size=(680,420))
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
         self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
         glob.network_selection = self.network_options.get()
