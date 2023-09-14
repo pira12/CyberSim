@@ -3,8 +3,8 @@ import os
 import customtkinter
 from PIL import Image
 from CTkMessagebox import CTkMessagebox
-from event_handler import start_simulation, stop_simulation
-from network import Network, Host, Edge
+from event_handler import start_simulation
+from network import Network, Host
 
 # System appearance settings
 customtkinter.set_appearance_mode("System")
@@ -560,7 +560,6 @@ class App(customtkinter.CTk):
         edge_services = self.edge_services.get()
         edge_services = edge_services.split(",")
         edge_services = [service.strip() for service in edge_services]
-        print(edge_services[0] == "s1")
 
         if (source_subnet_address, source_host_address) not in list(glob.created_network.host_map.keys()):
             CTkMessagebox(master=app, title="Error", message="The source address of the edge does not exist", icon="warning")
@@ -880,6 +879,10 @@ class App(customtkinter.CTk):
 
         if self.harden_edge.get() == 0 and self.harden_host.get() == 0:
             CTkMessagebox(master=app, title="Error", message="Select at least one defence method for the defender!", icon="warning")
+            return True
+
+        if glob.use_created_network == True and glob.created_network.get_all_edges_from((1,0)) == []:
+            CTkMessagebox(master=app, title="Error", message="The Internet of the created network needs at least 1 outgoing edge!", icon="warning")
             return True
 
 if __name__ == "__main__":

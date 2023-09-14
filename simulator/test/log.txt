@@ -1,22 +1,65 @@
-2023-08-30 15:41:47,852 Attacker actions and strategy have been loaded for attacker 0 at 0.
-2023-08-30 15:41:47,854 Start SubnetScan at 0.
-2023-08-30 15:41:47,855 Start Harden_host on host (2, 1) at 0.
-2023-08-30 15:41:47,857 SubnetScan succeeded on host (1, 0) at 10.
-2023-08-30 15:41:47,857 Host (2, 1) hardened against host_att1 at 10.
-2023-08-30 15:41:47,858 Start Exploit at 10.
-2023-08-30 15:41:47,858 Start Harden_host on host (2, 1) at 10.
-2023-08-30 15:41:47,860 Host (2, 1) hardened against host_att2 at 20.
-2023-08-30 15:41:47,861 Start Harden_host on host (2, 4) at 20.
-2023-08-30 15:41:47,862 Exploit succeeded on edge ((1, 0), (2, 3)) at 25.
-2023-08-30 15:41:47,864 Start PrivilegeEscalation at 25.
-2023-08-30 15:41:47,865 Host (2, 4) hardened against host_att1 at 30.
-2023-08-30 15:41:47,865 Start Harden_host on host (2, 4) at 30.
-2023-08-30 15:41:47,868 Privilege escalation succeeded on host (2, 3) at 40.
-2023-08-30 15:41:47,868 Host (2, 4) hardened against host_att2 at 40.
-2023-08-30 15:41:47,868 Start SubnetScan at 40.
-2023-08-30 15:41:47,868 Start Harden_edge on edge ((3, 2), (3, 0)) at 40.
-2023-08-30 15:41:47,871 SubnetScan succeeded on host (2, 3) at 50.
-2023-08-30 15:41:47,871 Edge ((3, 2), (3, 0)) hardened against edge_att1 at 50.
-2023-08-30 15:41:47,871 Start Exploit at 50.
-2023-08-30 15:41:47,872 Start Harden_host on host (3, 2) at 50.1.
-2023-08-30 15:41:47,874 Simulation ended at time: 60.0
+2023-09-14 09:31:59,905 Attacker actions and strategy have been loaded for attacker 0 at 0.
+2023-09-14 09:31:59,907 Attacker actions and strategy have been loaded for attacker 1 at 0.
+2023-09-14 09:31:59,909 Start SubnetScan at 0.
+2023-09-14 09:31:59,909 Start SubnetScan at 0.
+2023-09-14 09:31:59,910 Start Harden_edge on edge ((1, 0), (1, 4)) at 0.
+2023-09-14 09:31:59,916 SubnetScan succeeded on host (1, 0) at 10.
+2023-09-14 09:31:59,917 SubnetScan succeeded on host (1, 0) at 10.
+2023-09-14 09:31:59,917 Edge ((1, 0), (1, 4)) hardened against edge_att2 at 10.
+2023-09-14 09:31:59,918 Start Exploit at 10.
+2023-09-14 09:31:59,918 Start Exploit at 10.
+2023-09-14 09:31:59,919 Start Harden_host on host (1, 4) at 10.
+2023-09-14 09:31:59,922 Exploit failed on edge ((1, 0), (1, 4)) at 15.
+2023-09-14 09:31:59,922 Exploit failed on edge ((1, 0), (1, 4)) at 15.
+2023-09-14 09:31:59,926 Start SubnetScan at 15.
+2023-09-14 09:31:59,927 Start SubnetScan at 15.
+2023-09-14 09:31:59,930 Host (1, 4) hardened against host_att1 at 20.
+2023-09-14 09:31:59,936 SubnetScan succeeded on host (1, 0) at 25.
+2023-09-14 09:31:59,937 SubnetScan succeeded on host (1, 0) at 25.
+2023-09-14 09:31:59,937 Start Exploit at 25.
+2023-09-14 09:31:59,937 Start Exploit at 25.
+2023-09-14 09:31:59,942 Exploit failed on edge ((1, 0), (1, 4)) at 30.
+2023-09-14 09:31:59,943 Exploit failed on edge ((1, 0), (1, 4)) at 30.
+2023-09-14 09:31:59,944 Start SubnetScan at 30.
+2023-09-14 09:31:59,945 Start SubnetScan at 30.
+2023-09-14 09:31:59,950 SubnetScan succeeded on host (1, 0) at 40.
+2023-09-14 09:31:59,950 SubnetScan succeeded on host (1, 0) at 40.
+2023-09-14 09:31:59,950 Start Exploit at 40.
+2023-09-14 09:31:59,951 Start Exploit at 40.
+2023-09-14 09:31:59,954 Exploit failed on edge ((1, 0), (1, 4)) at 45.
+2023-09-14 09:31:59,954 Exploit failed on edge ((1, 0), (1, 4)) at 45.
+2023-09-14 09:31:59,955 Start SubnetScan at 45.
+2023-09-14 09:31:59,955 Start SubnetScan at 45.
+2023-09-14 09:31:59,959 SubnetScan succeeded on host (1, 0) at 55.
+2023-09-14 09:31:59,959 SubnetScan succeeded on host (1, 0) at 55.
+2023-09-14 09:31:59,959 Start Exploit at 55.
+2023-09-14 09:31:59,960 Start Exploit at 55.
+2023-09-14 09:31:59,962 Exploit failed on edge ((1, 0), (1, 4)) at 60.
+2023-09-14 09:31:59,962 Exploit failed on edge ((1, 0), (1, 4)) at 60.
+2023-09-14 09:31:59,963 Start SubnetScan at 60.
+2023-09-14 09:31:59,964 Start SubnetScan at 60.
+2023-09-14 09:31:59,969 SubnetScan succeeded on host (1, 0) at 70.
+2023-09-14 09:31:59,969 SubnetScan succeeded on host (1, 0) at 70.
+2023-09-14 09:31:59,969 Start Exploit at 70.
+2023-09-14 09:31:59,969 Start Exploit at 70.
+2023-09-14 09:31:59,971 Exploit failed on edge ((1, 0), (1, 4)) at 75.
+2023-09-14 09:31:59,971 Exploit failed on edge ((1, 0), (1, 4)) at 75.
+2023-09-14 09:31:59,972 Start SubnetScan at 75.
+2023-09-14 09:31:59,973 Start SubnetScan at 75.
+2023-09-14 09:31:59,977 SubnetScan succeeded on host (1, 0) at 85.
+2023-09-14 09:31:59,977 SubnetScan succeeded on host (1, 0) at 85.
+2023-09-14 09:31:59,978 Start Exploit at 85.
+2023-09-14 09:31:59,978 Start Exploit at 85.
+2023-09-14 09:31:59,980 Exploit failed on edge ((1, 0), (1, 4)) at 90.
+2023-09-14 09:31:59,981 Exploit failed on edge ((1, 0), (1, 4)) at 90.
+2023-09-14 09:31:59,981 Start SubnetScan at 90.
+2023-09-14 09:31:59,982 Start SubnetScan at 90.
+2023-09-14 09:31:59,986 SubnetScan succeeded on host (1, 0) at 100.
+2023-09-14 09:31:59,986 SubnetScan succeeded on host (1, 0) at 100.
+2023-09-14 09:31:59,986 Start Exploit at 100.
+2023-09-14 09:31:59,986 Start Exploit at 100.
+2023-09-14 09:31:59,989 Exploit failed on edge ((1, 0), (1, 4)) at 105.
+2023-09-14 09:31:59,989 Exploit failed on edge ((1, 0), (1, 4)) at 105.
+2023-09-14 09:31:59,989 Start SubnetScan at 105.
+2023-09-14 09:31:59,990 Start SubnetScan at 105.
+2023-09-14 09:31:59,993 Simulation ended at time: 111.0
