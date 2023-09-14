@@ -114,6 +114,15 @@ Systems tab:
     + Output folder name entry field: This entry field will decide the name of the output folder will be named, which contains all the results.
 
 
+Create network tab:
+
+    A custom network can be created by adding hosts and and edges to the network. The created network can be used by selecting
+    'created_network' in the system tab.
+
+    When adding hosts and edges, make sure there are attacks and hardenings that can be used on those processes and services.
+    The default processes for which attacks and hardenings exist are p1 and p2, the default services are s1 and s2.
+
+
 Attacker tab:
 
     On the attacker tab we create the number of attackers we want for a simulation,
