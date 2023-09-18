@@ -341,10 +341,51 @@ class Network:
         self.adjacency_matrix = np.c_[self.adjacency_matrix, np.zeros(host_numb + 1)]
 
 
-# What to do when the edge already exists?
+    def delete_host(self, address):
+        """
+        Add a node to the network.
+        ----------
+        address : (source address, destination address)
+        """
+
+        place = self.get_host_place(address)
+        del self.hosts[place]
+        del self.host_map[address]
+
+        for key in self.host_map.keys():
+            if self.host_map[key] > place:
+                self.host_map[key] -= 1
+
+        new_edges = {}
+
+        # Make a new dictionary for the edges, since the places
+        # of the hosts are changed by deleting one host.
+        for (source, dest) in self.edges.keys():
+            if source == place or dest == place:
+                continue
+
+            if source > place:
+                new_source = source - 1
+            else:
+                new_source = source
+
+            if dest > place:
+                new_dest = dest - 1
+            else:
+                new_dest = dest
+
+            new_edges[(new_source, new_dest)] = self.edges[(source, dest)]
+
+        self.edges = new_edges
+
+        self.adjacency_matrix = np.delete(self.adjacency_matrix,(place), axis=0)
+        self.adjacency_matrix = np.delete(self.adjacency_matrix,(place), axis=1)
+
+
+
     def add_edge(self, source_addr, dest_addr, servs_allowed):
         """
-        Add an edge tot the network.
+        Add an edge to the network.
         The column number is the source and the row number the destination
         in the adjacency matrix.
         ----------
@@ -357,6 +398,22 @@ class Network:
         self.edges[(source, dest)] = Edge(source_addr, dest_addr, servs_allowed)
 
         self.adjacency_matrix[source][dest] = 1
+
+
+    def delete_edge(self, source_addr, dest_addr):
+        """
+        Delete an edge from the network.
+        The column number is the source and the row number the destination
+        in the adjacency matrix.
+        ----------
+        source_addr : (int, int)
+        dest_addr : (int, int)
+        """
+        source = self.host_map[source_addr]
+        dest = self.host_map[dest_addr]
+        del self.edges[(source, dest)]
+
+        self.adjacency_matrix[source][dest] = 0
 
 
     def add_sensitive_hosts(self, address):
@@ -384,6 +441,15 @@ class Network:
 
         else:
             print("The address", address, "is not in the network and can thus not be a sensitive host")
+
+
+    def delete_sensitive_hosts(self, address):
+        """
+        Delete a sensitive host from the network.
+        ---------
+        address : (int, int)
+        """
+        self.sensitive_hosts.remove(address)
 
 
     def get_score_host(self, address):
@@ -466,6 +532,21 @@ class Network:
         address_source = self.get_host_given_place(u).get_address()
         address_destination = self.get_host_given_place(v).get_address()
         return self.get_edge((address_source, address_destination))
+
+
+    def check_edge_addr(self, source_address, destination_address):
+        """
+        Check if an edge exists.
+        ----------
+        source_address : (int, int)
+            Place of the source host.
+        destination_address : (int, int)
+            Place of the destination host.
+        """
+        source_numb = self.get_host_place(source_address)
+        dest_numb = self.get_host_place(destination_address)
+        return self.adjacency_matrix[source_numb][dest_numb]
+
 
 
     def check_edge(self, u, v):
@@ -719,6 +800,38 @@ class Network:
             total += host.get_score()
 
         return total, comprimised_score
+
+
+    def draw_pre_attack_network(self):
+        G = nx.DiGraph(self.adjacency_matrix)
+        pos = nx.spring_layout(G, seed=3113794652)  # positions for all nodes
+
+        plt.figure()
+
+        # Create the legend.
+        legend_elements = [
+            Line2D([0], [0], marker='o', color='w', label='Network',markerfacecolor='tab:orange', markersize=10),
+            Line2D([0], [0], marker='o', color='w', label='Internet',markerfacecolor='maroon', markersize=10),
+        ]
+        plt.legend(handles=legend_elements, loc='best')
+
+        # Draw the normal and hardened hosts.
+        nx.draw(G, pos, node_color="tab:orange")
+
+
+        # Draw the internet.
+        _, internet = self.get_all_compromised_hosts()
+        nx.draw(G, pos, nodelist=internet, node_color="maroon")
+
+        labels = {}
+        for n in G.nodes:
+            add1, add2 = self.hosts[n].get_address()
+            labels[n] = str(add1) + ", " + str(add2)
+
+        nx.draw_networkx_labels(G, pos, labels, font_size=6, font_color="whitesmoke")
+        # plt.show()
+        plt.savefig(f"./created_network.png", format="PNG")
+        plt.close()
 
 
 

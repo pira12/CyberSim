@@ -21,6 +21,8 @@ harden_edge_allowed = None
 scan_host_allowed = None
 update_host_allowed = None
 update_firewall_allowed = None
+created_network = None
+use_created_network = None
 current_run = 0
 
 # Total score of all nodes
@@ -110,6 +112,15 @@ Systems tab:
     + Simulation run time entry field: This entry field will decide how long the simulated time will be. Must be an integer.
 
     + Output folder name entry field: This entry field will decide the name of the output folder will be named, which contains all the results.
+
+
+Create network tab:
+
+    A custom network can be created by adding hosts and and edges to the network. The created network can be used by selecting
+    'created_network' in the system tab.
+
+    When adding hosts and edges, make sure there are attacks and hardenings that can be used on those processes and services.
+    The default processes for which attacks and hardenings exist are p1 and p2, the default services are s1 and s2.
 
 
 Attacker tab:

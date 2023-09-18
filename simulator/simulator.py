@@ -3,7 +3,8 @@ import os
 import customtkinter
 from PIL import Image
 from CTkMessagebox import CTkMessagebox
-from event_handler import start_simulation, stop_simulation
+from event_handler import start_simulation
+from network import Network, Host
 
 # System appearance settings
 customtkinter.set_appearance_mode("System")
@@ -85,11 +86,12 @@ class App(customtkinter.CTk):
         """
         Window configuration
         """
-        self.title("NeDeS")
+        self.title("CyberSim")
         self.geometry(f"{1366}x{768}")
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.run_index = 0
+        glob.created_network = Network()
 
         """
         -------------------------------------------------------------------------------------------
@@ -145,9 +147,11 @@ class App(customtkinter.CTk):
         self.tabview = customtkinter.CTkTabview(self, width=880, height=550)
         self.tabview.grid(row=0, column=1, columnspan=4, rowspan=4, padx=5, pady=5, sticky="nesw")
         self.tabview.add("System")
+        self.tabview.add("Create network")
         self.tabview.add("Attacker")
         self.tabview.add("Defender")
         self.tabview.add("Simulation log")
+        # self.tabview.add("Actions")
 
         self.progressbar = customtkinter.CTkProgressBar(self, orientation="horizontal", height=5)
         self.progressbar.grid(row=2, column=1, columnspan=4, padx=5, pady=5, sticky="esw")
@@ -159,9 +163,11 @@ class App(customtkinter.CTk):
         Configure grid of individual tabs
         """
         self.tabview.tab("System").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Create network").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Attacker").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Defender").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Simulation log").grid_columnconfigure(0, weight=1)
+        # self.tabview.tab("Actions").grid_columnconfigure(0, weight=1)
 
         """
         -------------------------------------------------------------------------------------------
@@ -186,7 +192,7 @@ class App(customtkinter.CTk):
         self.label_1 = customtkinter.CTkLabel(master=self.option_frame, text="Select a network:")
         self.label_1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
         self.network_options = customtkinter.CTkOptionMenu(master=self.option_frame, dynamic_resizing=False,
-                                                           values=["network1", "network2", "network3", "network4", "network5"],
+                                                           values=["network1", "network2", "network3", "network4", "network5", "created_network"],
                                                            command=self.update_network_entry)
         self.network_options.grid(row=0, column=1, padx=20, pady=(20, 20), sticky="nw")
 
@@ -196,9 +202,9 @@ class App(customtkinter.CTk):
 
         self.update_network_entry(0)
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, text="Network selection preview:")
-        self.network_preview.grid(row=0, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=0, column=0, padx=10, pady=3, sticky="nsew")
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
-        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
 
         # Simulation number selection
         self.label_2 = customtkinter.CTkLabel(master=self.option_frame, text="Set the number of simulations:")
@@ -323,6 +329,314 @@ class App(customtkinter.CTk):
         self.tabview.tab("Simulation log").grid_rowconfigure(0, weight=3)
         self.log.grid_rowconfigure(0, weight=3)
 
+
+        """
+        -------------------------------------------------------------------------------------------
+        Create network tab
+        """
+
+        # Create the frame to create/delete hosts
+        self.network_frame_host = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.network_frame_host.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        # Create the frame to create/delete edges
+        self.network_frame_edge = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.network_frame_edge.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        # Create the frame to create/delete the sensitive hosts
+        self.sensitive_frame = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.sensitive_frame.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
+
+
+        # The network preview frame
+        self.create_network_frame = customtkinter.CTkFrame(self.tabview.tab("Create network"))
+        self.create_network_frame.grid(row=0, column=0, rowspan=2, padx=10, pady=10, sticky="nsew")
+
+        self.update_preview_created_network()
+        self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, text="Network selection preview:")
+        self.network_created_preview.grid(row=0, column=0, padx=10, pady=3, sticky="nsew")
+        self.network_created_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
+        self.network_created_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
+
+        # Add or delete a host to the network
+        self.label_n2 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set the address of the host:")
+        self.label_n2.grid(row=1, column=0, padx=20, pady=20, sticky="nw")
+        self.host_entry = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="int, int")
+        self.host_entry.grid(row=1, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
+
+        self.label_n3 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set score of the host:")
+        self.label_n3.grid(row=2, column=0, padx=20, pady=20, sticky="nw")
+        self.host_score = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="int")
+        self.host_score.grid(row=2, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
+
+        self.label_n4 = customtkinter.CTkLabel(master=self.network_frame_host, text="Set the processes of the host:")
+        self.label_n4.grid(row=3, column=0, padx=20, pady=20, sticky="nw")
+        self.host_processes = customtkinter.CTkEntry(master=self.network_frame_host, placeholder_text="string, string, ..")
+        self.host_processes.grid(row=3, column=2, padx=(65, 20), pady=(20, 20), sticky="nw")
+
+        self.add_host_button = customtkinter.CTkButton(master=self.network_frame_host, text="Add host", command=self.add_host)
+        self.add_host_button.grid(row=4, column=0, padx=(60,20), pady=10)
+        self.delete_host_button = customtkinter.CTkButton(master=self.network_frame_host, text="Delete host", command=self.delete_host)
+        self.delete_host_button.grid(row=4, column=2, padx=(65,20), pady=10)
+
+        # Add or delete an edge to the network
+        self.label_n5 = customtkinter.CTkLabel(master=self.network_frame_edge, text="Set the source address of the edge:")
+        self.label_n5.grid(row=5, column=0, padx=20, pady=20, sticky="nw")
+        self.edge_entry1 = customtkinter.CTkEntry(master=self.network_frame_edge, placeholder_text="int, int")
+        self.edge_entry1.grid(row=5, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.label_n6 = customtkinter.CTkLabel(master=self.network_frame_edge, text="Set the destination address of the edge:")
+        self.label_n6.grid(row=6, column=0, padx=20, pady=20, sticky="nw")
+        self.edge_entry2 = customtkinter.CTkEntry(master=self.network_frame_edge, placeholder_text="int, int")
+        self.edge_entry2.grid(row=6, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.label_n7 = customtkinter.CTkLabel(master=self.network_frame_edge, text="Set the services of the edge:")
+        self.label_n7.grid(row=7, column=0, padx=20, pady=20, sticky="nw")
+        self.edge_services = customtkinter.CTkEntry(master=self.network_frame_edge, placeholder_text="string, string, ..")
+        self.edge_services.grid(row=7, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.add_edge_button = customtkinter.CTkButton(master=self.network_frame_edge, text="Add edge", command=self.add_edge)
+        self.add_edge_button.grid(row=8, column=0, padx=20, pady=10)
+        self.delete_edge_button = customtkinter.CTkButton(master=self.network_frame_edge, text="Delete edge", command=self.delete_edge)
+        self.delete_edge_button.grid(row=8, column=1, padx=20, pady=10)
+
+
+
+        # Add or delete a sensitive host
+        self.label_n8 = customtkinter.CTkLabel(master=self.sensitive_frame, text="Set the address of the sensitive host:")
+        self.label_n8.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        self.sensitive_entry = customtkinter.CTkEntry(master=self.sensitive_frame, placeholder_text="int, int")
+        self.sensitive_entry.grid(row=0, column=1, padx=(20, 20), pady=(20, 20), sticky="nw")
+
+        self.add_sensitive_button = customtkinter.CTkButton(master=self.sensitive_frame, text="Add sensitive host", command=self.add_sensitive_host)
+        self.add_sensitive_button.grid(row=0, column=2, padx=20, pady=10)
+        self.delete_sensitive_button = customtkinter.CTkButton(master=self.sensitive_frame, text="Delete sensitive host", command=self.delete_sensitive_host)
+        self.delete_sensitive_button.grid(row=0, column=3, padx=20, pady=10)
+
+
+        # """
+        # -------------------------------------------------------------------------------------------
+        # Actions tab
+        # """
+
+        # # Create the frame to create/delete hosts
+        # self.action_frame_attacks_h = customtkinter.CTkFrame(self.tabview.tab("Actions"))
+        # self.action_frame_attacks_h.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # # Create the frame to create/delete hosts
+        # self.action_frame_attacks_e = customtkinter.CTkFrame(self.tabview.tab("Actions"))
+        # self.action_frame_attacks_e.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # self.host_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="name")
+        # self.host_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        # self.host_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="cost")
+        # self.host_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
+        # self.host_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="duration")
+        # self.host_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
+        # self.host_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text="process")
+        # self.host_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
+
+        # self.edge_atrib1 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="name")
+        # self.edge_atrib1.grid(row=0, column=0, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib2 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="cost")
+        # self.edge_atrib2.grid(row=0, column=1, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib3 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="duration")
+        # self.edge_atrib3.grid(row=0, column=2, padx=20, pady=20, sticky="nw")
+        # self.edge_atrib4 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text="service")
+        # self.edge_atrib4.grid(row=0, column=3, padx=20, pady=20, sticky="nw")
+
+        # # Show the current attacks
+        # self.show_host_attacks()
+        # self.show_edge_attacks()
+
+
+    def show_host_attacks(self):
+        host_attacks = glob.atts_h
+
+        for i in range(0, len(host_attacks)):
+            self.temp1 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text=host_attacks[i].get_name())
+            self.temp1.grid(row=i+1, column=0, padx=20, pady=20, sticky="nw")
+            self.temp2 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text=host_attacks[i].get_cost())
+            self.temp2.grid(row=i+1, column=1, padx=20, pady=20, sticky="nw")
+            self.temp3 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text=host_attacks[i].get_duration())
+            self.temp3.grid(row=i+1, column=2, padx=20, pady=20, sticky="nw")
+            self.temp6 = customtkinter.CTkLabel(master=self.action_frame_attacks_h, text=host_attacks[i].get_process())
+            self.temp6.grid(row=i+1, column=3, padx=20, pady=20, sticky="nw")
+
+
+    def show_edge_attacks(self):
+        edge_attacks = glob.atts_e
+
+        for i in range(0, len(edge_attacks)):
+            self.temp1 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text=edge_attacks[i].get_name())
+            self.temp1.grid(row=i+1, column=0, padx=20, pady=20, sticky="nw")
+            self.temp2 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text=edge_attacks[i].get_cost())
+            self.temp2.grid(row=i+1, column=1, padx=20, pady=20, sticky="nw")
+            self.temp3 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text=edge_attacks[i].get_duration())
+            self.temp3.grid(row=i+1, column=2, padx=20, pady=20, sticky="nw")
+            self.temp6 = customtkinter.CTkLabel(master=self.action_frame_attacks_e, text=edge_attacks[i].get_service())
+            self.temp6.grid(row=i+1, column=3, padx=20, pady=20, sticky="nw")
+
+
+    def process_address(self, input):
+        """
+        Check if the given input is of the format: int, int
+        """
+        addresses = input.split(",")
+        if len(addresses) != 2:
+            CTkMessagebox(master=app, title="Error", message="The address should be 'subnet address, host address'", icon="warning")
+            return False, False
+
+        addresses = [address.strip() for address in addresses]
+        subnet_address = addresses[0]
+        host_address = addresses[1]
+
+        if subnet_address.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The subnet address of the host must be a number", icon="warning")
+            return False, False
+        elif host_address.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The host address of the host must be a number", icon="warning")
+            return False, False
+
+        return int(subnet_address), int(host_address)
+
+
+    def add_host(self):
+        """
+        Add a host to the created network.
+        """
+        subnet_address, host_address = self.process_address(self.host_entry.get())
+        host_processes = self.host_processes.get()
+        host_processes = host_processes.split(",")
+        host_processes = [process.strip() for process in host_processes]
+        host_score = self.host_score.get()
+
+        if subnet_address == False:
+            return
+        elif (subnet_address, host_address) in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The address of the host already exists", icon="warning")
+        elif host_score.isdigit() == False:
+            CTkMessagebox(master=app, title="Error", message="The score of the host must be a number", icon="warning")
+        elif host_processes == ['']:
+            CTkMessagebox(master=app, title="Error", message="The host must have at least one process", icon="warning")
+
+        else:
+            glob.created_network.add_host(Host(subnet_address, host_address, int(host_score), 2, 0, [], glob.hardware[0], host_processes, glob.services[0:1], glob.os[0]))
+            self.update_preview_created_network()
+            self.update_network_entry(0)
+
+
+    def delete_host(self):
+        """
+        Delete a host from the created network.
+        """
+        subnet_address, host_address = self.process_address(self.host_entry.get())
+
+        if subnet_address == False:
+            return
+        elif (subnet_address, host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The address of the host does not exist", icon="warning")
+        elif (subnet_address, host_address) == (1, 0):
+            CTkMessagebox(master=app, title="Error", message="The host (1, 0) is the internet and cannot be deleted", icon="warning")
+        else:
+            glob.created_network.delete_host((subnet_address, host_address))
+            self.update_preview_created_network()
+            self.update_network_entry(0)
+
+
+
+    def add_edge(self):
+        """
+        Add an edge to the created network.
+        """
+        source_subnet_address, source_host_address = self.process_address(self.edge_entry1.get())
+        if source_subnet_address == False:
+            return
+
+        dest_subnet_address, dest_host_address = self.process_address(self.edge_entry2.get())
+        if source_subnet_address == False or dest_subnet_address == False:
+            return
+
+        edge_services = self.edge_services.get()
+        edge_services = edge_services.split(",")
+        edge_services = [service.strip() for service in edge_services]
+
+        if (source_subnet_address, source_host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The source address of the edge does not exist", icon="warning")
+        elif (dest_subnet_address, dest_host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The destination address of the edge does not exist", icon="warning")
+        elif (source_subnet_address, source_host_address) == (dest_subnet_address, dest_host_address):
+            CTkMessagebox(master=app, title="Error", message="The edge has the same source and destination address", icon="warning")
+        elif glob.created_network.check_edge_addr((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address)) == 1:
+            CTkMessagebox(master=app, title="Error", message="This edge already exists", icon="warning")
+        elif edge_services == ['']:
+            CTkMessagebox(master=app, title="Error", message="The edge must have at least one service", icon="warning")
+        else:
+            glob.created_network.add_edge((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address), edge_services)
+            self.update_preview_created_network()
+            self.update_network_entry(0)
+
+
+    def delete_edge(self):
+        """
+        Delete an edge from the created network.
+        """
+        source_subnet_address, source_host_address = self.process_address(self.edge_entry1.get())
+        if source_subnet_address == False:
+            return
+        dest_subnet_address, dest_host_address = self.process_address(self.edge_entry2.get())
+
+        if source_subnet_address == False or dest_subnet_address == False:
+            return
+        elif (source_subnet_address, source_host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The source address of the edge does not exist", icon="warning")
+        elif (dest_subnet_address, dest_host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The destination address of the edge does not exist", icon="warning")
+
+        elif (source_subnet_address, source_host_address) == (dest_subnet_address, dest_host_address):
+            CTkMessagebox(master=app, title="Error", message="The edge has the same source and destination address", icon="warning")
+        elif glob.created_network.check_edge_addr((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address)) == 0:
+            CTkMessagebox(master=app, title="Error", message="This edge does not exist", icon="warning")
+        else:
+            glob.created_network.delete_edge((source_subnet_address, source_host_address), (dest_subnet_address, dest_host_address))
+            self.update_preview_created_network()
+            self.update_network_entry(0)
+
+
+    def add_sensitive_host(self):
+        """
+        Change a host to a sensitive host.
+        """
+        subnet_address, host_address = self.process_address(self.sensitive_entry.get())
+
+        if subnet_address == False:
+            return
+        elif (subnet_address, host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The address of the edge does not exist", icon="warning")
+        elif (subnet_address, host_address) in glob.created_network.sensitive_hosts:
+            CTkMessagebox(master=app, title="Error", message="This address is already a sensitve host", icon="warning")
+        else:
+            glob.created_network.add_sensitive_hosts((subnet_address, host_address))
+            CTkMessagebox(master=app, title="success", message="The sensitive host is added", icon="check")
+
+
+    def delete_sensitive_host(self):
+        """
+        Change a sensitive host to a regular host.
+        """
+        subnet_address, host_address = self.process_address(self.sensitive_entry.get())
+
+        if subnet_address == False:
+            return
+        elif (subnet_address, host_address) not in list(glob.created_network.host_map.keys()):
+            CTkMessagebox(master=app, title="Error", message="The address of the edge does not exist", icon="warning")
+        elif (subnet_address, host_address) not in glob.created_network.sensitive_hosts:
+            CTkMessagebox(master=app, title="Error", message="This address is not a sensitve host", icon="warning")
+        else:
+            glob.created_network.delete_sensitive_hosts((subnet_address, host_address))
+            CTkMessagebox(master=app, title="success", message="The sensitive host is deleted", icon="check")
+
+
     def show_success(self):
         """
         Function which will show the success pop-up box.
@@ -351,12 +665,30 @@ class App(customtkinter.CTk):
         """
         Function which will change the network preview according to its selction.
         """
-        self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
-                                              size=(680,420))
+        if self.network_options.get() == "created_network":
+            glob.use_created_network = True
+            self.image = customtkinter.CTkImage(light_image=Image.open("created_network.png"),
+                                                dark_image=Image.open("created_network.png"),
+                                                size=(680,420))
+        else:
+            glob.use_created_network = False
+            self.image = customtkinter.CTkImage(light_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                                dark_image=Image.open(f"basic_networks/basic_{self.network_options.get()}.png"),
+                                                size=(680,420))
         self.network_preview = customtkinter.CTkLabel(self.preview_frame, image=self.image, text="")
-        self.network_preview.grid(row=1, column=0, padx=10, pady=2.5, sticky="nsew")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
         glob.network_selection = self.network_options.get()
+
+    def update_preview_created_network(self):
+        """
+        Function which will change the network preview according to the created network.
+        """
+        glob.created_network.draw_pre_attack_network()
+        self.created_image = customtkinter.CTkImage(light_image=Image.open("created_network.png"),
+                                              dark_image=Image.open("created_network.png"),
+                                              size=(680,420))
+        self.network_preview = customtkinter.CTkLabel(self.create_network_frame, image=self.created_image, text="")
+        self.network_preview.grid(row=1, column=0, padx=10, pady=3, sticky="nsew")
 
     def reset_results(self):
         """
@@ -547,6 +879,10 @@ class App(customtkinter.CTk):
 
         if self.harden_edge.get() == 0 and self.harden_host.get() == 0:
             CTkMessagebox(master=app, title="Error", message="Select at least one defence method for the defender!", icon="warning")
+            return True
+
+        if glob.use_created_network == True and glob.created_network.get_all_edges_from((1,0)) == []:
+            CTkMessagebox(master=app, title="Error", message="The Internet of the created network needs at least 1 outgoing edge!", icon="warning")
             return True
 
 if __name__ == "__main__":
