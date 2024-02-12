@@ -660,6 +660,41 @@ class Network:
         return best
 
 
+    def get_most_connected_host(self):
+        """
+        Get the host that has the most edges.
+        """
+        best = 0
+
+        for host_numb in range(len(self.hosts)) :
+            all_neighbours = []
+
+            # Find all neighbours.
+            for i in range(0, len(self.adjacency_matrix)):
+                if self.adjacency_matrix[i][host_numb] == 1:
+                    all_neighbours.append(i)
+                elif self.adjacency_matrix[host_numb][i] == 1:
+                    all_neighbours.append(i)
+
+            best = 0
+            best_edges = 0
+
+            # Find the neighbour with the most edges.
+            for n in all_neighbours:
+                edges_out = np.sum(self.adjacency_matrix[n])
+                edges_in = np.sum(self.adjacency_matrix[:, n])
+                total_edges = edges_out + edges_in
+
+                if total_edges > best_edges:
+                    best = n
+                    best_edges = total_edges
+                elif total_edges == best_edges:
+                    if random.randint(0, 1):
+                        best = n
+
+        return best
+
+
     def get_random_host(self):
         """
         Return a random hosts from the network and 1 otherwise.

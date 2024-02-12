@@ -204,12 +204,11 @@ class Defender:
         An edge between best1 and best2 is fully hardened,
         or either best1 or best2 is hardened.
         """
-        max_host = self.network.get_number_of_hosts()
-        random_numb = random.randint(0, max_host-1)
+        high_deg = self.network.get_most_connected_host()
 
         # Determine the most connected neighbour and the most connected
         # neighbour of the most connected neighbour.
-        best1 = self.network.get_most_connected_neighbour(random_numb)
+        best1 = self.network.get_most_connected_neighbour(high_deg)
         best2 = self.network.get_most_connected_neighbour(best1)
 
         r = random.randint(0, 1)

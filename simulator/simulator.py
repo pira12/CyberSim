@@ -87,7 +87,7 @@ class App(customtkinter.CTk):
         Window configuration
         """
         self.title("CyberSim")
-        self.geometry(f"{1366}x{768}")
+        self.geometry(f"{1376}x{774}")
         self.results_window = None
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.run_index = 0
@@ -641,6 +641,7 @@ class App(customtkinter.CTk):
         """
         Function which will show the success pop-up box.
         """
+
         msg = CTkMessagebox(master=app, title="success", message="The simulation is done!", icon="check",
                             option_1="Thanks", option_2="Show results")
 
